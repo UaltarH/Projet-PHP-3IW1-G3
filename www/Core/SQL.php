@@ -1,23 +1,31 @@
 <?php
 namespace App\Core;
 
-abstract class SQL{
+class SQL{
 
     private $pdo;
     private $table;
-    public function __construct() {
-        // connexion à la bdd
-        //TODO : SINGLETON à réaliser
+    private static $instance;
+    private $connection;
+
+    protected function __construct() {
         try {
-            $this->pdo = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
+            $this->connection = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
         }catch(\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
+    }
 
-        //$this->table = static::class;
-        // TODO : ici il faut créer un fichier avec les constantes, comme le préfixe "esgi_", les infos de connexion PDO
-        $classExploded = explode("\\", get_called_class());
-        $this->table = "esgi_".end($classExploded);
+    public static function getInstance() {
+        if (is_null(self::$instance)) {
+            self::$instance = new SQL();
+        }
+
+        return self::$instance;
+    }
+
+    public function getConnection() {
+        return $this->connection;
     }
 
     public static function populate(Int $id): object

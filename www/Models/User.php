@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use App\Core\SQL;
+
 class User extends SQL
 {
+    private $db_connexion;
+
     private Int $id = 0;
     protected String $firstname;
     protected String $lastname;
@@ -16,7 +19,7 @@ class User extends SQL
     private ?String $date_updated;
 
     public function __construct(){
-        parent::__construct();
+        $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
     /**

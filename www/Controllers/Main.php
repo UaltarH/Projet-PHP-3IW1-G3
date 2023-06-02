@@ -8,11 +8,10 @@ class Main
 {
     public function home(): void
     {
-        $pseudo = "Prof";
-        $view = new View("Main/home", "front");
-        $view->assign("pseudo", $pseudo);
-        $view->assign("age", 30);
-        $view->assign("titleseo", "supernouvellepage");
+        if(!isset($_SESSION['id'])) {
+            header('Location: /s-inscrire');
+            exit();
+        }
     }
 
     public function contact(): void
