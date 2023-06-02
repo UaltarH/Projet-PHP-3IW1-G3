@@ -6,7 +6,7 @@ use App\Core\View;
 
 class Main
 {
-    public function home(): void
+    public function home(): void     
     {
         $pseudo = "Prof";
         $view = new View("Main/home", "front");
