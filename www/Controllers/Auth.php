@@ -22,8 +22,10 @@ class Auth
         //Form validé ? et correct ?
         if($form->isSubmited() && $form->isValid()){
             $user = new User();
-            $user = new User();
-            $user = new User();
+            $user->setFirstname();
+            $user->setLastname();
+            $user->setEmail();
+            $user->setPwd();
             $user->save();
         }
         $view->assign("formErrors", $form->errors);

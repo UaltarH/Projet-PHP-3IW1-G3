@@ -6,12 +6,13 @@ use App\Core\View;
 
 class Main
 {
-    public function home(): void
+    public function home(): void     
     {
-        if(!isset($_SESSION['id'])) {
-            header('Location: /s-inscrire');
-            exit();
-        }
+        $pseudo = "Prof";
+        $view = new View("Main/home", "front");
+        $view->assign("pseudo", $pseudo);
+        $view->assign("age", 30);
+        $view->assign("titleseo", "supernouvellepage");
     }
 
     public function contact(): void
