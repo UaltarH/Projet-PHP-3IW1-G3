@@ -15,6 +15,7 @@ services:
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./script/sql/create_db/script_carte_chance.sql:/docker-entrypoint-initdb.d/script_carte_chance.sql
     environment:
       POSTGRES_DB: esgi
       POSTGRES_USER: esgi
