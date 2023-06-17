@@ -1,0 +1,21 @@
+.header {
+  background-color: red;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+.header ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.header ul li {
+  display: inline-block;
+  margin: 0 10px;
+}
+.header ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/*# sourceMappingURL=style.css.map */
