@@ -26,6 +26,12 @@ services:
     ports:
       - 8080:8080
 
+  mailcatcher:
+    restart: always
+    image: dockage/mailcatcher:0.8.2
+    ports:
+      - "1080:1080"
+      - "1025:1025"
 
 volumes:
   pgdata:
