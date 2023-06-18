@@ -25,7 +25,13 @@ services:
     restart: always
     ports:
       - 8080:8080
-
+  
+  sass:
+    build: sass
+    volumes:
+      - ./www/Assets/scss/:/var/www/html/scss
+      - ./www/style.css:/var/www/html/style.css
+    command: sass --watch /var/www/html/scss/main.scss:/var/www/html/style.css
 
 volumes:
   pgdata:
