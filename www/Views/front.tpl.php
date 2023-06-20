@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Template Front</h1>
-    <?php 
+    <!-- <?php 
         $uri = $_SERVER["REQUEST_URI"];
         $uriExploded = explode("?", $uri);
         $uri = strtolower(trim( $uriExploded[0], "/"));
@@ -23,7 +23,7 @@
                 S'inscrire
             </button>
         <?php } ?>
-    <?php } ?>
+    <?php } ?> -->
 
     <!-- inclure la vue -->
     <?php include $this->view;?>

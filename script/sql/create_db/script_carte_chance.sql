@@ -36,6 +36,7 @@ CREATE TABLE carte_chance_user (
     email VARCHAR(64) NOT NULL,
     password VARCHAR(64) NOT NULL,
     email_confirmation BOOLEAN NOT NULL,
+    confirmToken VARCHAR(255) NULL,
     phone_number INTEGER NOT NULL,
     date_inscription DATE NOT NULL,
     role_id SERIAL NOT NULL,
@@ -166,5 +167,5 @@ INSERT INTO carte_chance_role_permission VALUES
 
 -- carte_chance_user
 INSERT INTO carte_chance_user VALUES
-    (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'azerty123', TRUE, 600000000, '2023-06-03', 1),
-    (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'azerty123', TRUE, 600000000, '2023-06-03', 2);
+    (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'azerty123', TRUE, NULL, 600000000, '2023-06-03', 1),
+    (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'azerty123', NULL, 600000000, '2023-06-03', 2);
