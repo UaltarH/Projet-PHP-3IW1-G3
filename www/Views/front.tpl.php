@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Super site</title>
     <meta name="description" content="ceci est un super site">
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>Template Front</h1>
-    <!-- <?php 
+    <main>
+
+        <?php $this->partial("header", []) ?>
+
+        <h1>Template Front</h1>
+        <!--<?php
         $uri = $_SERVER["REQUEST_URI"];
         $uriExploded = explode("?", $uri);
         $uri = strtolower(trim( $uriExploded[0], "/"));
@@ -25,8 +32,10 @@
         <?php } ?>
     <?php } ?> -->
 
-    <!-- inclure la vue -->
-    <?php include $this->view;?>
-
+        <!-- inclure la vue -->
+        <?php include $this->view; ?>
+    </main>
+        <?php $this->partial("footer", []) ?>
 </body>
+
 </html>
