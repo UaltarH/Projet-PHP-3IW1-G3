@@ -25,3 +25,7 @@ logout:
 s-inscrire:
   controller: Auth
   action: register
+
+email-confirmation:
+  controller: Auth
+  action: emailConfirmation

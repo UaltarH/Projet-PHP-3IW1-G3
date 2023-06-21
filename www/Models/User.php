@@ -3,23 +3,30 @@
 namespace App\Models;
 
 use App\Core\SQL;
+use DateTime;
 
 class User extends SQL
 {
-    private $db_connexion;
+    //private $db_connexion;
 
     private Int $id = 0;
-    protected String $firstname;
-    protected String $lastname;
+    protected String $pseudo;
+    protected String $first_name;
+    protected String $last_name;
     protected String $email;
-    protected String $pwd;
-    protected String $country;
-    protected Int $status = 0;
-    private ?String $date_inserted;
-    private ?String $date_updated;
+    protected String $password;
+    protected bool $email_confirmation = false; 
+    protected Int $phone_number;
+    protected String $date_inscription;
+    protected Int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
+    protected String $confirmToken;
+    
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
+        //de base 
+        parent::__construct();
+
+        //$this->db_connexion = SQL::getInstance()->getConnection();
     }
 
     /**
@@ -41,9 +48,25 @@ class User extends SQL
     /**
      * @return String
      */
+    public function getPseudo(): string
+    {
+        return $this->pseudo;
+    }
+
+    /**
+     * @param String $pseudo
+     */
+    public function setPseudo(string $pseudo): void
+    {
+        $this->pseudo = trim($pseudo);
+    }
+
+    /**
+     * @return String
+     */
     public function getFirstname(): string
     {
-        return $this->firstname;
+        return $this->first_name;
     }
 
     /**
@@ -51,7 +74,7 @@ class User extends SQL
      */
     public function setFirstname(string $firstname): void
     {
-        $this->firstname = ucwords(strtolower(trim($firstname)));
+        $this->first_name = ucwords(strtolower(trim($firstname)));
     }
 
     /**
@@ -59,7 +82,7 @@ class User extends SQL
      */
     public function getLastname(): string
     {
-        return $this->lastname;
+        return $this->last_name;
     }
 
     /**
@@ -67,7 +90,7 @@ class User extends SQL
      */
     public function setLastname(string $lastname): void
     {
-        $this->lastname = strtoupper(trim($lastname));
+        $this->last_name = strtoupper(trim($lastname));
     }
 
     /**
@@ -89,83 +112,92 @@ class User extends SQL
     /**
      * @return String
      */
-    public function getPwd(): string
+    public function getPassword(): string
     {
-        return $this->pwd;
+        return $this->password;
     }
 
     /**
-     * @param String $pwd
+     * @param String $password
      */
-    public function setPwd(string $pwd): void
+    public function setPassword(string $password): void
     {
-        $this->pwd = password_hash($pwd, PASSWORD_DEFAULT);
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
-    /**
-     * @return String
-     */
-    public function getCountry(): string
+
+    public function getEmailConfirmation(): bool
     {
-        return $this->country;
+        return $this->email_confirmation;
     }
 
-    /**
-     * @param String $country
-     */
-    public function setCountry(string $country): void
+
+    public function setEmailConfirmation(bool $emailConfirmation): void
     {
-        $this->country = strtoupper(trim($country));
+        $this->email_confirmation = $emailConfirmation;
     }
 
     /**
      * @return Int
      */
-    public function getStatus(): int
+    public function getPhoneNumber(): int
     {
-        return $this->status;
+        return $this->phone_number;
     }
 
     /**
-     * @param Int $status
+     * @param Int $phone_number
      */
-    public function setStatus(int $status): void
+    public function setPhoneNumber(int $phoneNumber): void
     {
-        $this->status = $status;
+        $this->phone_number = $phoneNumber;
     }
 
     /**
-     * @return \DateTime
+     * @return String
      */
-    public function getDateInserted(): \DateTime
+    public function getDateInscription(): string
     {
-        return $this->date_inserted;
+        return $this->date_inscription;
     }
 
     /**
-     * @param \DateTime $date_inserted
+     * @param String $date_inscription
      */
-    public function setDateInserted(\DateTime $date_inserted): void
+    public function setDateInscription(string $dateInscription): void
     {
-        $this->date_inserted = $date_inserted;
+        $this->date_inscription = $dateInscription;
     }
 
     /**
-     * @return \DateTime
+     * @return Int
      */
-    public function getDateUpdated(): \DateTime
+    public function getRoleId(): int
     {
-        return $this->date_updated;
+        return $this->role_id;
     }
 
     /**
-     * @param \DateTime $date_updated
+     * @param Int $role_id
      */
-    public function setDateUpdated(\DateTime $date_updated): void
+    public function setRoleId(int $roleId): void
     {
-        $this->date_updated = $date_updated;
+        $this->role_id = $roleId;
     }
 
+        /**
+     * @return String
+     */
+    public function getConfirmToken(): string
+    {
+        return $this->confirmToken;
+    }
 
-
+    /**
+     * @param String $confirmToken
+     */
+    public function setConfirmToken(string $confirmToken): void
+    {
+        $this->confirmToken = $confirmToken;
+    }
 }

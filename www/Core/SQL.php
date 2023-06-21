@@ -2,10 +2,8 @@
 namespace App\Core;
 
 class SQL{
-
-    private $pdo;
     private $table;
-    private static $instance;
+    //private static $instance;
     private $connection;
 
     protected function __construct() {
@@ -14,19 +12,32 @@ class SQL{
         }catch(\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
+        
+        // DE BASE : recuperer le nom de la table : (nom de la classe )
+         $classExploded = explode("\\", get_called_class());
+         $this->table = "carte_chance_".strtolower(end($classExploded));
     }
 
-    public static function getInstance() {
-        if (is_null(self::$instance)) {
-            self::$instance = new SQL();
-        }
+    // public function setTableFromChild() {
+    //     $classExploded = explode("\\", get_called_class());
+    //     $this->table = "carte_chance_".strtolower(end($classExploded)); //todo mettre carte_chance dans le fichier de conf global xml de gaulthier + on recupere le nom de la table via le nom de la classe enfant de Sql
+    // }
 
-        return self::$instance;
-    }
+    // public function setTable(string $tableName) {
+    //     $this->table = $tableName;
+    // }
 
-    public function getConnection() {
-        return $this->connection;
-    }
+    // public static function getInstance() {
+    //     if (is_null(self::$instance)) {
+    //         self::$instance = new SQL();
+    //     }
+
+    //     return self::$instance;
+    // }
+
+    // public function getConnection() {
+    //     return $this->connection;
+    // }
 
     public static function populate(Int $id): object
     {
@@ -35,40 +46,77 @@ class SQL{
         return $objet->getOneWhere(["id"=>$id]);
     }
 
-    public function getOneWhere(array $where): object
+    //le resultat sera sous d'un tableau associatif, l'unique colonne qu'on aura se nomme "column_exists" avec comme contenu soit 
+    //"the value for column the nom_colonne_concerné already exists" ou "none_exists".
+    // si le resultat de cette methode revoi un bool (false) ca veut dire que dans la table il n'y a aucune donné 
+    public function existOrNot(array $where):array|bool
     {
-        $sqlWhere = [];
-        foreach ($where as $column=>$value) {
-            $sqlWhere[] = $column."=:".$column;
+        if(!is_null($this->table)){
+            $sqlWhere = [];
+            foreach ($where as $column=>$value) {
+                $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM ".$this->table." WHERE ".$column."=:".$column.") THEN 'the value for column the ".$column." already exists'";
+            }
+            $queryPrepared = $this->connection->prepare("SELECT CASE ".implode("  ", $sqlWhere)." ELSE 'none_exists' END AS column_exists FROM ".$this->table." LIMIT 1;");
+            $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
+            $queryPrepared->execute($where);
+
+            return $queryPrepared->fetch(); 
         }
-        $queryPrepared = $this->pdo->prepare("SELECT * FROM ".$this->table." WHERE ".implode(" AND ", $sqlWhere));
-        $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
-        $queryPrepared->execute($where);
-        return $queryPrepared->fetch();
+    }
+
+    public function getOneWhere(array $where)
+    {
+        if(!is_null($this->table)){
+            $sqlWhere = [];
+            foreach ($where as $column=>$value) {
+                $sqlWhere[] = $column."=:".$column;
+            }
+            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table." WHERE ".implode(" AND ", $sqlWhere));
+            $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
+            $queryPrepared->execute($where);
+            return $queryPrepared->fetch();
+        }
+        else{
+            die("le nom de la table n'a pas été renseigné et donc l'action sql select ne peut pas se faire");
+        }
     }
 
 
-    public function save(): void
+    public function save(): bool
     {
-        $columns = get_object_vars($this);
-        $columnsToExclude = get_class_vars(get_class());
-        $columns = array_diff_key($columns, $columnsToExclude);
-
-        if(is_numeric($this->getId()) && $this->getId()>0) {
-            $sqlUpdate = [];
-            foreach ($columns as $column=>$value) {
-                $sqlUpdate[] = $column."=:".$column;
+        if(!is_null($this->table)){
+            $columns = get_object_vars($this);
+            $columnsToExclude = get_class_vars(get_class());
+            $columns = array_diff_key($columns, $columnsToExclude);
+            //
+            
+            if(is_numeric($this->getId()) && $this->getId()>0) {
+                $sqlUpdate = [];
+                foreach ($columns as $column=>$value) {
+                    $sqlUpdate[] = $column."=:".$column;
+                }
+                $queryPrepared = $this->connection->prepare("UPDATE ".$this->table.
+                    " SET ".implode(",", $sqlUpdate). " WHERE id=".$this->getId());
+            }else{
+                $queryPrepared = $this->connection->prepare("INSERT INTO ".$this->table.
+                    " (".implode("," , array_keys($columns) ).") 
+                VALUES
+                (:".implode(" , :" , array_keys($columns) ).") ");
             }
-            $queryPrepared = $this->pdo->prepare("UPDATE ".$this->table.
-                " SET ".implode(",", $sqlUpdate). " WHERE id=".$this->getId());
-        }else{
-            $queryPrepared = $this->pdo->prepare("INSERT INTO ".$this->table.
-                " (".implode("," , array_keys($columns) ).") 
-            VALUES
-             (:".implode(",:" , array_keys($columns) ).") ");
-        }
+            foreach ($columns as $key => $value) {
+                if (is_bool($value)) {
+                    $columns[$key] = $value ? 'true' : 'false'; // Convertir la valeur booléenne en chaîne de caractères
+                }
+            }
 
-        $queryPrepared->execute($columns);
+            $resultQuery = $queryPrepared->execute($columns);
+            return $resultQuery;
+        }
+        else {
+            die("le nom de la table n'a pas été renseigné et donc l'action sql update/insert ne peut pas se faire");
+            return false;
+        }
+        
 
     }
 
