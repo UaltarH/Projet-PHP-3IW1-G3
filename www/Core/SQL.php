@@ -1,6 +1,11 @@
 <?php
 namespace App\Core;
 
+class ResponseSave{
+    public bool $success;
+    public int $idNewElement;
+}
+
 class SQL{
     private $table;
     //private static $instance;
@@ -81,16 +86,79 @@ class SQL{
         }
     }
 
+    public function selectAll(): array
+    {
+        if(!is_null($this->table)){
+            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table);
+            $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
+            $queryPrepared->execute();
+            return $queryPrepared->fetchAll();
+        }
+        else{
+            die("le nom de la table n'a pas été renseigné et donc l'action sql select ne peut pas se faire");
+        }
+    }
 
-    public function save(): bool
+    //Exemple de $fkInfos:
+    // $FkInfos = [
+    //     [0]=>[
+    //         "table"=>"category_article",
+    //         "fkColumns"=> ["fkOriginId"=>category_id,
+    //                       "idTargetTable"=>"id",
+    //                     ]
+    //     ]
+    // ]
+    public function selectWithFk(array $fkInfos): array
+    {
+
+        if(!is_null($this->table)){
+            $sqlJoin = [];
+            foreach($fkInfos as $fkInfo){
+                $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".$this->table.".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+            }
+            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table." ".implode(" ", $sqlJoin));
+
+
+            $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
+            $queryPrepared->execute();
+
+            return $queryPrepared->fetchAll();
+        }
+        else{
+            die("le nom de la table n'a pas été renseigné et donc l'action sql select ne peut pas se faire");
+        }
+    }
+
+    public function insertIntoJoinTable():bool
     {
         if(!is_null($this->table)){
             $columns = get_object_vars($this);
             $columnsToExclude = get_class_vars(get_class());
             $columns = array_diff_key($columns, $columnsToExclude);
-            //
+
+            $queryPrepared = $this->connection->prepare("INSERT INTO ".$this->table.
+                    " (".implode("," , array_keys($columns) ).") 
+                VALUES
+                (:".implode(" , :" , array_keys($columns) ).") ");
+            return $queryPrepared->execute($columns);
+        }
+        else {
+            die("le nom de la table n'a pas été renseigné et donc l'action sql update/insert ne peut pas se faire");
+            return false;
+        }
+    }
+
+    public function save(): ResponseSave
+    {
+        if(!is_null($this->table)){
+            $columns = get_object_vars($this);
+            $columnsToExclude = get_class_vars(get_class());
+            $columns = array_diff_key($columns, $columnsToExclude);
+            
+            $methode = "";
             
             if(is_numeric($this->getId()) && $this->getId()>0) {
+                $methode = "update";
                 $sqlUpdate = [];
                 foreach ($columns as $column=>$value) {
                     $sqlUpdate[] = $column."=:".$column;
@@ -98,6 +166,7 @@ class SQL{
                 $queryPrepared = $this->connection->prepare("UPDATE ".$this->table.
                     " SET ".implode(",", $sqlUpdate). " WHERE id=".$this->getId());
             }else{
+                $methode = "insert";
                 $queryPrepared = $this->connection->prepare("INSERT INTO ".$this->table.
                     " (".implode("," , array_keys($columns) ).") 
                 VALUES
@@ -109,8 +178,18 @@ class SQL{
                 }
             }
 
-            $resultQuery = $queryPrepared->execute($columns);
-            return $resultQuery;
+            // echo "<pre>";
+            // var_dump($columns);
+            // var_dump($queryPrepared->queryString);
+            // echo "</pre>";
+            $response = new ResponseSave();
+            $response->success = $queryPrepared->execute($columns);
+            if($methode == "insert"){
+                $response->idNewElement = $this->connection->lastInsertId();
+            }else{
+                $response->idNewElement = 0;
+            }
+            return $response;
         }
         else {
             die("le nom de la table n'a pas été renseigné et donc l'action sql update/insert ne peut pas se faire");

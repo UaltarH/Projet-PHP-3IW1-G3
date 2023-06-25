@@ -6,10 +6,11 @@ class Validator
 {
     private array $data = [];
     public array $errors = [];
+    
     public function isSubmited(): bool
     {
         $this->data = ($this->method == "POST")?$_POST:$_GET;
-        if(isset($this->data["submit"])){
+        if(isset($this->data[$this->config["config"]["submitName"]])){
             return true;
         }
         return false;
@@ -22,22 +23,28 @@ class Validator
 
         //La bonne method ? -> tester si la request method (POST / GET / PUT ect...) est la meme que celle qui est attendu par la classe enfant
         if($_SERVER["REQUEST_METHOD"] != $this->method){
-            die("Tentative de Hack");
+            die("Tentative de Hack methode differente");
         }
+
+        //exclude les inputs qui on un type file
+        $filteredConf = array_filter($this->config["inputs"], function($element) {
+            return !isset($element["type"]) || $element["type"] !== "file";
+        });
+        
         //Le nb de inputs -> pour tester si le nombre d'input envoyer et le meme que celui qui est attendu par la classe enfant
-        if(count($this->config["inputs"])+1 != count($this->data)){ //+1 car "submit" est envoyé aussi
-            die("Tentative de Hack");
+        if(count($filteredConf)+1 != count($this->data)){ //+1 car "submit" est envoyé aussi
+            die("Tentative de Hack nombre d'input different");
         }
 
         //tester les inputs envoyer
-        foreach ($this->config["inputs"] as $name=>$configInput){
+        foreach ($filteredConf as $name=>$configInput){
             //tester si le nom de l'input est attendu 
             if(!isset($this->data[$name])){
-                die("Tentative de Hack");
+                die("Tentative de Hack, input non attendu");
             }
             //tester dans le cas ou l'input ne doit pas etre vide(required) 
             if(isset($configInput["required"]) && self::isEmpty($this->data[$name])){
-                die("Tentative de Hack");
+                die("Tentative de Hack, input vide");
             }
             //tester si l'input a un minimum de taille 
             if(isset($configInput["min"]) && !self::isMinLength($this->data[$name], $configInput["min"])){

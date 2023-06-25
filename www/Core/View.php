@@ -1,6 +1,10 @@
 <?php
 namespace App\Core;
 
+use App\Models\Article;
+use App\Models\Category_article;
+
+
 class View {
 
     private String $view;
@@ -38,6 +42,53 @@ class View {
         if(!file_exists($this->template)){
             die("Le template ".$this->template." n'existe pas");
         }
+        if($template != 'unauthorised'){
+            //set options for the menu depanding on the template used        
+            //get articles and categories with query which have a foreign key bteewen them
+            $article = new Article();
+            //utiliser la methode selectWithFk avec la var  $article, le parametre vas contenir un array de cette forme :
+            $fkInfosQuery = [
+                [
+                    "table" => "carte_chance_category_article",
+                    "foreignKeys" => [
+                        "originColumn" => "category_id",
+                        "targetColumn" => "id"
+                    ]
+                ]
+            ];
+            $resultQuery = $article->selectWithFk($fkInfosQuery);
+
+            //create array used for fill menu links 
+            $informationsToFillMenu = [];
+
+            $informationsToFillMenu["Home"] = "/default";
+            $informationsToFillMenu["Connection"] = "/login";
+            $informationsToFillMenu["Deconnection"] = "/logout";
+            $informationsToFillMenu["Inscription"] = "/s-inscrire";
+            foreach ($resultQuery as $row) {
+                $category = $row['category_name'];
+                $articleName = $row['title'];
+                $articleId = $row['id'];
+            
+                // Si la catégorie n'existe pas dans le tableau, l'ajouter
+                if (!isset($informationsToFillMenu["Articles"]["categories"][$category])) {
+                    $informationsToFillMenu["Articles"]["categories"][$category] = ['links' => []];
+                }
+            
+                // Ajouter l'article à la catégorie correspondante
+                $informationsToFillMenu["Articles"]["categories"][$category]['links'][$articleName] = "page?number=" .$articleId;
+            }
+
+            //depanding of the template change links menu 
+            if($template == "back"){
+                $informationsToFillMenu["Admin"]["categories"]["Article"]["links"]["Page managment"] = "/page-managment";
+            }
+
+            $this->assign("menuOpt", $informationsToFillMenu);
+        }
+        
+
+        
     }
 
     public function partial(String $name, array $config, $errors = []): void
