@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
 :root {
-  --primary: #118AB2;
-  --secondary: #06D6A0;
-  --warning: #A44A3F;
+  --primary: #118ab2;
+  --secondary: #06d6a0;
+  --warning: #a44a3f;
   font-family: "Poppins", sans-serif;
 }
 
@@ -13,6 +13,7 @@
 .header nav {
   background-color: var(--secondary);
   align-items: baseline;
+  justify-content: center;
   flex-wrap: wrap;
   display: flex;
   gap: 10px;
@@ -76,6 +77,41 @@
 .header nav .search svg {
   padding-right: 10px;
   cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  background-color: var(--secondary);
+  color: white;
+}
+.footer nav {
+  display: flex;
+  justify-content: center;
+}
+.footer nav p {
+  padding: 10px;
+}
+.footer nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  list-style-type: none;
+}
+.footer nav ul li {
+  border-radius: 5px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.footer nav ul li:hover {
+  background-color: var(--primary);
+}
+.footer nav ul a {
+  text-decoration: none;
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */

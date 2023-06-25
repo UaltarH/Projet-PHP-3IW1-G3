@@ -13,6 +13,7 @@
             </li>
             <li><a href="/posts">Articles</a></li>
         </ul>
+
         <div class='search'>
             <input type="text" placeholder="Rechercher">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -23,6 +24,34 @@
             </svg>
 
         </div>
+
+        <?php
+        $uri = $_SERVER["REQUEST_URI"];
+        $uriExploded = explode("?", $uri);
+        $uri = strtolower(trim($uriExploded[0], "/"));
+        ?>
+
+        <ul class="menu">
+            <li>
+                <?php if (!isset($_SESSION["id"])) { ?>
+                    <?php if ($uri != "se-connecter") { ?>
+                        <a onclick="window.location.href='/se-connecter';">
+                            Se connecter
+                        <?php } ?>
+                        </a>
+            </li>
+            <?php
+                    if ($uri != "s-inscrire") { ?>
+                <li>
+                    <a onclick="window.location.href='/s-inscrire'">
+                        S'inscrire
+                    </a>
+                </li>
+            <?php } ?>
+        <?php } ?>
+        </ul>
+
+
 
     </nav>
 </header>

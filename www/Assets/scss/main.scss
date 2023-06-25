@@ -1,20 +1,21 @@
 // Global
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
 
-$primary : #118AB2;
-$secondary : #06D6A0;
-$warning : #A44A3F;
+$primary: #118ab2;
+$secondary: #06d6a0;
+$warning: #a44a3f;
 
 :root {
-    --primary : #{$primary};
-    --secondary : #{$secondary};
-    --warning : #{$warning};
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --warning: #{$warning};
 
-    font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 // Partials
 
 @import "./partials/_header.scss";
+@import "./partials/_footer.scss";
 
 // Views
