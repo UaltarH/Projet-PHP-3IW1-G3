@@ -1,21 +1,117 @@
-.header {
-  background-color: red;
-  color: #fff;
-  padding: 20px;
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+:root {
+  --primary: #118ab2;
+  --secondary: #06d6a0;
+  --warning: #a44a3f;
+  font-family: "Poppins", sans-serif;
 }
-.header ul {
+
+.header h1 {
+  text-align: center;
+  color: var(--primary);
+}
+.header nav {
+  background-color: var(--secondary);
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+.header nav .menu {
   list-style: none;
+  display: flex;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
+  gap: 1rem;
 }
-.header ul li {
-  display: inline-block;
-  margin: 0 10px;
+.header nav .menu li {
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
-.header ul li a {
-  color: #fff;
+.header nav .menu li a {
+  color: white;
   text-decoration: none;
+}
+.header nav .menu li .sous-menu {
+  display: none;
+  text-decoration: none;
+}
+.header nav .menu li .sous-menu li {
+  padding: 10px;
+}
+.header nav .menu li:hover {
+  background-color: var(--primary);
+}
+.header nav .menu li:hover .sous-menu {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
+}
+.header nav .menu li:hover .sous-menu li:hover {
+  background-color: var(--secondary);
+}
+.header nav .search {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  border-radius: 10px;
+  background-color: #fff;
+}
+.header nav .search input {
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+  text-indent: 10px;
+}
+.header nav .search svg {
+  padding-right: 10px;
+  cursor: pointer;
+}
+
+.footer {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  background-color: var(--secondary);
+  color: white;
+}
+.footer nav {
+  display: flex;
+  justify-content: center;
+}
+.footer nav p {
+  padding: 10px;
+}
+.footer nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  list-style-type: none;
+}
+.footer nav ul li {
+  border-radius: 5px;
+  padding: 10px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.footer nav ul li:hover {
+  background-color: var(--primary);
+}
+.footer nav ul a {
+  text-decoration: none;
+  color: white;
 }
 
 /*# sourceMappingURL=style.css.map */
