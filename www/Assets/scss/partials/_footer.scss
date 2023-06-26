@@ -1,12 +1,12 @@
 .footer {
-  position: absolute;
-  bottom: 20px;
+  margin-top: 50px;
   width: 100%;
   background-color: var(--secondary);
   color: white;
 
   nav {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 
     p {

@@ -15,7 +15,9 @@
         <?php $this->partial("header", []) ?>
 
         <!-- inclure la vue -->
-        <?php include $this->view; ?>
+        <div class="container">
+            <?php include $this->view; ?>
+        </div>
     </main>
     <?php $this->partial("footer", []) ?>
 </body>
