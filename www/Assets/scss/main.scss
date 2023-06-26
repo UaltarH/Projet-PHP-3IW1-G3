@@ -5,12 +5,13 @@ $primary: #118ab2;
 $secondary: #06d6a0;
 $warning: #a44a3f;
 
+$font-family-base: "Poppins", sans-serif;
+
 :root {
   --primary: #{$primary};
   --secondary: #{$secondary};
   --warning: #{$warning};
-
-  font-family: "Poppins", sans-serif;
+  --font-family-base: #{$font-family-base};
 }
 
 // Partials
@@ -19,3 +20,7 @@ $warning: #a44a3f;
 @import "./partials/_footer.scss";
 
 // Views
+
+// Bootstrap
+
+@import "../../library/bootstrap/scss/bootstrap.scss";

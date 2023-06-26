@@ -35,7 +35,7 @@
             <li>
                 <?php if (!isset($_SESSION["id"])) { ?>
                     <?php if ($uri != "se-connecter") { ?>
-                        <a onclick="window.location.href='/se-connecter';">
+                        <a onclick="window.location.href='/login';">
                             Se connecter
                         <?php } ?>
                         </a>
