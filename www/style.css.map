@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "sourceRoot": "",
+  "sources": [
+    "Assets/scss/partials/_header.scss"
+  ],
+  "names": [],
+  "mappings": "AAAA;EACI;EACA;EACA;EACA;;AAEA;EACI;EACA;EACA;;AAEA;EACI;EACA;;AAEA;EACI;EACA",
+  "file": "style.css"
+}

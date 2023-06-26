@@ -1,3 +1,11 @@
-<footer>
-    <p>Copyright 2023 </p>
+<footer class="footer">
+    <nav>
+        <ul>
+            <li> <a href="/plan-du-site">Plan du site</a> </li>
+            <li> <a href="/contact">Contact</a> </li>
+            <li> <a href="/mentions-legales">Mentions légales</a> </li>
+            <li> <a href="/politique-de-cookies">Politique de cookies</a> </li>
+        </ul>
+        <p>© 2023 La carte chance</p>
+    </nav>
 </footer>
