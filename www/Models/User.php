@@ -7,7 +7,7 @@ use DateTime;
 
 class User extends SQL
 {
-    //private $db_connexion;
+    private $db_connexion;
 
     private Int $id = 0;
     protected String $pseudo;
@@ -24,9 +24,9 @@ class User extends SQL
 
     public function __construct(){
         //de base 
-        parent::__construct();
+        // parent::__construct();
 
-        //$this->db_connexion = SQL::getInstance()->getConnection();
+        $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
     /**
