@@ -114,7 +114,7 @@ class Pages
             $view->assign("typeError", 'noConnection');
         } else {
             //utilisateur connecter et admin:
-            $view = new View("Article/articleManagment", "back");
+            $view = new View("Article/articleManagment", "back", 2);
         
             //récuperer toutes les category d'article qui existe dans la bdd, 
             $optionsCategoriesArticle = [];

@@ -11,10 +11,10 @@ class View {
     private String $template;
     private $data = [];
 
-    public function __construct(String $view, String $template = "back") {
+    public function __construct(String $view, String $template = "back", int $roleId = 0) {
         $this->setView($view);
         $this->setTemplate($template);
-
+        $this->setMenuOptions($roleId);
     }
 
     public function assign(String $key, $value): void
@@ -42,7 +42,19 @@ class View {
         if(!file_exists($this->template)){
             die("Le template ".$this->template." n'existe pas");
         }
-        if($template != 'unauthorised'){
+    }
+
+    public function partial(String $name, array $config, $errors = []): void
+    {
+        if(!file_exists("Views/Partials/".$name.".ptl.php")){
+            die("Le partial ".$name." n'existe pas");
+        }
+        include "Views/Partials/".$name.".ptl.php";
+    }
+
+    public function setMenuOptions(int $userRoleId): void
+    {
+        if($this->template != 'unauthorised'){
             //set options for the menu depanding on the template used        
             //get articles and categories with query which have a foreign key bteewen them
             $article = new Article();
@@ -80,23 +92,12 @@ class View {
             }
 
             //depanding of the template change links menu 
-            if($template == "back"){
+            if($userRoleId == 2){ //is admin ajouter les pages d'admin
                 $informationsToFillMenu["Admin"]["categories"]["Article"]["links"]["Page managment"] = "/page-managment";
             }
 
             $this->assign("menuOpt", $informationsToFillMenu);
-        }
-        
-
-        
-    }
-
-    public function partial(String $name, array $config, $errors = []): void
-    {
-        if(!file_exists("Views/Partials/".$name.".ptl.php")){
-            die("Le partial ".$name." n'existe pas");
-        }
-        include "Views/Partials/".$name.".ptl.php";
+        }       
     }
 
     public function __destruct(){
