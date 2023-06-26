@@ -2,42 +2,48 @@
 namespace App\Core;
 
 class SQL{
-    private $table;
-    //private static $instance;
-    private $connection;
+    private static $table;
+    private static $instance;
+    private static $connection;
 
-    protected function __construct() {
+    protected function __construct($class) {
         try {
-            $this->connection = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
+            self::$connection = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
         }catch(\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
         
         // DE BASE : recuperer le nom de la table : (nom de la classe )
-         $classExploded = explode("\\", get_called_class());
-         $this->table = "carte_chance_".strtolower(end($classExploded));
+        $classExploded = explode("\\", $class);
+        self::$table = "carte_chance_".strtolower(end($classExploded));
     }
 
-    // public function setTableFromChild() {
-    //     $classExploded = explode("\\", get_called_class());
-    //     $this->table = "carte_chance_".strtolower(end($classExploded)); //todo mettre carte_chance dans le fichier de conf global xml de gaulthier + on recupere le nom de la table via le nom de la classe enfant de Sql
-    // }
+    public function setTableFromChild() {
+        $classExploded = explode("\\", get_called_class());
+        self::$table = "carte_chance_".strtolower(end($classExploded)); //todo mettre carte_chance dans le fichier de conf global xml de gaulthier + on recupere le nom de la table via le nom de la classe enfant de Sql
+    }
 
-    // public function setTable(string $tableName) {
-    //     $this->table = $tableName;
-    // }
+    public function setTable(string $tableName) {
+        self::$table = $tableName;
+    }
 
-    // public static function getInstance() {
-    //     if (is_null(self::$instance)) {
-    //         self::$instance = new SQL();
-    //     }
+    public static function getInstance() {
+        
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        
+        if (isset($trace[1]['class'])) {
+            if (is_null(self::$instance)) {
+                self::$instance = new SQL($trace[1]['class']);
+            }
 
-    //     return self::$instance;
-    // }
+            return self::$instance;
+        }
+        die("Pas de class d'appel");
+    }
 
-    // public function getConnection() {
-    //     return $this->connection;
-    // }
+    public function getConnection() {
+        return self::$connection;
+    }
 
     public static function populate(Int $id): object
     {
@@ -51,12 +57,12 @@ class SQL{
     // si le resultat de cette methode revoi un bool (false) ca veut dire que dans la table il n'y a aucune donné 
     public function existOrNot(array $where):array|bool
     {
-        if(!is_null($this->table)){
+        if(!is_null(self::$table)){
             $sqlWhere = [];
             foreach ($where as $column=>$value) {
-                $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM ".$this->table." WHERE ".$column."=:".$column.") THEN 'the value for column the ".$column." already exists'";
+                $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM ".self::$table." WHERE ".$column."=:".$column.") THEN 'the value for column the ".$column." already exists'";
             }
-            $queryPrepared = $this->connection->prepare("SELECT CASE ".implode("  ", $sqlWhere)." ELSE 'none_exists' END AS column_exists FROM ".$this->table." LIMIT 1;");
+            $queryPrepared = self::$connection->prepare("SELECT CASE ".implode("  ", $sqlWhere)." ELSE 'none_exists' END AS column_exists FROM ".self::$table." LIMIT 1;");
             $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
             $queryPrepared->execute($where);
 
@@ -66,12 +72,12 @@ class SQL{
 
     public function getOneWhere(array $where)
     {
-        if(!is_null($this->table)){
+        if(!is_null(self::$table)){
             $sqlWhere = [];
             foreach ($where as $column=>$value) {
                 $sqlWhere[] = $column."=:".$column;
             }
-            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table." WHERE ".implode(" AND ", $sqlWhere));
+            $queryPrepared = self::$connection->prepare("SELECT * FROM ".self::$table." WHERE ".implode(" AND ", $sqlWhere));
             $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
             $queryPrepared->execute($where);
             return $queryPrepared->fetch();
@@ -84,7 +90,7 @@ class SQL{
 
     public function save(): bool
     {
-        if(!is_null($this->table)){
+        if(!is_null(self::$table)){
             $columns = get_object_vars($this);
             $columnsToExclude = get_class_vars(get_class());
             $columns = array_diff_key($columns, $columnsToExclude);
@@ -95,10 +101,10 @@ class SQL{
                 foreach ($columns as $column=>$value) {
                     $sqlUpdate[] = $column."=:".$column;
                 }
-                $queryPrepared = $this->connection->prepare("UPDATE ".$this->table.
+                $queryPrepared = self::$connection->prepare("UPDATE ".self::$table.
                     " SET ".implode(",", $sqlUpdate). " WHERE id=".$this->getId());
             }else{
-                $queryPrepared = $this->connection->prepare("INSERT INTO ".$this->table.
+                $queryPrepared = self::$connection->prepare("INSERT INTO ".self::$table.
                     " (".implode("," , array_keys($columns) ).") 
                 VALUES
                 (:".implode(" , :" , array_keys($columns) ).") ");
