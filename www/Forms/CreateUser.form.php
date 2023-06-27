@@ -3,7 +3,7 @@ namespace App\Forms;
 use App\Core\Validator;
 class CreateUser extends Validator
 {
-    public $method = "POST";
+    public string $method = "POST";
     protected array $config = [];
     public function getConfig(): array
     {

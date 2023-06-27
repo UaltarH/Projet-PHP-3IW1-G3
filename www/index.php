@@ -21,9 +21,6 @@ spl_autoload_register(function ($class) {
     }
 });
 
-
-
-
 //Afficher le controller et l'action correspondant à l'URI
 
 $uriStr = $_SERVER["REQUEST_URI"];

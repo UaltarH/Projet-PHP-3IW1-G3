@@ -16,7 +16,8 @@ class Register extends Validator
                     "id"=>"register-form",
                     "class"=>"form",
                     "enctype"=>"",
-                    "submit"=>"Nous rejoindre",
+                    "submitLabel"=>"Nous rejoindre",
+                    "submitName"=>"submit",
                     "reset"=>"Annuler"
                 ],
                 "inputs"=>[

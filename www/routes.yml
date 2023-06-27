@@ -2,10 +2,6 @@ default:
   controller: Main
   action: home
 
-a-propos:
-  controller: Main
-  action: aboutUs
-
 about-us:
   controller: Main
   action: aboutUs
@@ -30,12 +26,21 @@ email-confirmation:
   controller: Auth
   action: emailConfirmation
 
+page:
+  controller: Pages
+  action: GetPage
+
+page-managment:
+  controller: Pages
+  action: createPage
+
 sys:
   user:
     list:
       controller: System
       action: userlist
       access: admin, moderator
+
 api:
   user:
     list:

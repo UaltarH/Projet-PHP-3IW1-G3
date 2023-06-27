@@ -7,12 +7,9 @@ use App\Forms\Register;
 use App\Forms\Connection;
 use App\Models\User;
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-require '/var/www/html/library/PHPMailer/src/Exception.php';
-require '/var/www/html/library/PHPMailer/src/PHPMailer.php';
-require '/var/www/html/library/PHPMailer/src/SMTP.php';
+use function App\Services\SendEmail\SendMailFunction;
+
+require_once '/var/www/html/Services/SendEmail.php';
 
 class Auth
 {
@@ -33,6 +30,9 @@ class Auth
                     if($result->getEmailConfirmation() == false) { //tester si l'email est confirmé   
                         $formConnection->errors[] = "l'email n'est pas confirmer";
                     } else {
+                        //l'utilisateur est bien connecter du coup on le redirige vers la home page 
+                        session_start();
+                        $_SESSION["pseudo"] = $result->getPseudo();
                         header("Location: default");
                     }    
                     
@@ -78,36 +78,16 @@ class Auth
                 }
                 $user->setConfirmToken($key);
 
- 
-                if($user->save()){ //return true | false
+                $responseQuery = $user->save();
+                if($responseQuery){ //return true | false
 
                     //envoi du mail pour la confirmation du compte:
-                    try {
-                        $mail = new PHPMailer (true);
-                        $mail->IsSMTP();
-                        $mail->Mailer = "smtp";
-                        $mail->SMTPDebug  = 0;  
-                        $mail->Port       = 1025;
-                        $mail->Host       = "mailcatcher";
-                        $mail->IsHTML(true);
-                        $mail->AddAddress($user->getEmail(), "recipient-name");
-                        $mail->SetFrom("carte_chance_admin@myges.fr", "from-name");
-                        $mail->Subject = "Confirmation de compte pour notre site Carte chance.";
-                        $content = "<b>Hello ".$user->getPseudo().", <a href='http://localhost/email-confirmation?pseudo=".urlencode($user->getPseudo())."&key=".$user->getConfirmToken()."'> Confirmez votre compte </a></b>";
+                    $to = $user->getEmail();
+                    $contentMail = "<b>Hello ".$user->getPseudo().", <a href='http://localhost/email-confirmation?pseudo=".urlencode($user->getPseudo())."&key=".$user->getConfirmToken()."'> Confirmez votre compte </a></b>";
+                    $subject = "Confirmation de compte pour notre site Carte chance.";
+                    $resultSendMail = SendMailFunction($to, $contentMail, $subject);
 
-                        $mail->MsgHTML($content);
-
-                        if(!$mail->Send()) {
-                            echo "Error while sending Email.";
-                        } else {
-                            echo "Email sent successfully";
-                        }
-                    } catch (Exception $e) {
-                            echo "Mailer Error: ".$mail->ErrorInfo;
-                    }
-
-
-                    header("Location: email-confirmation");
+                    $view->assign("messageInfoSendMail", $resultSendMail);
                 }
             }
         }
@@ -116,10 +96,17 @@ class Auth
 
     public function logout(): void
     {
-        echo "Page de déconnexion";
+        session_start();
+        // Supprimer une variable de session spécifique
+        unset($_SESSION['pseudo']);
+        header("Location: login");
     }
 
     public function emailConfirmation(): void {
+        $view = new View("Auth/emailConfirmation", "front");
+        $messageInfo = [];
+        //$view->assign("messageInfo", '');
+
         if(isset($_GET['pseudo'], $_GET['key']) AND !empty($_GET['pseudo']) AND !empty($_GET['key'])) {
             $pseudo = htmlspecialchars(urldecode($_GET['pseudo']));
             $key = htmlspecialchars($_GET['key']);
@@ -128,25 +115,24 @@ class Auth
             $whereSql = ["pseudo" => $pseudo, "confirmToken" => $key];
             $result = $user->getOneWhere($whereSql);
             if(is_bool($result)){
-                echo("utilisateur introuvable belec au hack !");
+                $messageInfo[] = "utilisateur introuvable belec au hack !";
             }
             else{
                 if($result->getEmailConfirmation() == true){
-                    echo('votre compte a deja été confirmé');
+                    $messageInfo[] = "votre compte a deja été confirmé";
                 }
                 else{
                     $result->setEmailConfirmation(true);
-                    if($result->save()){
-                        echo('votre compte a été confirmez, vous pouvez des maintenant vous connecter');
+                    $responseQuery = $result->save();
+                    if($responseQuery->success){
+                        $messageInfo[] = "votre compte a bien été confirmez, vous pouvez des maintenant vous connecter";
                     }
                 }
             }        
         }
         else{
-            echo "Un email de confirmation vous a été envoyé a votre adresse mail afin de confirmez votre compte.<br>";
+            $messageInfo[] = "les parametres de l'url sont incorrect";
         }
-        echo "<button onclick='window.location.href='/login''>
-                Connection
-            </button>";
+        $view->assign("messageInfo", $messageInfo);
     }
 }

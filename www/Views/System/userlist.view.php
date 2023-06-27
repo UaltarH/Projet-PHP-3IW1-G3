@@ -70,22 +70,10 @@
                         console.log(JSON.stringify(params));
                         let data = table.row($(this).parents('tr')).data();
                         console.log(JSON.stringify(data));
+
                     });
                 }
             }
         });
     });
-</script>
-<script>
-    // setTimeout(() => {
-    //     let arr_edit = document.getElementsByClassName('row-edit-button');
-    //     console.log(JSON.stringify(arr_edit));
-    //     for(let elt of arr_edit) {
-    //         elt.addEventListener('click', function(e) {
-    //             e.preventDefault();
-    //             console.log(e.target.href);
-    //         })
-    //     }
-    // },1000);
-
 </script>

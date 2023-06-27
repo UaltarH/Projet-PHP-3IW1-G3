@@ -1,9 +1,9 @@
 <?php
 namespace App\Forms;
 use App\Core\Validator;
-class CreateUser extends Validator
+class EditUser extends Validator
 {
-    public $method = "POST";
+    public string $method = "POST";
     protected array $config = [];
     public function getConfig(): array
     {
@@ -56,7 +56,6 @@ class CreateUser extends Validator
                     "error"=>"L'email est incorrect",
                     "required"=>true
                 ],
-                //TODO : check phone number format
                 "phone_number"=>[
                     "id"=>"create-user-form-phoneNumber",
                     "class"=>"form-input",
