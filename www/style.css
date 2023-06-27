@@ -11,75 +11,14 @@
   text-align: center;
   color: var(--primary);
 }
-.header nav {
-  background-color: var(--secondary);
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: wrap;
-  display: flex;
-  gap: 10px;
-  padding: 10px;
-}
-.header nav .menu {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  gap: 1rem;
-}
-.header nav .menu li {
-  color: white;
+.header .navbar .nav-item,
+.header .navbar .dropdown-item {
   border-radius: 5px;
-  padding: 10px;
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
 }
-.header nav .menu li a {
-  color: white;
-  text-decoration: none;
-}
-.header nav .menu li .sous-menu {
-  display: none;
-  text-decoration: none;
-}
-.header nav .menu li .sous-menu li {
-  padding: 10px;
-}
-.header nav .menu li:hover {
+.header .navbar .nav-item:hover,
+.header .navbar .dropdown-item:hover {
   background-color: var(--primary);
 }
-.header nav .menu li:hover .sous-menu {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  padding: 0;
-  list-style: none;
-}
-.header nav .menu li:hover .sous-menu li:hover {
-  background-color: var(--secondary);
-}
-.header nav .search {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  border-radius: 10px;
-  background-color: #fff;
-}
-.header nav .search input {
-  border: none;
-  outline: none;
-  padding: 10px;
-  border-radius: 10px;
-  text-indent: 10px;
-}
-.header nav .search svg {
-  padding-right: 10px;
-  cursor: pointer;
-}
-
 .footer {
   margin-top: 50px;
   width: 100%;
@@ -93,6 +32,7 @@
 }
 .footer nav p {
   padding: 10px;
+  margin: 0;
 }
 .footer nav ul {
   display: flex;
@@ -100,6 +40,7 @@
   gap: 10px;
   justify-content: center;
   list-style-type: none;
+  margin: 0;
 }
 .footer nav ul li {
   border-radius: 5px;
@@ -8535,7 +8476,9 @@ textarea.form-control-lg {
   color: rgba(var(--bs-black-rgb), var(--bs-text-opacity)) !important;
 }
 
-.text-white {
+.text-white, .header .navbar .nav-item,
+.header .navbar .dropdown-item, .header .navbar .nav-item .nav-link,
+.header .navbar .dropdown-item .nav-link {
   --bs-text-opacity: 1;
   color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
 }
@@ -11974,5 +11917,3 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
-
-/*# sourceMappingURL=style.css.map */
