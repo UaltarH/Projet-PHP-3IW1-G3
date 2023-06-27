@@ -6,13 +6,21 @@ use App\Core\SQL;
 
 class Article_content extends SQL
 {
+    private $db_connexion;
     protected int $article_id;
     protected int $content_id;
 
     public function __construct(){
-        parent::__construct();
+        $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
+
+    public static function getTable(): string
+    {
+        $classExploded = explode("\\", get_called_class());
+        return  "carte_chance_".strtolower(end($classExploded));
+    }
+    
     /**
      * @return Int
      */
