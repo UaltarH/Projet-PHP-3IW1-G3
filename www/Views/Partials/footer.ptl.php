@@ -1,5 +1,5 @@
 <footer class="footer">
-    <nav>
+    <nav class="navbar">
         <ul>
             <li> <a href="/plan-du-site">Plan du site</a> </li>
             <li> <a href="/contact">Contact</a> </li>
