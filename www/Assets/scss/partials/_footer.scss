@@ -1,0 +1,40 @@
+.footer {
+  margin-top: 50px;
+  width: 100%;
+  background-color: var(--secondary);
+  color: white;
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    p {
+      padding: 10px;
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      list-style-type: none;
+
+      li {
+        border-radius: 5px;
+        padding: 10px;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--primary);
+        }
+      }
+
+      a {
+        text-decoration: none;
+        color: white;
+      }
+    }
+  }
+}
