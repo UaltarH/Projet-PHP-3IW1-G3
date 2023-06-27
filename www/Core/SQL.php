@@ -7,29 +7,19 @@ class ResponseSave{
 }
 
 class SQL{
-    private static $table;
     private static $instance;
     private static $connection;
 
-    protected function __construct($class) {
+    protected function __construct() {
         try {
             self::$connection = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
         }catch(\Exception $e){
             die("Erreur SQL : ".$e->getMessage());
         }
-        
-        // DE BASE : recuperer le nom de la table : (nom de la classe )
-        $classExploded = explode("\\", $class);
-        self::$table = "carte_chance_".strtolower(end($classExploded));
     }
 
-    public function setTableFromChild() {
-        $classExploded = explode("\\", get_called_class());
-        self::$table = "carte_chance_".strtolower(end($classExploded)); //todo mettre carte_chance dans le fichier de conf global xml de gaulthier + on recupere le nom de la table via le nom de la classe enfant de Sql
-    }
-
-    public function setTable(string $tableName) {
-        self::$table = $tableName;
+    public static function getTable() {
+        throw new \Exception("getTable() method not implemented");
     }
 
     public static function getInstance() {
@@ -62,12 +52,12 @@ class SQL{
     // si le resultat de cette methode revoi un bool (false) ca veut dire que dans la table il n'y a aucune donné 
     public function existOrNot(array $where):array|bool
     {
-        if(!is_null(self::$table)){
+        if(!is_null(static::getTable())){
             $sqlWhere = [];
             foreach ($where as $column=>$value) {
-                $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM ".self::$table." WHERE ".$column."=:".$column.") THEN 'the value for column the ".$column." already exists'";
+                $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM ".static::getTable()." WHERE ".$column."=:".$column.") THEN 'the value for column the ".$column." already exists'";
             }
-            $queryPrepared = self::$connection->prepare("SELECT CASE ".implode("  ", $sqlWhere)." ELSE 'none_exists' END AS column_exists FROM ".self::$table." LIMIT 1;");
+            $queryPrepared = self::$connection->prepare("SELECT CASE ".implode("  ", $sqlWhere)." ELSE 'none_exists' END AS column_exists FROM ".static::getTable()." LIMIT 1;");
             $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
             $queryPrepared->execute($where);
 
@@ -77,12 +67,12 @@ class SQL{
 
     public function getOneWhere(array $where)
     {
-        if(!is_null(self::$table)){
+        if(!is_null(static::getTable())){
             $sqlWhere = [];
             foreach ($where as $column=>$value) {
                 $sqlWhere[] = $column."=:".$column;
             }
-            $queryPrepared = self::$connection->prepare("SELECT * FROM ".self::$table." WHERE ".implode(" AND ", $sqlWhere));
+            $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." WHERE ".implode(" AND ", $sqlWhere));
             $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
             $queryPrepared->execute($where);
             return $queryPrepared->fetch();
@@ -94,8 +84,8 @@ class SQL{
 
     public function selectAll(): array
     {
-        if(!is_null($this->table)){
-            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table);
+        if(!is_null(static::getTable())){
+            $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable());
             $queryPrepared->setFetchMode( \PDO::FETCH_CLASS, get_called_class());
             $queryPrepared->execute();
             return $queryPrepared->fetchAll();
@@ -115,16 +105,13 @@ class SQL{
     //     ]
     // ]
     public function selectWithFk(array $fkInfos): array
-    {
-
-        if(!is_null($this->table)){
+    {        
+        if(!is_null(static::getTable())){
             $sqlJoin = [];
             foreach($fkInfos as $fkInfo){
-                $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".$this->table.".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+                $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".static::getTable().".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
             }
-            $queryPrepared = $this->connection->prepare("SELECT * FROM ".$this->table." ".implode(" ", $sqlJoin));
-
-
+            $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." ".implode(" ", $sqlJoin));
             $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
             $queryPrepared->execute();
 
@@ -137,12 +124,12 @@ class SQL{
 
     public function insertIntoJoinTable():bool
     {
-        if(!is_null($this->table)){
+        if(!is_null(static::getTable())){
             $columns = get_object_vars($this);
             $columnsToExclude = get_class_vars(get_class());
             $columns = array_diff_key($columns, $columnsToExclude);
 
-            $queryPrepared = $this->connection->prepare("INSERT INTO ".$this->table.
+            $queryPrepared = self::$connection->prepare("INSERT INTO ".static::getTable().
                     " (".implode("," , array_keys($columns) ).") 
                 VALUES
                 (:".implode(" , :" , array_keys($columns) ).") ");
@@ -156,7 +143,7 @@ class SQL{
 
     public function save(): ResponseSave
     {
-        if(!is_null(self::$table)){
+        if(!is_null(static::getTable())){
             $columns = get_object_vars($this);
             $columnsToExclude = get_class_vars(get_class());
             $columns = array_diff_key($columns, $columnsToExclude);
@@ -169,11 +156,11 @@ class SQL{
                 foreach ($columns as $column=>$value) {
                     $sqlUpdate[] = $column."=:".$column;
                 }
-                $queryPrepared = self::$connection->prepare("UPDATE ".self::$table.
+                $queryPrepared = self::$connection->prepare("UPDATE ".static::getTable().
                     " SET ".implode(",", $sqlUpdate). " WHERE id=".$this->getId());
             }else{
                 $methode = "insert";
-                $queryPrepared = self::$connection->prepare("INSERT INTO ".self::$table.
+                $queryPrepared = self::$connection->prepare("INSERT INTO ".static::getTable().
                     " (".implode("," , array_keys($columns) ).") 
                 VALUES
                 (:".implode(" , :" , array_keys($columns) ).") ");
@@ -191,7 +178,7 @@ class SQL{
             $response = new ResponseSave();
             $response->success = $queryPrepared->execute($columns);
             if($methode == "insert"){
-                $response->idNewElement = $this->connection->lastInsertId();
+                $response->idNewElement = self::$connection->lastInsertId();
             }else{
                 $response->idNewElement = 0;
             }

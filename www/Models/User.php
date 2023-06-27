@@ -28,6 +28,12 @@ class User extends SQL
         $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
+    public static function getTable(): string
+    {
+        $classExploded = explode("\\", get_called_class());
+        return  "carte_chance_".strtolower(end($classExploded));
+    }
+
     /**
      * @return Int
      */
