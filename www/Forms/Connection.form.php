@@ -16,7 +16,8 @@ class Connection extends Validator
                     "id"=>"connection-form",
                     "class"=>"form",
                     "enctype"=>"",
-                    "submit"=>"Se connecter",
+                    "submitLabel"=>"Se connecter",
+                    "submitName"=>"submit",
                     "reset"=>"Annuler"
                 ],
                 "inputs"=>[
