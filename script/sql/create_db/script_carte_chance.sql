@@ -15,6 +15,9 @@ DROP TABLE IF EXISTS carte_chance_content CASCADE;
 DROP TABLE IF EXISTS carte_chance_category_jeux CASCADE;
 DROP TABLE IF EXISTS carte_chance_jeux CASCADE;
 
+-- Ajout de la librairie UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 -- Création des tables (sans les tables de jointure)
 CREATE TABLE carte_chance_permission (
     id SERIAL PRIMARY KEY,
@@ -27,7 +30,7 @@ CREATE TABLE carte_chance_role (
 );
 
 CREATE TABLE carte_chance_user (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     pseudo VARCHAR(15) NOT NULL UNIQUE,
     first_name VARCHAR(64) NOT NULL,
     last_name VARCHAR(64) NOT NULL,
@@ -43,31 +46,33 @@ CREATE TABLE carte_chance_user (
 );
 
 CREATE TABLE carte_chance_comment (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     content TEXT NOT NULL,
     creation_date DATE NOT NULL,
-    user_id SERIAL,
+    user_id UUID DEFAULT uuid_generate_v4(),
+    PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES carte_chance_user (id)
 ); 
 
 CREATE TABLE carte_chance_category_article (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     category_name VARCHAR(64) NOT NULL,
     description VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE carte_chance_article (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     title VARCHAR(64) NOT NULL UNIQUE,
     content TEXT NOT NULL,
     created_date DATE NOT NULL,
     updated_date DATE NOT NULL,
-    category_id SERIAL,
+    category_id UUID DEFAULT uuid_generate_v4(),
+    PRIMARY KEY (id),
     FOREIGN KEY (category_id) REFERENCES carte_chance_category_article (id)
 );
 
 -- CREATE TABLE carte_chance_page (
---     id SERIAL,
+--     id UUID DEFAULT uuid_generate_v4(),
 --     title VARCHAR(8) NOT NULL,
 --     creation_date DATE NOT NULL,
 --     article_id SERIAL,
@@ -76,20 +81,22 @@ CREATE TABLE carte_chance_article (
 -- );
 
 CREATE TABLE carte_chance_content (
-    id SERIAL PRIMARY KEY,
-    path_content VARCHAR(255) NOT NULL
+    id UUID DEFAULT uuid_generate_v4(),
+    path_content VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE carte_chance_category_jeux (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     category_name VARCHAR(64) NOT NULL,
     description VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE carte_chance_jeux (
-    id SERIAL PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4(),
     title VARCHAR(64) NOT NULL UNIQUE,
-    category_id SERIAL NOT NULL,
+    category_id UUID DEFAULT uuid_generate_v4() NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (category_id) REFERENCES carte_chance_category_jeux (id)
 );
 
@@ -103,32 +110,32 @@ CREATE TABLE carte_chance_role_permission (
 );
 
 CREATE TABLE carte_chance_comment_article (
-    article_id SERIAL,
-    comment_id SERIAL,
+    article_id UUID DEFAULT uuid_generate_v4(),
+    comment_id UUID DEFAULT uuid_generate_v4(),
     PRIMARY KEY (article_id, comment_id),
     FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
     FOREIGN KEY (comment_id) REFERENCES carte_chance_comment (id)
 );
 
 CREATE TABLE carte_chance_article_jeux (
-    article_id SERIAL,
-    jeux_id SERIAL,
+    article_id UUID DEFAULT uuid_generate_v4(),
+    jeux_id UUID DEFAULT uuid_generate_v4(),
     PRIMARY KEY (article_id, jeux_id),
     FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
     FOREIGN KEY (jeux_id) REFERENCES carte_chance_jeux (id)
 );
 
 CREATE TABLE carte_chance_article_content (
-    article_id SERIAL,
-    content_id SERIAL,
+    article_id UUID DEFAULT uuid_generate_v4(),
+    content_id UUID DEFAULT uuid_generate_v4(),
     PRIMARY KEY (article_id, content_id),
     FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
     FOREIGN KEY (content_id) REFERENCES carte_chance_content (id)
 );
 
 CREATE TABLE carte_chance_jeux_content (
-    jeux_id SERIAL,
-    content_id SERIAL,
+    jeux_id UUID DEFAULT uuid_generate_v4(),
+    content_id UUID DEFAULT uuid_generate_v4(),
     PRIMARY KEY (jeux_id, content_id),
     FOREIGN KEY (jeux_id) REFERENCES carte_chance_jeux (id),
     FOREIGN KEY (content_id) REFERENCES carte_chance_content (id)

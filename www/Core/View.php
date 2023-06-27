@@ -68,6 +68,7 @@ class View {
                     ]
                 ]
             ];
+            
             $resultQuery = $article->selectWithFk($fkInfosQuery);
 
             //create array used for fill menu links 

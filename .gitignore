@@ -2,6 +2,7 @@
 .idea/
 .DS_Store
 www/uploads/
-style.css.map
 dfsefs
+www/style.css.map
+www/style.css
 

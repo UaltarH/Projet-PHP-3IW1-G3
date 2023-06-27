@@ -5,11 +5,18 @@ use App\Core\SQL;
 
 class Content extends SQL
 {
+    private $db_connexion;
     private int $id = 0;
     protected string $path_content;
 
     public function __construct(){
-        parent::__construct();
+        $this->db_connexion = SQL::getInstance()->getConnection();
+    }
+
+    public static function getTable(): string
+    {
+        $classExploded = explode("\\", get_called_class());
+        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**
