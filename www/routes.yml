@@ -29,3 +29,11 @@ s-inscrire:
 email-confirmation:
   controller: Auth
   action: emailConfirmation
+
+page:
+  controller: Pages
+  action: GetPage
+
+page-managment:
+  controller: Pages
+  action: createPage

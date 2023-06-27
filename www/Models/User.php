@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Core\SQL;
-use DateTime;
 
 class User extends SQL
 {
