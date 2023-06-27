@@ -1,35 +1,44 @@
 default:
   controller: Main
   action: home
+  access: [ALL]
 
 about-us:
   controller: Main
   action: aboutUs
+  access: [ALL]
 
 contact:
   controller: Main
   action: contact
+  access: [ALL]
 
 login:
   controller: Auth
   action: login
+  access: [ALL]
 
 logout:
   controller: Auth
   action: logout
+  access: [USER, MODERATOR, ADMIN]
 
 s-inscrire:
   controller: Auth
   action: register
+  access: [ALL]
 
 email-confirmation:
   controller: Auth
   action: emailConfirmation
+  access: [USER, MODERATOR, ADMIN]
 
 page:
   controller: Pages
   action: GetPage
+  access: [ALL]
 
 page-managment:
   controller: Pages
   action: createPage
+  access: [ADMIN]
