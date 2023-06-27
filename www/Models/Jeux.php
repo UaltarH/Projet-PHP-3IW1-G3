@@ -6,12 +6,19 @@ use App\Core\SQL;
 
 class Jeux extends SQL
 {
+    private $db_connexion;
     private $id = 0;
     protected string $title;
     protected int $category_id = 1;
 
     public function __construct(){
-        parent::__construct();
+        $this->db_connexion = SQL::getInstance()->getConnection();
+    }
+
+    public static function getTable(): string
+    {
+        $classExploded = explode("\\", get_called_class());
+        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**
