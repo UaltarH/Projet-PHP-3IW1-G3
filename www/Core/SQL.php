@@ -1,6 +1,8 @@
 <?php
 namespace App\Core;
 
+use App\Models\User;
+
 class SQL{
     private $table;
     //private static $instance;
@@ -62,6 +64,8 @@ class SQL{
 
             return $queryPrepared->fetch(); 
         }
+        else
+            return false;
     }
 
     public function getOneWhere(array $where)
@@ -88,8 +92,10 @@ class SQL{
             $columns = get_object_vars($this);
             $columnsToExclude = get_class_vars(get_class());
             $columns = array_diff_key($columns, $columnsToExclude);
+            echo '<pre>';
+//            var_dump($columns);
             //
-            
+
             if(is_numeric($this->getId()) && $this->getId()>0) {
                 $sqlUpdate = [];
                 foreach ($columns as $column=>$value) {
@@ -116,8 +122,71 @@ class SQL{
             die("le nom de la table n'a pas été renseigné et donc l'action sql update/insert ne peut pas se faire");
             return false;
         }
-        
-
     }
+    public function list($params): array
+    {
+        $query = $this->connection->query("SELECT count(id) FROM $this->table");
+        $totalRecords = $query->fetch()[0];
 
+        $columns = $params["columns"];
+        $start = $params["start"];
+        $length = $params["length"];
+        $search = $params["search"];
+        $columnToSort = $params["columnToSort"];
+        $sortOrder = $params["sortOrder"];
+
+        $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
+        $uriStr = strtolower(trim( $uriExploded[0], "/"));
+        $uri = explode('/', $uriStr);
+
+        $query = "SELECT id, ".implode(", ", array_values($columns)).
+            " FROM ".$this->table;
+        if(strlen($search) > 0) {
+            $query .= " WHERE";
+            foreach($columns as $key=>$column) {
+                $query .= " CAST($column as TEXT) like '%$search%'";
+                if($key != count($columns)-1) {
+                    $query .= " OR";
+                }
+            }
+        }
+        if(!empty($columnToSort) && in_array($columnToSort, $columns)) {
+            $query .= " ORDER BY $columnToSort";
+            if(!empty($sortOrder) && (strtolower($sortOrder) == "asc" || strtolower($sortOrder) == "desc")) {
+                $query .= " $sortOrder";
+            }
+        }
+        $query .= " LIMIT $length OFFSET $start";
+        $queryPrepared = $this->connection->prepare($query);
+        $queryPrepared->execute();
+        $result = [];
+        $cpt = 0;
+        // TODO : put data in object and assign $result[$cpt][$column] with $object->getProperty();
+        while ($row = $queryPrepared->fetch()) {
+            $result[$cpt]['id'] = $row['id'];
+            foreach ($columns as $column){
+                $result[$cpt][trim($column)] = $row[trim($column)];
+            }
+            $result[$cpt]["action"] = "<a href='/sys/".$uri[1]."/list?action=edit&id=".$row['id']."' class='row-edit-button'>Edit</a> | <a href='/sys/".$uri[1]."/list?action=delete&id=".$row['id']."''>Delete</a>";
+            $cpt++;
+        }
+
+        return [
+            'draw' => intval($_GET['draw']),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $result,
+        ];
+    }
+    public function delete($id): bool
+    {
+        $query = "DELETE FROM ".$this->table." WHERE id = '".$id."'";
+        $queryPrepared = $this->connection->prepare($query);
+        return $queryPrepared->execute();
+    }
+    public function faker($query): void
+    {
+        $queryPrepared = $this->connection->prepare($query);
+        $queryPrepared->execute();
+    }
 }

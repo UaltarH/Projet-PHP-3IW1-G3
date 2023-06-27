@@ -17,6 +17,9 @@
                 class="<?= $configInput["class"] ?>"
                 id="<?= $configInput["placeholder"] ?>"
                 type="<?= $configInput["type"] ?>"
+                <?= $configInput["type"] == "tel" ? 'pattern="'.$configInput["pattern"].'"' : '' ?>
+                <?= $configInput["type"] == "tel" ? 'minlength="'.$configInput["min"].'"' : '' ?>
+                <?= $configInput["type"] == "tel" ? 'maxlength="'.$configInput["max"].'"' : '' ?>
                 <?= $configInput["required"]?"required":"" ?>
          ><br>
 

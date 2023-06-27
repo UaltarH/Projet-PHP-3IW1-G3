@@ -29,3 +29,21 @@ s-inscrire:
 email-confirmation:
   controller: Auth
   action: emailConfirmation
+
+sys:
+  user:
+    list:
+      controller: System
+      action: userlist
+      access: admin, moderator
+api:
+  user:
+    list:
+      controller: Api
+      action: userlist
+      params: [length, start, search, draw]
+      access: admin, moderator
+    delete:
+      controller: Api
+      action: userdelete
+      access: admin
