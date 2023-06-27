@@ -14,7 +14,8 @@ class CreateUser extends Validator
                 "id"=>"createUser-form",
                 "class"=>"form",
                 "enctype"=>"",
-                "submit"=>"Ajouter un utilisateur",
+                "submitLabel"=>"Ajouter un utilisateur",
+                "submitName"=>"submitCreateUser",
                 "reset"=>"Annuler"
             ],
             "inputs"=>[

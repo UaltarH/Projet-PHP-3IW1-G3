@@ -157,7 +157,7 @@ class SQL{
     }
     public function list($params): array
     {
-        $query = self::$connection->query("SELECT count(id) FROM ".self::$table);
+        $query = self::$connection->query("SELECT count(id) FROM ".static::getTable());
         $totalRecords = $query->fetch()[0];
 
         $columns = $params["columns"];
@@ -172,7 +172,7 @@ class SQL{
         $uri = explode('/', $uriStr);
 
         $query = "SELECT id, ".implode(", ", array_values($columns)).
-            " FROM ".self::$table;
+            " FROM ".static::getTable();
         if(strlen($search) > 0) {
             $query .= " WHERE";
             foreach($columns as $key=>$column) {
@@ -212,7 +212,7 @@ class SQL{
     }
     public function delete($id): bool
     {
-        $query = "DELETE FROM ".self::$table." WHERE id = '".$id."'";
+        $query = "DELETE FROM ".static::getTable()." WHERE id = '".$id."'";
         $queryPrepared = self::$connection->prepare($query);
         return $queryPrepared->execute();
     }
