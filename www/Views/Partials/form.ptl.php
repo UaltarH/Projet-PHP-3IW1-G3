@@ -18,6 +18,9 @@
                 class="<?= $configInput["class"] ?>"
                 id="<?= $configInput["id"] ?>"
                 type="<?= $configInput["type"] ?>"
+                <?= $configInput["type"] == "tel" ? 'pattern="'.$configInput["pattern"].'"' : '' ?>
+                <?= $configInput["type"] == "tel" ? 'minlength="'.$configInput["min"].'"' : '' ?>
+                <?= $configInput["type"] == "tel" ? 'maxlength="'.$configInput["max"].'"' : '' ?>
                 <?= $configInput["required"]?"required":"" ?>
          ><br>
       <?php elseif ($configInput["type"] === "select"): ?>

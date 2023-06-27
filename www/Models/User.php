@@ -14,7 +14,7 @@ class User extends SQL
     protected String $last_name;
     protected String $email;
     protected String $password;
-    protected bool $email_confirmation = false; 
+    protected bool $email_confirmation = false;
     protected Int $phone_number;
     protected String $date_inscription;
     protected Int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
@@ -204,5 +204,15 @@ class User extends SQL
     public function setConfirmToken(string $confirmToken): void
     {
         $this->confirmToken = $confirmToken;
+    }
+    public function userFaker(): string
+    {
+        $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
+        for($i = 0; $i < 100; $i++) {
+            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '0123456789', '".date("Y-m-d H:i:s")."', 1)";
+            if($i !== 99) $query.= ",";
+        }
+        $query .= ";";
+        return $query;
     }
 }

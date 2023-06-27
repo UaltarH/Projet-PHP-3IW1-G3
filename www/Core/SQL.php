@@ -60,8 +60,7 @@ class SQL{
         $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
 
-        return $queryPrepared->fetch(); 
-        
+        return $queryPrepared->fetch();
     }
 
     public function getOneWhere(array $where)
@@ -108,7 +107,6 @@ class SQL{
 
     public function insertIntoJoinTable():bool
     {
-
         $columns = get_object_vars($this);
         $columnsToExclude = get_class_vars(get_class());
         $columns = array_diff_key($columns, $columnsToExclude);
@@ -118,7 +116,6 @@ class SQL{
             VALUES
             (:".implode(" , :" , array_keys($columns) ).") ");
         return $queryPrepared->execute($columns);
-        
     }
 
     public function save(): ResponseSave
@@ -149,7 +146,6 @@ class SQL{
                 $columns[$key] = $value ? 'true' : 'false'; // Convertir la valeur booléenne en chaîne de caractères
             }
         }
-
         $response = new ResponseSave();
         $response->success = $queryPrepared->execute($columns);
         if($methode == "insert"){
@@ -158,9 +154,71 @@ class SQL{
             $response->idNewElement = 0;
         }
         return $response;
-        
-        
-
     }
+    public function list($params): array
+    {
+        $query = self::$connection->query("SELECT count(id) FROM ".static::getTable());
+        $totalRecords = $query->fetch()[0];
 
+        $columns = $params["columns"];
+        $start = $params["start"];
+        $length = $params["length"];
+        $search = $params["search"];
+        $columnToSort = $params["columnToSort"];
+        $sortOrder = $params["sortOrder"];
+
+        $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
+        $uriStr = strtolower(trim( $uriExploded[0], "/"));
+        $uri = explode('/', $uriStr);
+
+        $query = "SELECT id, ".implode(", ", array_values($columns)).
+            " FROM ".static::getTable();
+        if(strlen($search) > 0) {
+            $query .= " WHERE";
+            foreach($columns as $key=>$column) {
+                $query .= " CAST($column as TEXT) like '%$search%'";
+                if($key != count($columns)-1) {
+                    $query .= " OR";
+                }
+            }
+        }
+        if(!empty($columnToSort) && in_array($columnToSort, $columns)) {
+            $query .= " ORDER BY $columnToSort";
+            if(!empty($sortOrder) && (strtolower($sortOrder) == "asc" || strtolower($sortOrder) == "desc")) {
+                $query .= " $sortOrder";
+            }
+        }
+        $query .= " LIMIT $length OFFSET $start";
+        $queryPrepared = self::$connection->prepare($query);
+        $queryPrepared->execute();
+        $result = [];
+        $cpt = 0;
+        // TODO : put data in object and assign $result[$cpt][$column] with $object->getProperty();
+        while ($row = $queryPrepared->fetch()) {
+            $result[$cpt]['id'] = $row['id'];
+            foreach ($columns as $column){
+                $result[$cpt][trim($column)] = $row[trim($column)];
+            }
+            $result[$cpt]["action"] = "<a href='/sys/".$uri[1]."/list?action=edit&id=".$row['id']."' class='row-edit-button'>Edit</a> | <a href='/sys/".$uri[1]."/list?action=delete&id=".$row['id']."''>Delete</a>";
+            $cpt++;
+        }
+
+        return [
+            'draw' => intval($_GET['draw']),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $result,
+        ];
+    }
+    public function delete($id): bool
+    {
+        $query = "DELETE FROM ".static::getTable()." WHERE id = '".$id."'";
+        $queryPrepared = self::$connection->prepare($query);
+        return $queryPrepared->execute();
+    }
+    public function faker($query): void
+    {
+        $queryPrepared = self::$connection->prepare($query);
+        $queryPrepared->execute();
+    }
 }

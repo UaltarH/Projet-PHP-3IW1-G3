@@ -60,7 +60,7 @@ class Auth
             $user = new User();
             //$user->setTableFromChild();
         
-            if($form->isValidSpecific($user, $_POST['password'], $_POST['passwordConfirm'], $_POST['email'], $_POST['pseudo'])){
+            if($form->isPhoneNumberValid($_POST['phone_number']) && $form->isPasswordValid($_POST['password'], $_POST['passwordConfirm']) && $form->isUserInfoValid($user, $_POST['email'], $_POST['pseudo'], $_POST['phone_number'])){
                 $user->setPseudo($_POST['pseudo']);
                 $user->setFirstname($_POST['first_name']);
                 $user->setLastname($_POST['last_name']);
