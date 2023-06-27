@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <title>Super site</title>
     <meta name="description" content="ceci est un super site">
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
     <main>
 
         <?php $this->partial("header", []) ?>
-
         <h1>Template Front user: </h1>
 
         <!-- create menu with variable come from View.php -->
@@ -61,9 +61,11 @@
         <?php } ?> -->
 
         <!-- inclure la vue -->
-        <?php include $this->view; ?>
+        <div class="container">
+            <?php include $this->view; ?>
+        </div>
     </main>
-        <?php $this->partial("footer", []) ?>
+    <?php $this->partial("footer", []) ?>
 </body>
 
 </html>

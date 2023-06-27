@@ -1,8 +1,26 @@
+// Global
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap");
+
+$primary: #118ab2;
+$secondary: #06d6a0;
+$warning: #a44a3f;
+
+$font-family-base: "Poppins", sans-serif;
+
+:root {
+  --primary: #{$primary};
+  --secondary: #{$secondary};
+  --warning: #{$warning};
+  --font-family-base: #{$font-family-base};
+}
+
 // Partials
 
 @import "./partials/_header.scss";
+@import "./partials/_footer.scss";
 
 // Views
 
-// Global
+// Bootstrap
 
+@import "../../library/bootstrap/scss/bootstrap.scss";
