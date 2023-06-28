@@ -16,7 +16,6 @@ class Article extends SQL
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();
-        
     }
 
     public static function getTable(): string
@@ -119,5 +118,12 @@ class Article extends SQL
     public function setCategoryId(int $category_id): void
     {
         $this->category_id = $category_id;
+    }
+
+    public function getTotalArticles(): int
+    {
+        $queryPrepared = $this->db_connexion->prepare("SELECT COUNT(*) FROM carte_chance_article");
+        $queryPrepared->execute();
+        return $queryPrepared->fetch()['count'];
     }
 }

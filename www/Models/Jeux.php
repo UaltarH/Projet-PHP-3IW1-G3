@@ -68,5 +68,12 @@ class Jeux extends SQL
     {
         $this->category_id = $category_id;
     }
+
+    public function getTotalJeux(): int
+    {
+        $queryPrepared = $this->db_connexion->prepare("SELECT COUNT(*) FROM carte_chance_jeux");
+        $queryPrepared->execute();
+        return $queryPrepared->fetch()['count'];
+    }
 }
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+//echo "<pre>";
 
 //require "Core/View.php";
 
