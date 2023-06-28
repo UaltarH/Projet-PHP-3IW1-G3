@@ -3,25 +3,29 @@
 namespace App\Models;
 
 use App\Core\SQL;
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use PDO;
 
 class User extends SQL
 {
     private $db_connexion;
-
-    private Int $id = 0;
-    protected String $pseudo;
-    protected String $first_name;
-    protected String $last_name;
-    protected String $email;
-    protected String $password;
+    private int $id = 0;
+    protected string $pseudo;
+    protected string $first_name;
+    protected string $last_name;
+    protected string $email;
+    protected string $password;
     protected bool $email_confirmation = false;
-    protected Int $phone_number;
-    protected String $date_inscription;
-    protected Int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
-    protected String $confirmToken;
-    
+    protected int $phone_number;
+    protected string $date_inscription;
+    protected int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
+    protected string $confirmToken;
 
-    public function __construct(){
+
+    public function __construct()
+    {
         //de base 
         // parent::__construct();
 
@@ -31,7 +35,7 @@ class User extends SQL
     public static function getTable(): string
     {
         $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
+        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**
@@ -190,7 +194,7 @@ class User extends SQL
         $this->role_id = $roleId;
     }
 
-        /**
+    /**
      * @return String
      */
     public function getConfirmToken(): string
@@ -205,14 +209,50 @@ class User extends SQL
     {
         $this->confirmToken = $confirmToken;
     }
+
     public function userFaker(): string
     {
         $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
-        for($i = 0; $i < 100; $i++) {
-            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '0123456789', '".date("Y-m-d H:i:s")."', 1)";
-            if($i !== 99) $query.= ",";
+        for ($i = 0; $i < 100; $i++) {
+            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '$i', '" . date("Y-m-d H:i:s") . "', 1)";
+            if ($i !== 99) $query .= ",";
         }
         $query .= ";";
         return $query;
+    }
+
+    public function getTotalUsers(): int
+    {
+        $queryPrepared = $this->db_connexion->prepare("SELECT COUNT(*) FROM carte_chance_user");
+        $queryPrepared->execute();
+        return $queryPrepared->fetch()['count'];
+    }
+
+    public function getNewUsersPerDay(): array
+    {
+//        $queryPrepared = $this->db_connexion->prepare("SELECT DATE(date_inscription) AS date, COUNT(*) AS count FROM carte_chance_user GROUP BY DATE(date_inscription) ORDER BY DATE(date_inscription)");
+//        $queryPrepared->execute();
+//        return $queryPrepared->fetchAll();
+
+        $dateDebut = date('Y-m-d', strtotime('-1 month'));
+        $dateFin = date('Y-m-d', strtotime('+1 day'));
+        $interval = new DateInterval('P1D');
+        $dateRange = new DatePeriod(new DateTime($dateDebut), $interval, new DateTime($dateFin));
+
+        $newUsersPerDay = [];
+
+        foreach ($dateRange as $date) {
+            $dateCourante = $date->format('Y-m-d');
+
+            $requete = $this->db_connexion->prepare("SELECT COUNT(*) AS count FROM carte_chance_user WHERE DATE(date_inscription) = ?");
+            $requete->execute([$dateCourante]);
+            $resultat = $requete->fetch(PDO::FETCH_ASSOC);
+
+            $newUsersPerDay[] = [
+                'date' => $dateCourante,
+                'count' => (int)$resultat['count']
+            ];
+        }
+        return $newUsersPerDay;
     }
 }

@@ -41,6 +41,7 @@ page:
 page-managment:
   controller: Pages
   action: createPage
+  access: [ADMIN, MODERATOR]
 
 sys:
   user:
@@ -48,6 +49,10 @@ sys:
       controller: System
       action: userlist
       access: [ADMIN, MODERATOR]
+  dashboard:
+    controller: Dashboard
+    action: index
+    access: [ADMIN, MODERATOR]
 
 api:
   user:
