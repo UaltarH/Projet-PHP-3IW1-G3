@@ -36,7 +36,8 @@ if (empty($uriStr))
     $uri[0] = "default";
 else $uri = explode('/', $uriStr);
 if (!file_exists("routes.yml")) {
-    return Errors::define(500, "Le fichier routes.yml n'existe pas");
+    Errors::define(500, "Le fichier routes.yml n'existe pas");
+    exit;
 }
 
 $routes = yaml_parse_file("routes.yml");
@@ -48,21 +49,24 @@ if (count($uri) > 1) {
         if (isset($routeArray[$value])) {
             $routeArray = $routeArray[$value];
         } else {
-            return Errors::define(404, "Route not exist");
+            Errors::define(404, "Route not exist");
+            exit;
         }
     }
 } else {
     if (isset($routeArray[$uri[0]])) {
         $routeArray = $routeArray[$uri[0]];
     } else {
-        return Errors::define(404, "Route not exist");
+        Errors::define(404, "Route not exist");
+        exit;
     }
 }
 if (isset($routeArray["controller"]) && $routeArray["action"]) {
     $controller = $routeArray["controller"];
     $action = $routeArray["action"];
 } else {
-    return Errors::define(500, 'Pas de controller ou action');
+    Errors::define(500, 'Pas de controller ou action');
+    exit;
 }
 
 // TODO : test privileges
@@ -73,7 +77,9 @@ if (isset($routeArray["controller"]) && $routeArray["action"]) {
 //}
 
 if (!file_exists("Controllers/" . $controller . ".php")) {
-    return Errors::define(500, "Le fichier Controllers/" . $controller . ".php n'existe pas");
+    Errors::define(500, "Le fichier Controllers/" . $controller . ".php n'existe pas");
+    exit;
+
     // die("Error 500 Internal Server Error : Le fichier Controllers/" . $controller . ".php n'existe pas");
 }
 include "Controllers/" . $controller . ".php";
@@ -81,13 +87,17 @@ include "Controllers/" . $controller . ".php";
 $controller = "\\App\\Controllers\\" . $controller;
 
 if (!class_exists($controller)) {
-    return Errors::define(500, "La classe " . $controller . " n'existe pas");
+    Errors::define(500, "La classe " . $controller . " n'existe pas");
+    exit;
+
     // die("Error 500 Internal Server Error : La classe " . $controller . " n'existe pas");
 }
 $objController = new $controller();
 
 if (!method_exists($objController, $action)) {
-    return Errors::define(500, "L'action " . $action . " n'existe pas");
+    Errors::define(500, "L'action " . $action . " n'existe pas");
+    exit;
+
     // die("Error 500 Internal Server Error : L'action " . $action . " n'existe pas");
 }
 
