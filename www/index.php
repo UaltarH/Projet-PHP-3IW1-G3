@@ -2,6 +2,11 @@
 
 namespace App;
 
+use App\Models\Role;
+
+use function App\Core\TokenJwt\validateJWT;
+use function App\Core\TokenJwt\getSpecificDataFromToken;
+require_once '/var/www/html/Core/TokenJwt.php';
 //require "Core/View.php";
 
 spl_autoload_register(function ($class) {
@@ -27,7 +32,7 @@ $uriStr = $_SERVER["REQUEST_URI"];
 $uriExploded = explode("?", $uriStr);
 $uriStr = strtolower(trim( $uriExploded[0], "/"));
 
-$uri = [];;
+$uri = [];
 if(empty($uriStr))
     $uri[0] = "default";
 else $uri = explode('/', $uriStr);
@@ -60,12 +65,7 @@ else {
     die('Error 500 Internal Server Error : Pas de controller ou action');
 }
 
-// TODO : test privileges
-//if(isset($routeArray["access"])) {
-//    if(!isset($_SESSION["role"]) || !str_contains($routeArray["access"],$_SESSION["role"])) {
-//        die('Error 404 access denied, not sufficient privileges');
-//    }
-//}
+
 
 if(!file_exists("Controllers/".$controller.".php")){
     die("Error 500 Internal Server Error : Le fichier Controllers/".$controller.".php n'existe pas");
@@ -83,4 +83,62 @@ if(!method_exists($objController, $action)){
     die("Error 500 Internal Server Error : L'action ".$action." n'existe pas");
 }
 
-$objController->$action();
+// TEST si il y a une clé token dans la session et si le token est valide et que si le role de l'utilisateur est autorisé à accéder à la page
+if(isset($routeArray["access"])) {
+    $accessArray = array_map('strtolower', $routeArray["access"]);
+    if(in_array("all", $accessArray) ){
+        $objController->$action();
+    }
+    else{
+        session_start();
+        if(isset($_SESSION["token"])) {
+            $token = $_SESSION["token"];
+            if(validateJWT($token)) {
+                // tester le role de l'utilisateur en le comparent avec le role de la route
+                $roleId = getSpecificDataFromToken($token, "roleId");
+    
+                $role = new Role(); 
+                $whereSql = ["id" => $roleId];
+                $role = $role->getOneWhere($whereSql);
+                if(is_bool($role)){
+                    die("Error 500 Internal Server Error : Le role n'existe pas");
+                } else{
+                    switch($role->getRoleName()){
+                        case "admin":
+                            if(in_array("admin", $accessArray)){
+                                $objController->$action();
+                            }
+                            else{
+                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                            }
+                            break;
+                        case "user":
+                            if(in_array("user", $accessArray)){
+                                $objController->$action();
+                            }
+                            else{
+                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                            }
+                            break;
+                        case "moderator":
+                            if(in_array("moderator", $accessArray)){
+                                $objController->$action();
+                            }
+                            else{
+                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                            }
+                        default:
+                            die("Error 500 Internal Server Error : Le role de l'utilisateur n'existe pas");
+                    }
+                }
+            } else {
+                die("Error Unauthorized : Token invalide ou expiré");
+            }
+       }
+       else{
+        die("pas de token c'est ciaooooo !");
+       }
+    }
+} else {
+    die("Error 500 Internal Server Error : the route doesn't have access key");
+}

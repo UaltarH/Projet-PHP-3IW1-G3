@@ -40,7 +40,6 @@ CREATE TABLE carte_chance_user (
     confirmToken VARCHAR(255),
     phone_number INTEGER NOT NULL UNIQUE,
     date_inscription DATE NOT NULL,
-    tokenConnection VARCHAR(255) NULL,
     role_id SERIAL NOT NULL,
     FOREIGN KEY (role_id) REFERENCES carte_chance_role (id)
 );
@@ -56,7 +55,7 @@ CREATE TABLE carte_chance_comment (
 
 CREATE TABLE carte_chance_category_article (
     id UUID DEFAULT uuid_generate_v4(),
-    category_name VARCHAR(64) NOT NULL,
+    category_name VARCHAR(64) NOT NULL UNIQUE,
     description VARCHAR(128) NOT NULL
 );
 
@@ -88,7 +87,7 @@ CREATE TABLE carte_chance_content (
 
 CREATE TABLE carte_chance_category_jeux (
     id UUID DEFAULT uuid_generate_v4(),
-    category_name VARCHAR(64) NOT NULL,
+    category_name VARCHAR(64) NOT NULL UNIQUE,
     description VARCHAR(128) NOT NULL
 );
 
@@ -155,7 +154,8 @@ INSERT INTO carte_chance_permission (id, permission_name) VALUES
 -- carte_chance_role
 INSERT INTO carte_chance_role (id, role_name) VALUES
     (DEFAULT, 'user'),
-    (DEFAULT, 'admin');
+    (DEFAULT, 'admin'),
+    (DEFAULT, 'moderator');
 
 -- carte_chance_role_permission
 INSERT INTO carte_chance_role_permission (permission_id, role_id) VALUES
@@ -167,8 +167,8 @@ INSERT INTO carte_chance_role_permission (permission_id, role_id) VALUES
 
 -- carte_chance_user
 INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirmToken, phone_number, date_inscription, role_id) VALUES
-    (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001, '2023-06-03',"tokenConfirm", 1),
-    (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL, 60000000, '2023-06-03',"tokenConfirm", 2);
+    (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001, '2023-06-03', 1),
+    (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL, 60000000, '2023-06-03', 2);
 
 -- carte_chance_category_article
 INSERT INTO carte_chance_category_article (id, category_name, description) VALUES

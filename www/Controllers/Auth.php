@@ -7,9 +7,11 @@ use App\Forms\Register;
 use App\Forms\Connection;
 use App\Models\User;
 
+use function App\Core\TokenJwt\generateJWT;
 use function App\Services\SendEmail\SendMailFunction;
 
 require_once '/var/www/html/Services/SendEmail.php';
+require_once '/var/www/html/Core/TokenJwt.php';
 
 class Auth
 {
@@ -22,17 +24,30 @@ class Auth
         if($formConnection->isSubmited() && $formConnection->isValid()){
             $user = new User();
             $whereSql = ["pseudo" => $_POST['pseudo']];
-            $result = $user->getOneWhere($whereSql);
+            $user = $user->getOneWhere($whereSql);
 
-            if(!is_bool($result)){ //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur 
-                if (password_verify($_POST['password'], $result->getPassword())) {
+            if(!is_bool($user)){ //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur 
+                if (password_verify($_POST['password'], $user->getPassword())) {
                     // Le mot de passe est correct   
-                    if($result->getEmailConfirmation() == false) { //tester si l'email est confirmé   
+                    if($user->getEmailConfirmation() == false) { //tester si l'email est confirmé   
                         $formConnection->errors[] = "l'email n'est pas confirmer";
                     } else {
                         //l'utilisateur est bien connecter du coup on le redirige vers la home page 
                         session_start();
-                        $_SESSION["pseudo"] = $result->getPseudo();
+                        //creer le token jwt et le set en variable session 
+                        $payload = array(
+                            'id' => $user->getId(), // Identifiant de l'utilisateur 
+                            'pseudo' => $user->getPseudo(), // Pseudo de l'utilisateur
+                            'firstName' => $user->getFirstname(), // Nom de l'utilisateur
+                            'lastName' => $user->getLastname(), // Prénom de l'utilisateur
+                            'roleId' => $user->getRoleId(), // Prénom de l'utilisateur
+                            'iat' => time(), // Horodatage de création du JWT (émetteur)
+                            'exp' => time() + 7200 // Horodatage d'expiration du JWT (2 heure)
+                        );
+
+                        $token = generateJWT($payload);
+                        session_start();
+                        $_SESSION['token'] = $token;
                         header("Location: default");
                     }    
                     
