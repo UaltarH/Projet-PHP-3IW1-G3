@@ -15,12 +15,12 @@ class Dashboard {
         $jeuxModel = new Jeux();
         $categorieJeuxModel = new Category_jeux();
 
-        $totalUsers = $userModel->getTotalUsers();
+        $totalUsers = $userModel->getTotalCount();
         $newUsersPerDay = $userModel->getNewUsersPerDay();
 
-        $totalArticles = $articleModel->getTotalArticles();
+        $totalArticles = $articleModel->getTotalCount();
 
-        $totalJeux = $jeuxModel->getTotalJeux();
+        $totalJeux = $jeuxModel->getTotalCount();
 
         $totalGamesByCategories = $categorieJeuxModel->getTotalGamesByCategories();
 

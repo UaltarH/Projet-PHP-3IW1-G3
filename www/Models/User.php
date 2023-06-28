@@ -221,13 +221,6 @@ class User extends SQL
         return $query;
     }
 
-    public function getTotalUsers(): int
-    {
-        $queryPrepared = $this->db_connexion->prepare("SELECT COUNT(*) FROM carte_chance_user");
-        $queryPrepared->execute();
-        return $queryPrepared->fetch()['count'];
-    }
-
     public function getNewUsersPerDay(): array
     {
         $dateDebut = date('Y-m-d', strtotime('-1 month'));

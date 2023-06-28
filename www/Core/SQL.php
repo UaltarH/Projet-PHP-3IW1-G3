@@ -216,9 +216,17 @@ class SQL{
         $queryPrepared = self::$connection->prepare($query);
         return $queryPrepared->execute();
     }
+
     public function faker($query): void
     {
         $queryPrepared = self::$connection->prepare($query);
         $queryPrepared->execute();
+    }
+
+    public function getTotalCount(): int
+    {
+        $queryPrepared = self::$connection->prepare("SELECT COUNT(*) FROM ".static::getTable());
+        $queryPrepared->execute();
+        return $queryPrepared->fetch()['count'];
     }
 }
