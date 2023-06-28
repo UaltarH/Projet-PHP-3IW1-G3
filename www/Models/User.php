@@ -230,10 +230,6 @@ class User extends SQL
 
     public function getNewUsersPerDay(): array
     {
-//        $queryPrepared = $this->db_connexion->prepare("SELECT DATE(date_inscription) AS date, COUNT(*) AS count FROM carte_chance_user GROUP BY DATE(date_inscription) ORDER BY DATE(date_inscription)");
-//        $queryPrepared->execute();
-//        return $queryPrepared->fetchAll();
-
         $dateDebut = date('Y-m-d', strtotime('-1 month'));
         $dateFin = date('Y-m-d', strtotime('+1 day'));
         $interval = new DateInterval('P1D');
