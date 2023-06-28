@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+//echo "<pre>";
 
 use App\Controllers\Errors;
 

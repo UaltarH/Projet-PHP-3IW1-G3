@@ -16,7 +16,6 @@ class Article extends SQL
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();
-        
     }
 
     public static function getTable(): string
