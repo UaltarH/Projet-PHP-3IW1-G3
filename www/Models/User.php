@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Core\SQL;
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use PDO;
 
 class User extends SQL
 {
     private $db_connexion;
-
     private String $id = "0";
     protected String $pseudo;
     protected String $first_name;
@@ -19,9 +22,9 @@ class User extends SQL
     protected String $date_inscription;
     protected Int $role_id; // 1 represente un utilisateur normal ; 2 represente un admin
     protected String $confirmToken;
-    
 
-    public function __construct(){
+    public function __construct()
+    {
         //de base 
         // parent::__construct();
 
@@ -31,7 +34,7 @@ class User extends SQL
     public static function getTable(): string
     {
         $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
+        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**
@@ -190,7 +193,7 @@ class User extends SQL
         $this->role_id = $roleId;
     }
 
-        /**
+    /**
      * @return String
      */
     public function getConfirmToken(): string
@@ -204,5 +207,29 @@ class User extends SQL
     public function setConfirmToken(string $confirmToken): void
     {
         $this->confirmToken = $confirmToken;
+    }
+
+    public function getNewUsersPerDay(): array
+    {
+        $dateDebut = date('Y-m-d', strtotime('-1 month'));
+        $dateFin = date('Y-m-d', strtotime('+1 day'));
+        $interval = new DateInterval('P1D');
+        $dateRange = new DatePeriod(new DateTime($dateDebut), $interval, new DateTime($dateFin));
+
+        $newUsersPerDay = [];
+
+        foreach ($dateRange as $date) {
+            $dateCourante = $date->format('Y-m-d');
+
+            $requete = $this->db_connexion->prepare("SELECT COUNT(*) AS count FROM carte_chance_user WHERE DATE(date_inscription) = ?");
+            $requete->execute([$dateCourante]);
+            $resultat = $requete->fetch(PDO::FETCH_ASSOC);
+
+            $newUsersPerDay[] = [
+                'date' => $dateCourante,
+                'count' => (int)$resultat['count']
+            ];
+        }
+        return $newUsersPerDay;
     }
 }

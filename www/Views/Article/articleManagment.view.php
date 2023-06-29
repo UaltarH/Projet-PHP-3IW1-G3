@@ -20,3 +20,11 @@
 <p>form create  article about game:</p>
 <?php $this->partial("form", $FormCreateArticleAboutGame, $FormCreateArticleAboutGameErrors) ?>
 <?php endif;?>
+
+<?php if(isset($successMessage)): ?>
+<?php var_dump($successMessage);?>
+<?php endif;?>
+
+<?php if(isset($errorMessage)): ?>
+<?php var_dump($errorMessage);?>
+<?php endif;?>

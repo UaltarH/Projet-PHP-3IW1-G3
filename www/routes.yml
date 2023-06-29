@@ -1,45 +1,81 @@
 default:
   controller: Main
   action: home
+  access: [ALL]
 
 about-us:
   controller: Main
   action: aboutUs
+  access: [ALL]
 
 contact:
   controller: Main
   action: contact
+  access: [ALL]
 
 login:
   controller: Auth
   action: login
+  access: [ALL]
 
 logout:
   controller: Auth
   action: logout
+  access: [USER, MODERATOR, ADMIN]
 
 s-inscrire:
   controller: Auth
   action: register
+  access: [ALL]
 
 email-confirmation:
   controller: Auth
   action: emailConfirmation
+  access: [ALL]
 
 page:
-  controller: Pages
-  action: GetPage
+  controller: Article
+  action: getArticle
+  access: [ALL]
 
-page-managment:
-  controller: Pages
-  action: createPage
+page:
+  allgames:
+    controller: Article
+    action: GetAllArticlesGame
+    access: [ALL]
+  allaboutgames:
+    controller: Article
+    action: GetAllArticlesAboutGame
+    access: [ALL]
+  allgamesbycategory:
+    controller: Article
+    action: GetAllArticlesGamesByCategory
+    access: [ALL]
+  allaboutgamesbygame:
+    controller: Article
+    action: GetAllArticlesAboutGamesByGame
+    access: [ALL]
 
 sys:
   user:
     list:
       controller: System
       action: userlist
-      access: admin, moderator
+      access: [ADMIN, MODERATOR]
+  article:
+    articlesmanagement:
+      controller: System
+      action: articlesManagement
+      access: [ADMIN, MODERATOR]
+    createArticleGame:
+      controller: System
+      action: addArticleGame
+      access: [ADMIN, MODERATOR]
+    createArticleAboutGame:
+      controller: System
+      action: addArticleAboutGame
+      access: [ADMIN, MODERATOR]
+
 
 api:
   user:
@@ -47,8 +83,8 @@ api:
       controller: Api
       action: userlist
       params: [length, start, search, draw]
-      access: admin, moderator
+      access: [ADMIN, MODERATOR]
     delete:
       controller: Api
       action: userdelete
-      access: admin
+      access: [ADMIN]

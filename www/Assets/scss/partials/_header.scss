@@ -4,84 +4,17 @@
     color: var(--primary);
   }
 
-  nav {
-    background-color: var(--secondary);
-    align-items: baseline;
-    justify-content: center;
-    flex-wrap: wrap;
-    display: flex;
-    gap: 10px;
-    padding: 10px;
+  .navbar {
+    .nav-item,
+    .dropdown-item {
+      @extend .text-white;
 
-    .menu {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0;
-      padding: 0;
-      gap: 1rem;
-
-      li {
-        color: white;
-        border-radius: 5px;
-        padding: 10px;
-
-        transition: all 0.2s ease-in-out;
-        cursor: pointer;
-
-        a {
-          color: white;
-          text-decoration: none;
-        }
-
-        .sous-menu {
-          display: none;
-          text-decoration: none;
-
-          li {
-            padding: 10px;
-          }
-        }
-
-        &:hover {
-          background-color: var(--primary);
-
-          .sous-menu {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            padding: 0;
-            list-style: none;
-
-            li {
-              &:hover {
-                background-color: var(--secondary);
-              }
-            }
-          }
-        }
+      border-radius: 5px;
+      &:hover {
+        background-color: var(--primary);
       }
-    }
-    .search {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      border-radius: 10px;
-      background-color: #fff;
-
-      input {
-        border: none;
-        outline: none;
-        padding: 10px;
-        border-radius: 10px;
-        text-indent: 10px;
-      }
-
-      svg {
-        padding-right: 10px;
-        cursor: pointer;
+      .nav-link {
+        @extend .text-white;
       }
     }
   }

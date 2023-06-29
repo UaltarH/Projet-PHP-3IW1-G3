@@ -16,37 +16,13 @@
 
         <h1>Template Front user: </h1>
 
-        <!-- create menu with variable come from View.php -->
-        <ul>
-            <?php foreach ($menuOpt as $label => $link): ?>
-                <?php if (is_array($link)): ?>
-                    <li>
-                        <?php echo $label; ?>
-                        <ul>
-                            <?php foreach ($link["categories"] as $category => $categoryData): ?>
-                                <li><?php echo $category; ?>
-                                    <ul>
-                                        <?php foreach ($categoryData["links"] as $articleTitle => $hrefArticle): ?>
-                                            <li><a href="<?php echo $hrefArticle; ?>"><?php echo $articleTitle; ?></a></li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </li>
-                <?php else: ?>
-                    <li><a href="<?php echo $link; ?>"><?php echo $label; ?></a></li>
-                <?php endif; ?>
-            <?php endforeach; ?>
-        </ul>
-
-
         <!-- inclure la vue -->
         <div class="container">
             <?php include $this->view; ?>
         </div>
     </main>
     <?php $this->partial("footer", []) ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
 </body>
 
 </html>

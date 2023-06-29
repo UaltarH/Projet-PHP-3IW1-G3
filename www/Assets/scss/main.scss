@@ -14,6 +14,9 @@ $font-family-base: "Poppins", sans-serif;
   --font-family-base: #{$font-family-base};
 }
 
+// Bootstrap
+
+@import "../../library/bootstrap/scss/bootstrap.scss";
 // Partials
 
 @import "./partials/_header.scss";
@@ -22,7 +25,6 @@ $font-family-base: "Poppins", sans-serif;
 @import "./partials/form";
 
 // Views
+@import "./partials/_dashboardSummary.scss";
+@import "./partials/_back.tpl.scss";
 
-// Bootstrap
-
-@import "../../library/bootstrap/scss/bootstrap.scss";

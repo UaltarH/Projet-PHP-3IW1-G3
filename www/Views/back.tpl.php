@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
 </head>
 <body>
+<?php $this->partial("header", []) ?>
+<div id="mainContainer">
     <h1>Template Back</h1>
 
         <!-- create menu with variable come from View.php -->
@@ -35,7 +37,7 @@
 <!--        </ul>-->
     
     <!-- inclure la vue -->
-    <?php include $this->view;?>
-
+    <?php include $this->view; ?>
+</div>
 </body>
 </html>
