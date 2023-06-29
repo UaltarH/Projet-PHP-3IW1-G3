@@ -45,8 +45,8 @@ if (isset($_SESSION["token"])) {
                             <li class="nav-item dropdown">Admin
                                 <ul class='dropdown-menu bg-secondary'>
                                     <li><a class="dropdown-item" href="/">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="/">Gestion des articles</a></li>
-                                    <li><a class="dropdown-item" href="/">Gestion des utilisateurs</a></li>
+                                    <li><a class="dropdown-item" href="/sys/article/articles-management">Gestion des articles</a></li>
+                                    <li><a class="dropdown-item" href="/sys/user/list">Gestion des utilisateurs</a></li>
                                     <li><a class="dropdown-item" href="/">Gestion des commentaires</a></li>
                                 </ul>
                             </li>

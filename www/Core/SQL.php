@@ -5,7 +5,7 @@ namespace App\Core;
 class ResponseSave
 {
     public bool $success;
-    public int $idNewElement;
+    public string|int|null $idNewElement;
 }
 
 class SQL
@@ -127,7 +127,6 @@ class SQL
         $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
-
         return $queryPrepared->fetchAll();
     }
 
@@ -150,12 +149,12 @@ class SQL
         $columnsToExclude = get_class_vars(get_class());
         $columns = array_diff_key($columns, $columnsToExclude);
         $methode = "";
-        
-        if($this->getId() != "0") {
+
+        if ($this->getId() != "0") {
             $methode = "update";
             $sqlUpdate = [];
             foreach ($columns as $column=>$value) {
-                $sqlUpdate[] = $column."='".$value."'";
+                $sqlUpdate[] = $column."=:".$column;
             }
             $query = "UPDATE ".static::getTable().
                 " SET ".implode(",", $sqlUpdate). " WHERE id='".$this->getId()."'";
@@ -165,7 +164,7 @@ class SQL
             $queryPrepared = self::$connection->prepare("INSERT INTO " . static::getTable() .
                 " (" . implode(",", array_keys($columns)) . ") 
             VALUES
-            (:" . implode(" , :", array_keys($columns)) . ") ");
+            (:" . implode(" , :", array_keys($columns)) .  ") RETURNING id ");
         }
         foreach ($columns as $key => $value) {
             if (is_bool($value)) {
@@ -173,13 +172,13 @@ class SQL
             }
         }
         $response = new ResponseSave();
-        $response->success = $methode == "insert" ? $queryPrepared->execute($columns) : $queryPrepared->execute();
-        if($methode == "insert"){
-//            $response->idNewElement = self::$connection->lastInsertId();
-        }else{
-
-            $response->idNewElement = 0;
-        }
+        $response->success = $queryPrepared->execute($columns);
+        
+        if ($methode == "insert") {
+            $id = $queryPrepared->fetchColumn();
+            $response->success = !!$id;
+            $response->idNewElement = $id;
+        } 
         return $response;
     }
 

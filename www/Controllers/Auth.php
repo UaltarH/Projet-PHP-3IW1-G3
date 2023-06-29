@@ -8,6 +8,8 @@ use App\Forms\Connection;
 use App\Models\User;
 use App\Models\Role;
 
+use App\Repository\UserRepository;
+
 use function App\Core\TokenJwt\generateJWT;
 use function App\Services\SendEmail\SendMailFunction;
 
@@ -79,8 +81,9 @@ class Auth
         //Form validé ? et correct ?
         if($form->isSubmited() && $form->isValid()){
             $user = new User();
-            //$user->setTableFromChild();
-        
+
+            $role = UserRepository::fetchUserRole()["id"];
+
             if($form->isPhoneNumberValid($_POST['phone_number']) && $form->isPasswordValid($_POST['password'], $_POST['passwordConfirm']) && $form->isFieldsInfoValid($user, ["email"=>$_POST['email'], "pseudo"=>$_POST['pseudo'], "phone_number"=>$_POST['phone_number']])){
                 $user->setPseudo($_POST['pseudo']);
                 $user->setFirstname($_POST['first_name']);
@@ -90,6 +93,7 @@ class Auth
                 $user->setPassword($_POST['password']);
                 $user->setEmailConfirmation(false);
                 $user->setDateInscription(date("Y-m-d H:i:s"));
+                $user->setRoleId($role); 
 
                 //create confirm token for email confirmation 
                 $lengthKey = 20;
@@ -97,14 +101,13 @@ class Auth
                 for($i = 0 ; $i < $lengthKey ; $i++){
                     $key .= mt_rand(0,20);
                 }
-                $user->setConfirmToken($key);
+                $user->setConfirmAndResetToken($key);
 
                 $responseQuery = $user->save();
-                if($responseQuery){ //return true | false
-
+                if($responseQuery->success){ //return true | false
                     //envoi du mail pour la confirmation du compte:
                     $to = $user->getEmail();
-                    $contentMail = "<b>Hello ".$user->getPseudo().", <a href='http://localhost/email-confirmation?pseudo=".urlencode($user->getPseudo())."&key=".$user->getConfirmToken()."'> Confirmez votre compte </a></b>";
+                    $contentMail = "<b>Hello ".$user->getPseudo().", <a href='http://localhost/email-confirmation?pseudo=".urlencode($user->getPseudo())."&key=".$user->getConfirmAndResetToken()."'> Confirmez votre compte </a></b>";
                     $subject = "Confirmation de compte pour notre site Carte chance.";
                     $resultSendMail = SendMailFunction($to, $contentMail, $subject);
 
@@ -133,7 +136,7 @@ class Auth
             $key = htmlspecialchars($_GET['key']);
 
             $user = new User();
-            $whereSql = ["pseudo" => $pseudo, "confirmToken" => $key];
+            $whereSql = ["pseudo" => $pseudo, "confirmAndResetToken" => $key];
             $result = $user->getOneWhere($whereSql);
             if(is_bool($result)){
                 $messageInfo[] = "utilisateur introuvable belec au hack !";

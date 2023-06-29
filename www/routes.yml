@@ -63,15 +63,15 @@ sys:
       action: userlist
       access: [ADMIN, MODERATOR]
   article:
-    articlesmanagement:
+    articles-management:
       controller: System
       action: articlesManagement
       access: [ADMIN, MODERATOR]
-    createArticleGame:
+    create-article-game:
       controller: System
       action: addArticleGame
       access: [ADMIN, MODERATOR]
-    createArticleAboutGame:
+    create-article-about-game:
       controller: System
       action: addArticleAboutGame
       access: [ADMIN, MODERATOR]
