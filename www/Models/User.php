@@ -8,16 +8,16 @@ class User extends SQL
 {
     private $db_connexion;
 
-    private Int $id = 0;
+    private String $id = "0";
     protected String $pseudo;
     protected String $first_name;
     protected String $last_name;
     protected String $email;
     protected String $password;
-    protected bool $email_confirmation = false;
+    protected bool $email_confirmation;
     protected Int $phone_number;
     protected String $date_inscription;
-    protected Int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
+    protected Int $role_id; // 1 represente un utilisateur normal ; 2 represente un admin
     protected String $confirmToken;
     
 
@@ -37,15 +37,15 @@ class User extends SQL
     /**
      * @return Int
      */
-    public function getId(): int
+    public function getId(): String
     {
         return $this->id;
     }
 
     /**
-     * @param Int $id
+     * @param String $id
      */
-    public function setId(int $id): void
+    public function setId(String $id): void
     {
         $this->id = $id;
     }
@@ -204,15 +204,5 @@ class User extends SQL
     public function setConfirmToken(string $confirmToken): void
     {
         $this->confirmToken = $confirmToken;
-    }
-    public function userFaker(): string
-    {
-        $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
-        for($i = 0; $i < 100; $i++) {
-            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '0123456789', '".date("Y-m-d H:i:s")."', 1)";
-            if($i !== 99) $query.= ",";
-        }
-        $query .= ";";
-        return $query;
     }
 }

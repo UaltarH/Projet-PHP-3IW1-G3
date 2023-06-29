@@ -31,14 +31,4 @@ class Api
             "sortOrder" => $columnSortOrder,
         ]));
     }
-    public function userdelete(): void
-    {
-        //TODO: access right
-        if(empty($_GET["id"])) {
-            die("Error 404");
-        }
-        $user = new User();
-        $delete = $user->delete(trim($_GET["id"]));
-        echo "Delete ".($delete ? "success":"fail");
-    }
 }

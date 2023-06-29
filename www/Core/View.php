@@ -14,7 +14,7 @@ class View {
     public function __construct(String $view, String $template = "back", int $roleId = 0) {
         $this->setView($view);
         $this->setTemplate($template);
-        $this->setMenuOptions($roleId);
+//        $this->setMenuOptions($roleId);
     }
 
     public function assign(String $key, $value): void

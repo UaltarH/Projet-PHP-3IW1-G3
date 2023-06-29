@@ -27,7 +27,7 @@ $uriStr = $_SERVER["REQUEST_URI"];
 $uriExploded = explode("?", $uriStr);
 $uriStr = strtolower(trim( $uriExploded[0], "/"));
 
-$uri = [];;
+$uri = [];
 if(empty($uriStr))
     $uri[0] = "default";
 else $uri = explode('/', $uriStr);
@@ -50,7 +50,11 @@ if(count($uri) > 1) {
     }
 }
 else {
-    $routeArray = $routeArray[$uri[0]];
+    if(isset($routeArray[$uri[0]])) {
+        $routeArray = $routeArray[$uri[0]];
+    } else {
+        die('Error 404');
+    }
 }
 if(isset($routeArray["controller"]) && $routeArray["action"]) {
     $controller = $routeArray["controller"];
