@@ -74,7 +74,6 @@ class SQL
 
     public function getOneWhere(array $where)
     {
-        var_dump(static::getTable());
         $sqlWhere = [];
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . "=:" . $column;
@@ -155,7 +154,7 @@ class SQL
             $methode = "update";
             $sqlUpdate = [];
             foreach ($columns as $column=>$value) {
-                $sqlUpdate[] = $column."='".$value."'";
+                $sqlUpdate[] = $column."=:".$column;
             }
             $query = "UPDATE ".static::getTable().
                 " SET ".implode(",", $sqlUpdate). " WHERE id='".$this->getId()."'";
@@ -172,7 +171,6 @@ class SQL
                 $columns[$key] = $value ? 'true' : 'false'; // Convertir la valeur booléenne en chaîne de caractères
             }
         }
-        var_dump($queryPrepared->queryString);
         $response = new ResponseSave();
         $response->success = $queryPrepared->execute($columns);
         

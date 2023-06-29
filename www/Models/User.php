@@ -203,7 +203,7 @@ class User extends SQL
      */
     public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {
-        $this->confirmToken = $confirmToken;
+        $this->confirmAndResetToken = $confirmAndResetToken;
     }
 
     public function getNewUsersPerDay(): array

@@ -8,6 +8,8 @@ use App\Forms\Connection;
 use App\Models\User;
 use App\Models\Role;
 
+use App\Repository\UserRepository;
+
 use function App\Core\TokenJwt\generateJWT;
 use function App\Services\SendEmail\SendMailFunction;
 
@@ -79,8 +81,9 @@ class Auth
         //Form validé ? et correct ?
         if($form->isSubmited() && $form->isValid()){
             $user = new User();
-            //$user->setTableFromChild();
-        
+
+            $role = UserRepository::fetchUserRole()["id"];
+
             if($form->isPhoneNumberValid($_POST['phone_number']) && $form->isPasswordValid($_POST['password'], $_POST['passwordConfirm']) && $form->isFieldsInfoValid($user, ["email"=>$_POST['email'], "pseudo"=>$_POST['pseudo'], "phone_number"=>$_POST['phone_number']])){
                 $user->setPseudo($_POST['pseudo']);
                 $user->setFirstname($_POST['first_name']);
@@ -90,7 +93,7 @@ class Auth
                 $user->setPassword($_POST['password']);
                 $user->setEmailConfirmation(false);
                 $user->setDateInscription(date("Y-m-d H:i:s"));
-                $user->setRoleId(""); //1 = user
+                $user->setRoleId($role); 
 
                 //create confirm token for email confirmation 
                 $lengthKey = 20;

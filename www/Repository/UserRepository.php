@@ -4,6 +4,12 @@ use App\Models\User;
 
 class UserRepository extends User
 {
+    public static function fetchUserRole(): array
+    {
+        $query = (new UserRepository)->getConnection()->query("SELECT id FROM carte_chance_role WHERE role_name='user'");
+        return $query->fetch();
+    }
+
     public static function fetchRoles(): array
     {
         $query = (new UserRepository)->getConnection()->query("SELECT * FROM carte_chance_role");
