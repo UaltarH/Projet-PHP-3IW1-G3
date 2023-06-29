@@ -65,4 +65,5 @@ if(isset($_SESSION["token"]))
             </li>
         <?php endif; ?>
     </nav>
+
 </header>

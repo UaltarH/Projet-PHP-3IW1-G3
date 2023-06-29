@@ -21,7 +21,7 @@ login:
 logout:
   controller: Auth
   action: logout
-  access: [ALL]
+  access: [USER, MODERATOR, ADMIN]
 
 s-inscrire:
   controller: Auth
