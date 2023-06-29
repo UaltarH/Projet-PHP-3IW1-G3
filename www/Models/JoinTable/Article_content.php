@@ -14,7 +14,6 @@ class Article_content extends SQL
         $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
-
     public static function getTable(): string
     {
         $classExploded = explode("\\", get_called_class());

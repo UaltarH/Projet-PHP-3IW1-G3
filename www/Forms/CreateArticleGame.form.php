@@ -6,7 +6,11 @@ class CreateArticleGame extends Validator
 {
     public $method = "POST";
     protected array $config = [];
-    public function getConfig(array $optionsCategoriesArticle, array $optionsCategoriesGame): array
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+    public function setConfig(array $optionsCategoriesGame): void
     {
         $this->config = [
                 "config"=>[
@@ -20,14 +24,6 @@ class CreateArticleGame extends Validator
                     "reset"=>"Annuler"
                 ],
                 "inputs"=>[
-                    "categoryArticle"=>[
-                        "id"=>"createArticleGame-form-categoryArticle",
-                        "class"=>"form-input",
-                        "type"=>"select",
-                        "error"=>"La categorie n'existe pas",
-                        "options"=> $optionsCategoriesArticle,
-                        "required"=>true
-                    ],
                     "titleGame"=>[
                         "id"=>"createArticleGame-form-titleGame",
                         "class"=>"form-input",
@@ -74,6 +70,6 @@ class CreateArticleGame extends Validator
                     ],
                 ]
         ];
-        return $this->config;
+
     }
 }

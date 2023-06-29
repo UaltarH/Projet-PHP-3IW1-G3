@@ -31,17 +31,30 @@ s-inscrire:
 email-confirmation:
   controller: Auth
   action: emailConfirmation
-  access: [USER, MODERATOR, ADMIN]
-
-page:
-  controller: Pages
-  action: GetPage
   access: [ALL]
 
-page-managment:
-  controller: Pages
-  action: createPage
-  access: [ADMIN, MODERATOR]
+page:
+  controller: Article
+  action: getArticle
+  access: [ALL]
+
+page:
+  allgames:
+    controller: Article
+    action: GetAllArticlesGame
+    access: [ALL]
+  allaboutgames:
+    controller: Article
+    action: GetAllArticlesAboutGame
+    access: [ALL]
+  allgamesbycategory:
+    controller: Article
+    action: GetAllArticlesGamesByCategory
+    access: [ALL]
+  allaboutgamesbygame:
+    controller: Article
+    action: GetAllArticlesAboutGamesByGame
+    access: [ALL]
 
 sys:
   user:
@@ -49,10 +62,20 @@ sys:
       controller: System
       action: userlist
       access: [ADMIN, MODERATOR]
-  dashboard:
-    controller: Dashboard
-    action: index
-    access: [ADMIN, MODERATOR]
+  article:
+    articlesmanagement:
+      controller: System
+      action: articlesManagement
+      access: [ADMIN, MODERATOR]
+    createArticleGame:
+      controller: System
+      action: addArticleGame
+      access: [ADMIN, MODERATOR]
+    createArticleAboutGame:
+      controller: System
+      action: addArticleAboutGame
+      access: [ADMIN, MODERATOR]
+
 
 api:
   user:

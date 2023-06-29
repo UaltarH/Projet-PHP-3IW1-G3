@@ -44,7 +44,6 @@ CREATE TABLE carte_chance_user
     confirmToken       VARCHAR(255),
     phone_number       INTEGER     NOT NULL UNIQUE,
     date_inscription   DATE        NOT NULL,
-    tokenConnection    VARCHAR(255) NULL,
     role_id            SERIAL      NOT NULL,
     FOREIGN KEY (role_id) REFERENCES carte_chance_role (id)
 );
@@ -62,7 +61,7 @@ CREATE TABLE carte_chance_comment
 CREATE TABLE carte_chance_category_article
 (
     id            UUID DEFAULT uuid_generate_v4() UNIQUE,
-    category_name VARCHAR(64)  NOT NULL,
+    category_name VARCHAR(64)  NOT NULL UNIQUE,
     description   VARCHAR(128) NOT NULL
 );
 
@@ -97,7 +96,7 @@ CREATE TABLE carte_chance_content
 CREATE TABLE carte_chance_category_jeux
 (
     id            UUID DEFAULT uuid_generate_v4() UNIQUE,
-    category_name VARCHAR(64)  NOT NULL,
+    category_name VARCHAR(64)  NOT NULL UNIQUE,
     description   VARCHAR(128) NOT NULL
 );
 
@@ -170,7 +169,8 @@ VALUES (DEFAULT, 'Create'),
 -- carte_chance_role
 INSERT INTO carte_chance_role (id, role_name)
 VALUES (DEFAULT, 'user'),
-       (DEFAULT, 'admin');
+       (DEFAULT, 'admin'),
+       (DEFAULT, 'moderator');
 
 -- carte_chance_role_permission
 INSERT INTO carte_chance_role_permission (permission_id, role_id)
