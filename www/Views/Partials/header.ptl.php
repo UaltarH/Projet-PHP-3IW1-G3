@@ -49,7 +49,7 @@ if(isset($_SESSION["token"]))
                 <li>Admin
                     <ul class='sous-menu'>
                         <li><a href="/">Dashboard</a></li>
-                        <li><a href="/">Gestion des articles</a></li>
+                        <li><a href="/sys/article/articles-management">Gestion des articles</a></li>
                         <li><a href="/">Gestion des utilisateurs</a></li>
                         <li><a href="/">Gestion des commentaires</a></li>
                     </ul>

@@ -114,10 +114,10 @@ class System
             else{
                 switch($category_article->getCategoryName()){
                     case "Jeux":
-                        header("Location: sys/article/createArticleGame");
+                        header("Location: /sys/article/create-article-game");
                         break;
                     case "Trucs et astuces":
-                        header("Location: sys/article/createArticleAboutGame");
+                        header("Location: /sys/article/create-article-about-game");
                         break;
                     default:
                         die("Erreur: la catégorie d'article n'existe pas");
@@ -135,7 +135,7 @@ class System
     {
         //utilisateur connecter et admin:
 
-        $view = new View("Article/articleManagment", "back", 2);
+        $view = new View("Article/articleManagment", "back");
         //récuperer toutes les catégoris des jeux qui existe dans la bdd
         $optionsCategoryGames = [];
         $category_jeux = new Category_jeux();
@@ -150,7 +150,14 @@ class System
 
         if($formCreateArticleGame->isSubmited() && $formCreateArticleGame->isValid()){
             //create article game
-            $categoryArticleGame = 1;
+            //get the category article game id:
+            $categoryArticleGame = new Category_article();
+            $categoryArticleGame = $categoryArticleGame->getOneWhere(["category_name" => "Jeux"]);
+            if(is_bool($categoryArticleGame)){
+                die("Erreur: la catégorie d'article Jeux n'existe pas");
+            }
+
+            $categoryArticleGameId = $categoryArticleGame->getId();
             $errorMessage = [];
             $article = new Article();
 
@@ -162,7 +169,7 @@ class System
                 $article->setContent($_POST['content']);
                 $article->setCreatedDate(date("Y-m-d H:i:s"));
                 $article->setUpdatedDate(date("Y-m-d H:i:s"));
-                $article->setCategoryId($categoryArticleGame);
+                $article->setCategoryId($categoryArticleGameId);
 
                 $responseQuery = $article->save();
                 $idNewArticle = $responseQuery->idNewElement;
@@ -302,7 +309,14 @@ class System
         if($formCreateArticleAboutGame->isSubmited() && $formCreateArticleAboutGame->isValid()){
             //ajouter l'article en base de donnée:
             $article = new Article();
-            $categoryArticleAboutGame = 2;
+
+            //get the category about game id:
+            $categoryArticleAboutGame = new Category_article();
+            $categoryArticleAboutGame = $categoryArticleAboutGame->getOneWhere(["category_name" => "Trucs et astuces"]);
+            if(is_bool($categoryArticleAboutGame)){
+                die("Erreur: la catégorie d'article trucs et astuces n'existe pas");
+            }
+            $categoryArticleAboutGameId = $categoryArticleAboutGame->getId();;
             $errorMessage = [];
             
             $whereSql = ["title" => $_POST['titleArticle']];
@@ -313,7 +327,7 @@ class System
                 $article->setContent($_POST['content']);
                 $article->setCreatedDate(date("Y-m-d H:i:s"));
                 $article->setUpdatedDate(date("Y-m-d H:i:s"));
-                $article->setCategoryId($categoryArticleAboutGame);
+                $article->setCategoryId($categoryArticleAboutGameId);
 
                 $responseQuery = $article->save();
                 $idNewArticle = $responseQuery->idNewElement;

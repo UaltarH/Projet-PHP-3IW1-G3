@@ -7,8 +7,8 @@ use App\Core\SQL;
 class Jeux_content extends SQL
 {
     private $db_connexion;
-    protected int $jeux_id;
-    protected int $content_id;
+    protected string $jeux_id;
+    protected string $content_id;
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();
@@ -21,33 +21,33 @@ class Jeux_content extends SQL
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getJeuId(): int
+    public function getJeuId(): string
     {
         return $this->jeux_id;
     }
 
     /**
-    * @param Int $jeux_id
+    * @param string $jeux_id
     */
-    public function setJeuId(int $jeux_id): void
+    public function setJeuId(string $jeux_id): void
     {
         $this->jeux_id = $jeux_id;
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getContentId(): int
+    public function getContentId(): string
     {
         return $this->content_id;
     }
 
     /**
-    * @param Int $content_id
+    * @param string $content_id
     */
-    public function setContentId(int $content_id): void
+    public function setContentId(string $content_id): void
     {
         $this->content_id = $content_id;
     }

@@ -6,7 +6,7 @@ use App\Core\SQL;
 class Content extends SQL
 {
     private $db_connexion;
-    private int $id = 0;
+    private string $id = "0";
     protected string $path_content;
 
     public function __construct(){
@@ -20,17 +20,17 @@ class Content extends SQL
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getId(): int
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param Int $id
+     * @param string $id
      */
-    public function setId(int $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
