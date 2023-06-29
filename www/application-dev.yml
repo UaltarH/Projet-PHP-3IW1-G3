@@ -1,0 +1,8 @@
+bdd: 
+  host: database
+  dbname: esgi
+  port: 5432
+  username: esgi
+  password: Test1234
+  prefix: carte_chance_
+errorLog: minimal

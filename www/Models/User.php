@@ -20,9 +20,8 @@ class User extends SQL
     protected bool $email_confirmation = false;
     protected int $phone_number;
     protected string $date_inscription;
-    protected string $role_id = "0"; 
+    protected string $role_id ; 
     protected string $confirmAndResetToken;
-
 
     public function __construct()
     {
@@ -204,18 +203,7 @@ class User extends SQL
      */
     public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {
-        $this->confirmAndResetToken = $confirmAndResetToken;
-    }
-
-    public function userFaker(): string
-    {
-        $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
-        for ($i = 0; $i < 100; $i++) {
-            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '$i', '" . date("Y-m-d H:i:s") . "', 1)";
-            if ($i !== 99) $query .= ",";
-        }
-        $query .= ";";
-        return $query;
+        $this->confirmToken = $confirmToken;
     }
 
     public function getNewUsersPerDay(): array

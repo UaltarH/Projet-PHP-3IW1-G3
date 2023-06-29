@@ -63,6 +63,7 @@ if (count($uri) > 1) {
         exit;
     }
 }
+
 if (isset($routeArray["controller"]) && $routeArray["action"]) {
     $controller = $routeArray["controller"];
     $action = $routeArray["action"];

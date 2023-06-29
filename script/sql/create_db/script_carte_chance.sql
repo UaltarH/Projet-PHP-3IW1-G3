@@ -165,6 +165,7 @@ CREATE TABLE carte_chance_jeux_content
 ------------------------------------------------------------------------------
 
 -- carte_chance_permission
+
 INSERT INTO carte_chance_permission (id, permission_name)
 VALUES (uuid_generate_v4(), 'Create'),
        (uuid_generate_v4(), 'Read'),
@@ -197,6 +198,7 @@ VALUES (uuid_generate_v4(), 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmai
         '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
        (uuid_generate_v4(), 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL,
         60000000, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
+
 
 -- carte_chance_category_article
 INSERT INTO carte_chance_category_article (id, category_name, description)
