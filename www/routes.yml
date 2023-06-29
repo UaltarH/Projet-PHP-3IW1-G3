@@ -21,7 +21,7 @@ login:
 logout:
   controller: Auth
   action: logout
-  access: [ADMIN, MODERATOR, USER]
+  access: [ALL]
 
 s-inscrire:
   controller: Auth
@@ -34,10 +34,27 @@ email-confirmation:
   access: [ALL]
 
 page:
-  controller: Pages
-  action: GetPage
+  controller: Article
+  action: getArticle
   access: [ALL]
 
+page:
+  allgames:
+    controller: Article
+    action: GetAllArticlesGame
+    access: [ALL]
+  allaboutgames:
+    controller: Article
+    action: GetAllArticlesAboutGame
+    access: [ALL]
+  allgamesbycategory:
+    controller: Article
+    action: GetAllArticlesGamesByCategory
+    access: [ALL]
+  allaboutgamesbygame:
+    controller: Article
+    action: GetAllArticlesAboutGamesByGame
+    access: [ALL]
 
 sys:
   user:

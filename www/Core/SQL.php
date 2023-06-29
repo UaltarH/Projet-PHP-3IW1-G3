@@ -105,6 +105,23 @@ class SQL{
         return $queryPrepared->fetchAll();
     }
 
+    public function selectWithFkAndWhere(array $fkInfos, array $where): array
+    {
+        $sqlJoin = [];
+        foreach($fkInfos as $fkInfo){
+            $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".static::getTable().".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+        }
+        $sqlWhere = [];
+        foreach ($where as $column=>$value) {
+            $sqlWhere[] = $column."=:".$column;
+        }
+        $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
+        $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
+        $queryPrepared->execute($where);
+
+        return $queryPrepared->fetchAll();
+    }
+
     public function insertIntoJoinTable():bool
     {
         $columns = get_object_vars($this);

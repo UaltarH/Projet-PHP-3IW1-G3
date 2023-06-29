@@ -22,7 +22,6 @@ function generateJWT($payload) {
 }
 
 function validateJWT($token) {
-    var_dump($token);
     // Clé secrète utilisée pour signer le JWT TODO : le mettre dans le fichier de config
     $secret = 'ma_cle_secrete_pastrop_secret_en_vrai'; 
 
@@ -33,7 +32,6 @@ function validateJWT($token) {
 
     // Vérifier la signature
     $expectedSignature = hash_hmac('sha256', $tokenParts[0] . '.' . $tokenParts[1], $secret);
-
     
     if ($signature !== $expectedSignature) {
         // La signature n'est pas valide
@@ -63,6 +61,15 @@ function getSpecificDataFromToken($token, $keyData):string
     $data = isset($payloadData[$keyData]) ? $payloadData[$keyData] : '';
 
     return $data;
+}
+
+function getAllInformationsFromToken($token):array
+{
+    $tokenParts = explode('.', $token);
+    $payload = base64_decode($tokenParts[1]);
+    $payloadData = json_decode($payload, true);
+
+    return $payloadData;
 }
 
 

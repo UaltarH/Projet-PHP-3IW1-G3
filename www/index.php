@@ -1,13 +1,13 @@
 <?php
 
-namespace App;
 
+namespace App;
+session_start();
 use App\Models\Role;
 
 use function App\Core\TokenJwt\validateJWT;
 use function App\Core\TokenJwt\getSpecificDataFromToken;
 require_once '/var/www/html/Core/TokenJwt.php';
-//require "Core/View.php";
 
 spl_autoload_register(function ($class) {
 
@@ -89,8 +89,7 @@ if(isset($routeArray["access"])) {
     if(in_array("all", $accessArray) ){
         $objController->$action();
     }
-    else{
-        session_start();
+    else{        
         if(isset($_SESSION["token"])) {
             $token = $_SESSION["token"];
             if(validateJWT($token)) {

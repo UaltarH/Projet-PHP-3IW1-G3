@@ -106,16 +106,22 @@ class System
         $formCategoryArticle->setConfig($optionsCategoriesArticle);
 
         if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
-            //appeler la methode pour create l'article game
-            if($_POST['categoryArticle'] == 1){ //todo: remplacer la verification en dure de l'id 
-                //appeler la methode pour create l'article game
-                header("Location: sys/article/createArticleGame");
-            } elseif($_POST['categoryArticle'] == 2){
-                //appeler la methode pour create l'article about game
-                header("Location: sys/article/createArticleAboutGame");
+            //get the category of article
+            $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
+            if(is_bool($category_article)){
+                die("Erreur: la catégorie d'article n'existe pas");
             }
             else{
-                die("Erreur: la catégorie d'article n'existe pas");
+                switch($category_article->getCategoryName()){
+                    case "Jeux":
+                        header("Location: sys/article/createArticleGame");
+                        break;
+                    case "Trucs et astuces":
+                        header("Location: sys/article/createArticleAboutGame");
+                        break;
+                    default:
+                        die("Erreur: la catégorie d'article n'existe pas");
+                }
             }
         }
         else{

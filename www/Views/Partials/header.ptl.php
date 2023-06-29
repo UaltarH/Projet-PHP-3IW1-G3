@@ -1,17 +1,27 @@
+<?php
+use function App\Core\TokenJwt\getAllInformationsFromToken;
+require_once '/var/www/html/Core/TokenJwt.php';
+
+if(isset($_SESSION["token"]))
+{
+    $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
+}
+
+?>
+
 <header class="header">
     <h1>La carte chance</h1>
     <nav>
         <ul class='menu'>
-            <li><a href="/">Accueil</a>
-
+            <li>
+                <a href="/">Accueil</a>
             </li>
-            <li><a href="/products">Tous les jeux</a>
-                <ul class='sous-menu'>
-                    <li>Test sous menu-1</li>
-                    <li>Sous menu</li>
-                </ul>
+            <li>
+                <a href="/page/allgames">Jeux</a>                
             </li>
-            <li><a href="/posts">Articles</a></li>
+            <li>
+                <a href="/page/allaboutgames">Trucs et astuces</a>
+            </li>
         </ul>
 
         <div class='search'>
@@ -25,33 +35,34 @@
 
         </div>
 
-        <?php
-        $uri = $_SERVER["REQUEST_URI"];
-        $uriExploded = explode("?", $uri);
-        $uri = strtolower(trim($uriExploded[0], "/"));
-        ?>
-
         <ul class="menu">
+        <?php if (isset($_SESSION["token"])): ?>
+            <!-- test si le token est set, donc cest un utilisateur -->
             <li>
-                <?php if (!isset($_SESSION["id"])) { ?>
-                    <?php if ($uri != "se-connecter") { ?>
-                        <a onclick="window.location.href='/login';">
-                            Se connecter
-                        <?php } ?>
-                        </a>
+                <a href="/">Profile</a>
             </li>
-            <?php
-                    if ($uri != "s-inscrire") { ?>
-                <li>
-                    <a onclick="window.location.href='/s-inscrire'">
-                        S'inscrire
-                    </a>
+            <li>
+                <a href="/logout">Se déconnecter</a>
+            </li>
+            <!-- test si l'utilisateur est un admin -->
+            <?php if ($informationsUser['roleName'] == "admin"): ?>
+                <li>Admin
+                    <ul class='sous-menu'>
+                        <li><a href="/">Dashboard</a></li>
+                        <li><a href="/">Gestion des articles</a></li>
+                        <li><a href="/">Gestion des utilisateurs</a></li>
+                        <li><a href="/">Gestion des commentaires</a></li>
+                    </ul>
                 </li>
-            <?php } ?>
-        <?php } ?>
-        </ul>
-
-
-
+            <?php endif; ?>
+        <?php else: ?> 
+            <!-- le client nest pas connecter -->
+            <li>
+                <a href="/login">Se connecter</a>
+            </li>
+            <li>
+                <a href="/s-inscrire">S'inscrire</a>
+            </li>
+        <?php endif; ?>
     </nav>
 </header>
