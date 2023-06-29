@@ -21,7 +21,7 @@ class User extends SQL
     protected int $phone_number;
     protected string $date_inscription;
     protected string $role_id ; 
-    protected string $confirmAndResetToken;
+    protected string $confirm_and_reset_token;
 
     public function __construct()
     {
@@ -195,7 +195,7 @@ class User extends SQL
      */
     public function getConfirmAndResetToken(): string
     {
-        return $this->confirmAndResetToken;
+        return $this->confirm_and_reset_token;
     }
 
     /**
@@ -203,7 +203,7 @@ class User extends SQL
      */
     public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {
-        $this->confirmAndResetToken = $confirmAndResetToken;
+        $this->confirm_and_reset_token = $confirmAndResetToken;
     }
 
     public function getNewUsersPerDay(): array

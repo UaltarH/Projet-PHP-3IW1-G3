@@ -43,7 +43,7 @@ CREATE TABLE carte_chance_user
     email              VARCHAR(64) NOT NULL UNIQUE,
     password           VARCHAR(64) NOT NULL,
     email_confirmation BOOLEAN     NOT NULL,
-    confirmAndResetToken       VARCHAR(255),
+    confirm_and_reset_token       VARCHAR(255),
     phone_number       INTEGER     NOT NULL UNIQUE,
     date_inscription   DATE        NOT NULL,
     role_id            UUID      NOT NULL,
@@ -192,7 +192,7 @@ VALUES ((SELECT id FROM carte_chance_permission WHERE permission_name = 'Create'
         (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
 
 -- carte_chance_user
-INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirmAndResetToken,
+INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token,
                                phone_number, date_inscription, role_id)
 VALUES (uuid_generate_v4(), 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001,
         '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
