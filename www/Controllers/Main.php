@@ -4,15 +4,19 @@ namespace App\Controllers;
 
 use App\Core\View;
 
+use function App\Core\TokenJwt\getSpecificDataFromToken;
+require_once '/var/www/html/Core/TokenJwt.php';
+
 class Main
 {
     public function home(): void     
     {
-        $pseudo = "Prof";
+        //utilisateur connecter:        
         $view = new View("Main/home", "front");
-        $view->assign("pseudo", $pseudo);
-        $view->assign("age", 30);
-        $view->assign("titleseo", "supernouvellepage");
+        if(isset($_SESSION['token'])){
+            $view->assign("pseudo", getSpecificDataFromToken($_SESSION['token'], "pseudo"));
+            $view->assign("roleId", getSpecificDataFromToken($_SESSION['token'], "roleId"));
+        }
     }
 
     public function contact(): void
