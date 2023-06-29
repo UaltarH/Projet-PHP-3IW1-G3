@@ -160,6 +160,7 @@ CREATE TABLE carte_chance_jeux_content
 ------------------------------------------------------------------------------
 
 -- carte_chance_permission
+
 INSERT INTO carte_chance_permission (id, permission_name)
 VALUES (DEFAULT, 'Create'),
        (DEFAULT, 'Read'),
@@ -181,12 +182,10 @@ VALUES (1, 1),
        (2, 2);
 
 -- carte_chance_user
-INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirmToken,
-                               phone_number, date_inscription, role_id)
-VALUES (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001,
-        '2023-06-03', 1),
-       (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL,
-        60000000, '2023-06-03', 2);
+INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirmToken, phone_number, date_inscription, role_id) VALUES
+    (DEFAULT, 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001, '2023-06-03', 1),
+    (DEFAULT, 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL, 60000000, '2023-06-03', 2);
+
 
 -- carte_chance_category_article
 INSERT INTO carte_chance_category_article (id, category_name, description)

@@ -48,12 +48,12 @@ class Validator
             if(isset($configInput["required"]) && self::isEmpty($this->data[$name])){
                 die("Tentative de Hack, input vide");
             }
-            //tester si l'input a un minimum de taille 
-            if(isset($configInput["min"]) && !self::isMinLength($this->data[$name], $configInput["min"])){
+            //tester si l'input a un minimum de taille
+            if(isset($configInput["min"]) && !self::isMinLength($this->data[$name], $configInput["min"]) && !self::isEmpty($this->data[$name])){
                 $this->errors[]=$configInput["error"];
             }
-            //tester si l'input a un maximum de taille 
-            if(isset($configInput["max"]) && !self::isMaxLength($this->data[$name], $configInput["max"])){
+            //tester si l'input a un maximum de taille
+            if(isset($configInput["max"]) && !self::isMaxLength($this->data[$name], $configInput["max"]) && !self::isEmpty($this->data[$name])){
                 $this->errors[]=$configInput["error"];
             }
         }
@@ -86,11 +86,9 @@ class Validator
         }
         return true;
     }
-    public function isUserInfoValid(User $user, string $email, string $pseudo, string $phoneNumber): bool
+    public function isFieldsInfoValid($model, array $fields): bool
     {
-        //todo tester si le password est identique + tester si l'email et l'email existe deja
-        $whereSql = ["pseudo" => $pseudo, "email" => $email, "phone_number" => $phoneNumber];
-        $resultQuery = $user->existOrNot($whereSql);
+        $resultQuery = $model->existOrNot($fields);
         if(is_bool($resultQuery)){
             //il n'y a aucun elements dans la table donc on return true
             return true;
@@ -100,7 +98,7 @@ class Validator
         $column = "";
 
         //verifier si le resultat de la requete contiens l'une des clés de $whereSql
-        foreach (array_keys($whereSql) as $key) {
+        foreach (array_keys($fields) as $key) {
             if (strpos($resultQuery["column_exists"], $key) !== false) {
                 $found = true;
                 $column = $key;
@@ -108,15 +106,8 @@ class Validator
             }
         }
         if ($found) {
-            //email or pseudo already exist
-            switch($column) {
-                case "pseudo":
-                    $this->errors[]= "le pseudo est dèja utilisé";
-                case "email":
-                    $this->errors[]= "l'email est dèja utilisé";
-                case "phone_number":
-                    $this->errors[]= "le numéro de téléphone est dèja utilisé";
-            }
+
+            $this->errors[]= "$column dèja utilisé";
             return false;
         }
         return true;
