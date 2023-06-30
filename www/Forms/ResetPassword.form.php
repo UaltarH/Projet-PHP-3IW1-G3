@@ -2,7 +2,7 @@
 namespace App\Forms;
 use App\Core\Validator;
 
-class Connection extends Validator
+class ResetPassword extends Validator
 {
     public $method = "POST";
     protected array $config = [];
@@ -12,26 +12,27 @@ class Connection extends Validator
                 "config"=>[
                     "method"=>$this->method,
                     "action"=>"", 
-                    "id"=>"connection-form",
+                    "id"=>"resetPassword-form",
                     "class"=>"form",
                     "enctype"=>"",
-                    "submitLabel"=>"Se connecter",
+                    "submitLabel"=>"Changer de mot de passe",
                     "submitName"=>"submit",
                     "reset"=>"Annuler"
                 ],
                 "inputs"=>[
-                    "pseudo"=>[
-                        "id"=>"connection-form-pseudo",
+                    "password"=>[
+                        "id"=>"resetPassword-form-password",
                         "class"=>"form-input",
-                        "placeholder"=>"Votre pseudo",
-                        "type"=>"text",
-                        "error"=>"Votre pseudo n'existe pas",
+                        "placeholder"=>"Votre nouveau mot de passe",
+                        "type"=>"password",
+                        "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec minimum 1 minuscules, 1 majuscules et 1 chiffre",
+                        "min"=>8,
                         "required"=>true
                     ],
-                    "password"=>[
-                        "id"=>"connection-form-pwd",
+                    "passwordConfirm"=>[
+                        "id"=>"resetPassword-form-passwordConfirm",
                         "class"=>"form-input",
-                        "placeholder"=>"Votre mot de passe",
+                        "placeholder"=>"Confirmez votre mot de passe",
                         "type"=>"password",
                         "error"=>"Votre mot de passe ne correspond pas",
                         "required"=>true
