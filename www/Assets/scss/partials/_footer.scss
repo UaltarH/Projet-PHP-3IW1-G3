@@ -9,6 +9,11 @@
     flex-wrap: wrap;
     justify-content: center;
 
+    @include media-breakpoint-down(md) {
+      flex-direction: column;
+      align-content: start;
+    }
+
     p {
       padding: 10px;
       margin: 0;
@@ -21,6 +26,10 @@
       justify-content: center;
       list-style-type: none;
       margin: 0;
+
+      @include media-breakpoint-down(md) {
+        flex-direction: column;
+      }
 
       li {
         border-radius: 5px;

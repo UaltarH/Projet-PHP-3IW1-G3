@@ -20,15 +20,11 @@ class User extends SQL
     protected bool $email_confirmation = false;
     protected int $phone_number;
     protected string $date_inscription;
-    protected int $role_id = 1; // 1 represente un utilisateur normal ; 2 represente un admin
-    protected string $confirmToken;
-
+    protected string $role_id ; 
+    protected string $confirm_and_reset_token;
 
     public function __construct()
     {
-        //de base 
-        // parent::__construct();
-
         $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
@@ -39,17 +35,17 @@ class User extends SQL
     }
 
     /**
-     * @return String
+     * @return string
      */
-    public function getId(): String
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-     * @param String $id
+     * @param string $id
      */
-    public function setId(String $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -179,17 +175,17 @@ class User extends SQL
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getRoleId(): int
+    public function getRoleId(): string
     {
         return $this->role_id;
     }
 
     /**
-     * @param Int $role_id
+     * @param string $role_id
      */
-    public function setRoleId(int $roleId): void
+    public function setRoleId(string $roleId): void
     {
         $this->role_id = $roleId;
     }
@@ -197,28 +193,17 @@ class User extends SQL
     /**
      * @return String
      */
-    public function getConfirmToken(): string
+    public function getConfirmAndResetToken(): string
     {
-        return $this->confirmToken;
+        return $this->confirm_and_reset_token;
     }
 
     /**
-     * @param String $confirmToken
+     * @param String $ConfirmAndResetToken
      */
-    public function setConfirmToken(string $confirmToken): void
+    public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {
-        $this->confirmToken = $confirmToken;
-    }
-
-    public function userFaker(): string
-    {
-        $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
-        for ($i = 0; $i < 100; $i++) {
-            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '$i', '" . date("Y-m-d H:i:s") . "', 1)";
-            if ($i !== 99) $query .= ",";
-        }
-        $query .= ";";
-        return $query;
+        $this->confirm_and_reset_token = $confirmAndResetToken;
     }
 
     public function getNewUsersPerDay(): array

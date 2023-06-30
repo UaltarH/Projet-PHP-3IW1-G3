@@ -12,7 +12,7 @@ class Article extends SQL
     protected string $title;
     protected string $created_date;
     protected string $updated_date;
-    protected int $category_id = 1;
+    protected string $category_id = "0";
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();
@@ -25,17 +25,17 @@ class Article extends SQL
     }
 
     /**
-     * @return String
+     * @return string
      */
-    public function getId(): String
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-    * @param String $id
+    * @param string $id
     */
-    public function setId(String $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -105,17 +105,17 @@ class Article extends SQL
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getCategoryId(): int
+    public function getCategoryId(): string
     {
         return $this->category_id;
     }
 
     /**
-    * @param Int $id
+    * @param string $id
     */
-    public function setCategoryId(int $category_id): void
+    public function setCategoryId(string $category_id): void
     {
         $this->category_id = $category_id;
     }

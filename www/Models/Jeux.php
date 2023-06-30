@@ -9,7 +9,7 @@ class Jeux extends SQL
     private $db_connexion;
     private string $id = "0";
     protected string $title;
-    protected int $category_id = 1;
+    protected string $category_id = "0";
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();
@@ -22,17 +22,17 @@ class Jeux extends SQL
     }
 
     /**
-     * @return String
+     * @return string
      */
-    public function getId(): String
+    public function getId(): string
     {
         return $this->id;
     }
 
     /**
-    * @param String $id
+    * @param string $id
     */
-    public function setId(String $id): void
+    public function setId(string $id): void
     {
         $this->id = $id;
     }
@@ -54,17 +54,17 @@ class Jeux extends SQL
     }
 
     /**
-     * @return Int
+     * @return string
      */
-    public function getCategory_id(): int
+    public function getCategory_id(): string
     {
         return $this->category_id;
     }
 
     /**
-    * @param Int $category_id
+    * @param string $category_id
     */
-    public function setCategory_id(int $category_id): void
+    public function setCategory_id(string $category_id): void
     {
         $this->category_id = $category_id;
     }

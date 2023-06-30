@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Super site</title>
     <meta name="description" content="ceci est un super site">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
     <link rel="stylesheet" type="text/css" href="../style.css"/>
 

@@ -3,6 +3,7 @@
 
 // TODO : test if user is connected and can show this page
 ?>
+<?php include "Views/Partials/editUserModal.ptl.php" ?>
 <nav>
     <ul>
         <li><a href="/sys/user/list?action=faker">Generate</a></li>
@@ -23,11 +24,12 @@
     </thead>
 </table>
 
-<?php $this->partial("form", $form, $formErrors) ?>
+<?php $this->partial("form", $createUserForm, $createUserFormErrors); ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 <script>
+
     $(document).ready(function() {
         let table = $('#userTable').DataTable({
             'processing': true,
@@ -56,7 +58,6 @@
             ],
             'drawCallback': function() {
                 let arr_edit = document.getElementsByClassName('row-edit-button');
-                console.log(JSON.stringify(arr_edit));
                 for(let elt of arr_edit) {
                     elt.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -67,9 +68,22 @@
                             memo[i[0]] = i[1] == +i[1] ? parseFloat(i[1],10) : decodeURIComponent(i[1]);
                             return memo;
                         }, {});
-                        console.log(JSON.stringify(params));
                         let data = table.row($(this).parents('tr')).data();
-                        console.log(JSON.stringify(data));
+                        let modalContainer = $('#modal-container');
+                        modalContainer.addClass("active");
+
+                        let form = $('#edit-user-form');
+                        let action = form.attr('action');
+                        let searchParams = new URLSearchParams(action.split('?')[1]);
+                        let baseURL = action.split('?')[0];
+                        searchParams.delete('id');
+                        let searchParamsStr = searchParams.toString().concat("&id="+data.id);
+                        action = baseURL.concat("?"+searchParamsStr);
+                        form.attr('action', action);
+
+                        $('#closeModal').on('click', function () {
+                            modalContainer.removeClass("active");
+                        });
 
                     });
                 }

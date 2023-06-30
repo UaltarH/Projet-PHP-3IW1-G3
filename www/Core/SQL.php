@@ -5,7 +5,7 @@ namespace App\Core;
 class ResponseSave
 {
     public bool $success;
-    public int $idNewElement;
+    public string|int|null $idNewElement;
 }
 
 class SQL
@@ -59,6 +59,8 @@ class SQL
     // si le resultat de cette methode revoi un bool (false) ca veut dire que dans la table il n'y a aucune donné 
     public function existOrNot(array $where): array|bool
     {
+        if(empty($where))
+            return true;
         $sqlWhere = [];
         foreach ($where as $column => $value) {
             $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM " . static::getTable() . " WHERE " . $column . "=:" . $column . ") THEN 'the value for column the " . $column . " already exists'";
@@ -149,7 +151,6 @@ class SQL
         $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " " . implode(" ", $sqlJoin) . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
-
         return $queryPrepared->fetchAll();
     }
 
@@ -171,23 +172,23 @@ class SQL
         $columns = get_object_vars($this);
         $columnsToExclude = get_class_vars(get_class());
         $columns = array_diff_key($columns, $columnsToExclude);
-
         $methode = "";
 
-        if (is_numeric($this->getId()) && $this->getId() > 0) {
+        if ($this->getId() != "0") {
             $methode = "update";
             $sqlUpdate = [];
-            foreach ($columns as $column => $value) {
-                $sqlUpdate[] = $column . "=:" . $column;
+            foreach ($columns as $column=>$value) {
+                $sqlUpdate[] = $column."=:".$column;
             }
-            $queryPrepared = self::$connection->prepare("UPDATE " . static::getTable() .
-                " SET " . implode(",", $sqlUpdate) . " WHERE id=" . $this->getId());
-        } else {
+            $query = "UPDATE ".static::getTable().
+                " SET ".implode(",", $sqlUpdate). " WHERE id='".$this->getId()."'";
+            $queryPrepared = self::$connection->prepare($query);
+        } else{
             $methode = "insert";
             $queryPrepared = self::$connection->prepare("INSERT INTO " . static::getTable() .
                 " (" . implode(",", array_keys($columns)) . ") 
             VALUES
-            (:" . implode(" , :", array_keys($columns)) . ") ");
+            (:" . implode(" , :", array_keys($columns)) .  ") RETURNING id ");
         }
         foreach ($columns as $key => $value) {
             if (is_bool($value)) {
@@ -196,15 +197,22 @@ class SQL
         }
         $response = new ResponseSave();
         $response->success = $queryPrepared->execute($columns);
+        
         if ($methode == "insert") {
-//            $response->idNewElement = self::$connection->lastInsertId();
-        } else {
-            $response->idNewElement = 0;
-        }
+            $id = $queryPrepared->fetchColumn();
+            $response->success = !!$id;
+            $response->idNewElement = $id;
+        } 
         return $response;
     }
 
-    public function list($params): array
+    /**
+     * Method used for datatable ajax calls, fetches specified columns and return a certain amount of results
+     * @param array $params : array that contains query parameters from datatable ajax call and columns with want to select
+     * @return array : array for datatable with data's we fetched
+     * @throws \Exception
+     */
+    public function list(array $params): array
     {
         $query = self::$connection->query("SELECT count(id) FROM " . static::getTable());
         $totalRecords = $query->fetch()[0];
