@@ -15,14 +15,15 @@ $font-family-base: "Poppins", sans-serif;
 }
 
 // Bootstrap
-
 @import "../../library/bootstrap/scss/bootstrap.scss";
+
 // Partials
 
 @import "./partials/_header.scss";
 @import "./partials/_footer.scss";
 
 // Views
-@import "./partials/_dashboardSummary.scss";
-@import "./partials/_back.tpl.scss";
+@import "./views/_dashboardSummary.scss";
+@import "./views/_back.tpl.scss";
+@import "./views/_form.scss";
 

@@ -72,14 +72,38 @@ class SQL
 
     public function getOneWhere(array $where)
     {
-        $sqlWhere = [];
         foreach ($where as $column => $value) {
-            $sqlWhere[] = $column . "=:" . $column;
+            $sqlWhere[] = $column . " = :" . $column;
+            if (is_bool($value)) {
+                $values[':' . $column] = $value ? 1 : 0;
+            } else {
+                $values[':' . $column] = $value;
+            }
         }
+
         $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
-        $queryPrepared->execute($where);
+        $queryPrepared->execute($values);
+
         return $queryPrepared->fetch();
+    }
+
+    public function getAllWhere(array $where)
+    {
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . " = :" . $column;
+            if (is_bool($value)) {
+                $values[':' . $column] = $value ? 1 : 0;
+            } else {
+                $values[':' . $column] = $value;
+            }
+        }
+
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        $queryPrepared->execute($values);
+
+        return $queryPrepared->fetchAll();
     }
 
     public function selectAll(): array
@@ -115,21 +139,21 @@ class SQL
     public function selectWithFkAndWhere(array $fkInfos, array $where): array
     {
         $sqlJoin = [];
-        foreach($fkInfos as $fkInfo){
-            $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".static::getTable().".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+        foreach ($fkInfos as $fkInfo) {
+            $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
         }
         $sqlWhere = [];
-        foreach ($where as $column=>$value) {
-            $sqlWhere[] = $column."=:".$column;
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . "=:" . $column;
         }
-        $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
-        $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " " . implode(" ", $sqlJoin) . " WHERE " . implode(" AND ", $sqlWhere));
+        $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
 
         return $queryPrepared->fetchAll();
     }
 
-    public function insertIntoJoinTable():bool
+    public function insertIntoJoinTable(): bool
     {
         $columns = get_object_vars($this);
         $columnsToExclude = get_class_vars(get_class());
@@ -173,7 +197,7 @@ class SQL
         $response = new ResponseSave();
         $response->success = $queryPrepared->execute($columns);
         if ($methode == "insert") {
-            $response->idNewElement = self::$connection->lastInsertId();
+//            $response->idNewElement = self::$connection->lastInsertId();
         } else {
             $response->idNewElement = 0;
         }

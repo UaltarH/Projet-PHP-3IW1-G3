@@ -46,14 +46,7 @@ if(isset($_SESSION["token"]))
             </li>
             <!-- test si l'utilisateur est un admin -->
             <?php if ($informationsUser['roleName'] == "admin"): ?>
-                <li>Admin
-                    <ul class='sous-menu'>
-                        <li><a href="/">Dashboard</a></li>
-                        <li><a href="/">Gestion des articles</a></li>
-                        <li><a href="/">Gestion des utilisateurs</a></li>
-                        <li><a href="/">Gestion des commentaires</a></li>
-                    </ul>
-                </li>
+                <li><a href="/sys/dashboard">Backoffice</a></li>
             <?php endif; ?>
         <?php else: ?> 
             <!-- le client nest pas connecter -->

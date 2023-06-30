@@ -11,7 +11,7 @@ use PDO;
 class User extends SQL
 {
     private $db_connexion;
-    private int $id = 0;
+    private string $id = "0";
     protected string $pseudo;
     protected string $first_name;
     protected string $last_name;
@@ -39,17 +39,17 @@ class User extends SQL
     }
 
     /**
-     * @return Int
+     * @return String
      */
-    public function getId(): int
+    public function getId(): String
     {
         return $this->id;
     }
 
     /**
-     * @param Int $id
+     * @param String $id
      */
-    public function setId(int $id): void
+    public function setId(String $id): void
     {
         $this->id = $id;
     }

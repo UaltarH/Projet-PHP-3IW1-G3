@@ -5,9 +5,9 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Forms\Register;
 use App\Forms\Connection;
-use App\Models\User;
 use App\Models\Role;
 
+use App\Models\User;
 use function App\Core\TokenJwt\generateJWT;
 use function App\Services\SendEmail\SendMailFunction;
 
