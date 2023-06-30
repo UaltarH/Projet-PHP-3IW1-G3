@@ -1,6 +1,10 @@
-<?php if(!empty($errors)): ?>
-<?php print_r($errors);?>
-<?php endif;?>
+<?php if (!empty($errors)) {
+    header("HTTP/1.1 400 Bad Request");
+    foreach ($errors as $error) {
+        echo "<span class='error'>" . $error . "</span></br>";
+    }
+}
+?>
 
 
 <form method="<?= $config["config"]["method"] ?>"
@@ -8,7 +12,6 @@
       enctype="<?= $config["config"]["enctype"] ?>"
       id="<?= $config["config"]["id"] ?>"
       class="<?= $config["config"]["class"] ?>">
-
     <?php foreach ($config["inputs"] as $name=>$configInput): ?>
         <div class="form-input-row">
         <?php if(isset($configInput["label"])): ?>
