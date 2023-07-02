@@ -53,9 +53,11 @@ CREATE TABLE carte_chance_user
 
 CREATE TABLE carte_chance_comment
 (
-    id            UUID DEFAULT uuid_generate_v4(),
-    content       TEXT NOT NULL,
-    creation_date DATE NOT NULL,
+    id            UUID    DEFAULT uuid_generate_v4() UNIQUE,
+    content       TEXT                  NOT NULL,
+    creation_date DATE                  NOT NULL,
+    moderated     BOOLEAN DEFAULT FALSE NOT NULL,
+    accepted      BOOLEAN DEFAULT FALSE NOT NULL,
     user_id       UUID,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES carte_chance_user (id)
@@ -259,3 +261,12 @@ INSERT INTO carte_chance_jeux (id, title, category_id)
 VALUES (DEFAULT, 'Monopoly', uuid_categorie),
        (DEFAULT, 'Jungle Speed', uuid_categorie);
 END $$;
+
+INSERT INTO carte_chance_comment (id, content, creation_date, moderated, accepted, user_id)
+VALUES (DEFAULT, 'Premier commentaire', '2023-06-01', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1)),
+        (DEFAULT, '2 commentaire', '2023-06-05', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1)),
+        (DEFAULT, '3 commentaire', '2023-06-10', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1)),
+        (DEFAULT, '4 commentaire', '2023-06-15', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1)),
+        (DEFAULT, '5 commentaire', '2023-06-20', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1)),
+        (DEFAULT, '6 commentaire', '2023-06-28', FALSE, FALSE, (SELECT id FROM carte_chance_user LIMIT 1));
+

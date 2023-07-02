@@ -31,7 +31,6 @@ if (isset($_SESSION["token"])) {
                         <a class='nav-link' href="/page/allaboutgames">Trucs et astuces</a>
                     </li>
 
-
                     <?php if (isset($_SESSION["token"])) : ?>
                         <!-- test si le token est set, donc cest un utilisateur -->
                         <li class="nav-item">
@@ -41,16 +40,11 @@ if (isset($_SESSION["token"])) {
                             <a class="nav-link" href="/logout">Se déconnecter</a>
                         </li>
                         <!-- test si l'utilisateur est un admin -->
-                        <?php if ($informationsUser['roleName'] == "admin") : ?>
-                            <li class="nav-item dropdown">Admin
-                                <ul class='dropdown-menu bg-secondary'>
-                                    <li><a class="dropdown-item" href="/">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="/sys/article/articles-management">Gestion des articles</a></li>
-                                    <li><a class="dropdown-item" href="/sys/user/list">Gestion des utilisateurs</a></li>
-                                    <li><a class="dropdown-item" href="/">Gestion des commentaires</a></li>
-                                </ul>
-                            </li>
-                        <?php endif; ?>
+                    <?php if ($informationsUser['roleName'] == "admin"): ?>
+                        <li class="nav-item">
+                          <a class="nav-link" href="/sys/dashboard">Backoffice</a>
+                        </li>
+                    <?php endif; ?>
                     <?php else : ?>
                         <!-- le client n'est pas connecter -->
                         <li class="nav-item">

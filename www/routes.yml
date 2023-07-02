@@ -85,6 +85,10 @@ sys:
     #   controller: System
     #   action: addArticleAboutGame
     #   access: [ADMIN, MODERATOR]
+  dashboard:
+    controller: Dashboard
+    action: index
+    access: [ADMIN, MODERATOR]
 
 
 api:
