@@ -1,3 +1,15 @@
+<?php
+
+use function App\Core\TokenJwt\getAllInformationsFromToken;
+
+require_once '/var/www/html/Core/TokenJwt.php';
+
+if (isset($_SESSION["token"])) {
+    $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,12 +50,12 @@
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                         <i class="bi bi-person"></i>
                     </div>
-                    <span class="d-none d-md-block dropdown-toggle ps-2"><?= $userProfil["pseudo"] ?></span>
+                    <span class="d-none d-md-block dropdown-toggle ps-2"><?= $informationsUser["pseudo"] ?></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li class="dropdown-header">
-                        <h6><?= $userProfil["firstName"] ?> <?= $userProfil["lastName"] ?></h6>
-                        <span><?= $userProfil["roleId"] == 2 ? "Admin" : "Modérateur" ?></span>
+                        <h6><?= $informationsUser["firstName"] ?> <?= $informationsUser["lastName"] ?></h6>
+                        <span><?= $informationsUser["roleName"] == "admin" ? "Admin" : "Modérateur" ?></span>
                     </li>
                     <li>
                         <hr class="dropdown-divider">

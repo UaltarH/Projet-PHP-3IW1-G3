@@ -8,7 +8,7 @@ use App\Models\Category_jeux;
 use App\Models\Comment;
 use App\Models\Jeux;
 use App\Models\User;
-use function App\Core\TokenJwt\getAllInformationsFromToken;
+
 
 
 class Dashboard {
@@ -21,8 +21,6 @@ class Dashboard {
 
         $totalUsers = $userModel->getTotalCount();
         $newUsersPerDay = $userModel->getNewUsersPerDay();
-
-        $userProfil = getAllInformationsFromToken($_SESSION["token"]);
 
         $totalArticles = $articleModel->getTotalCount();
 
@@ -40,6 +38,5 @@ class Dashboard {
         $view->assign('totalJeux', $totalJeux);
         $view->assign('totalGamesByCategories', $totalGamesByCategories);
         $view->assign('unmoderatedComment', $unmoderatedComment);
-        $view->assign('userProfil', $userProfil);
     }
 }

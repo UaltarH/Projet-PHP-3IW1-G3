@@ -77,9 +77,9 @@ class SQL
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . " = :" . $column;
             if (is_bool($value)) {
-                $values[':' . $column] = $value ? 1 : 0;
+                $values[$column] = $value ? 1 : 0;
             } else {
-                $values[':' . $column] = $value;
+                $values[$column] = $value;
             }
         }
 
@@ -95,9 +95,9 @@ class SQL
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . " = :" . $column;
             if (is_bool($value)) {
-                $values[':' . $column] = $value ? 1 : 0;
+                $values[$column] = $value ? 1 : 0;
             } else {
-                $values[':' . $column] = $value;
+                $values[$column] = $value;
             }
         }
 
