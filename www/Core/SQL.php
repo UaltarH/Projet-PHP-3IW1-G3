@@ -198,14 +198,25 @@ class SQL
         $length = $params["length"];
         $search = $params["search"];
         $columnToSort = $params["columnToSort"];
-        $sortOrder = $params["sortOrder"];
-
+        $sortOrder = $params["sortOrder"];        
         $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
         $uriStr = strtolower(trim($uriExploded[0], "/"));
         $uri = explode('/', $uriStr);
 
-        $query = "SELECT id, " . implode(", ", array_values($columns)) .
+        //add join constraint:
+        if(isset($params["join"])){
+            $sqlJoin = [];
+            foreach ($params["join"] as $fkInfo) {
+                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+            }
+            implode(" ", $sqlJoin);
+            $query = "SELECT " . static::getTable() . ".id, " . implode(", ", array_values($columns)) .
+            " FROM " . static::getTable() . " " . implode(" ", $sqlJoin);
+        } else{
+            $query = "SELECT id, " . implode(", ", array_values($columns)) .
             " FROM " . static::getTable();
+        }
+
         if (strlen($search) > 0) {
             $query .= " WHERE";
             foreach ($columns as $key => $column) {
@@ -226,6 +237,7 @@ class SQL
         $queryPrepared->execute();
         $result = [];
         $cpt = 0;
+
         // TODO : put data in object and assign $result[$cpt][$column] with $object->getProperty();
         while ($row = $queryPrepared->fetch()) {
             $result[$cpt]['id'] = $row['id'];
