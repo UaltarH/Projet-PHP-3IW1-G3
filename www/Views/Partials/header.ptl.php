@@ -16,7 +16,9 @@ if (isset($_SESSION["token"])) {
 
     <nav class="navbar navbar-expand-lg bg-secondary p-2 my-3 ">
         <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -51,7 +53,7 @@ if (isset($_SESSION["token"])) {
                             <a class='nav-link' href="/login">Se connecter</a>
                         </li>
                         <li class="nav-item">
-                            <a class='nav-link' href="/s-inscrire">S' inscrire</a>
+                        <a class='nav-link' href="/s-inscrire">S' inscrire</a>
                         </li>
                     <?php endif; ?>
 
@@ -63,5 +65,4 @@ if (isset($_SESSION["token"])) {
             </form>
         </div>
     </nav>
-
 </header>
