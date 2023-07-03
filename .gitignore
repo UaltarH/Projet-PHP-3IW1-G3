@@ -1,0 +1,9 @@
+/vendor/
+.idea/
+.DS_Store
+www/uploads/
+dfsefs
+style.css.map
+style.css
+*Zone.Identifier
+

@@ -1,0 +1,106 @@
+default:
+  controller: Main
+  action: home
+  access: [ALL]
+
+about-us:
+  controller: Main
+  action: aboutUs
+  access: [ALL]
+
+contact:
+  controller: Main
+  action: contact
+  access: [ALL]
+
+login:
+  controller: Auth
+  action: login
+  access: [ALL]
+
+logout:
+  controller: Auth
+  action: logout
+  access: [ALL]
+
+s-inscrire:
+  controller: Auth
+  action: register
+  access: [ALL]
+
+email-confirmation:
+  controller: Auth
+  action: emailConfirmation
+  access: [ALL]
+
+profil:
+  controller: Auth
+  action: profile
+  access: [USER, MODERATOR, ADMIN]
+
+reset-password:
+  controller: Auth
+  action: resetPassword
+  access: [USER, MODERATOR, ADMIN]
+
+page:
+  controller: Article
+  action: getArticle
+  access: [ALL]
+
+page:
+  allgames:
+    controller: Article
+    action: GetAllArticlesGame
+    access: [ALL]
+  allaboutgames:
+    controller: Article
+    action: GetAllArticlesAboutGame
+    access: [ALL]
+  allgamesbycategory:
+    controller: Article
+    action: GetAllArticlesGamesByCategory
+    access: [ALL]
+  allaboutgamesbygame:
+    controller: Article
+    action: GetAllArticlesAboutGamesByGame
+    access: [ALL]
+
+sys:
+  user:
+    list:
+      controller: System
+      action: userlist
+      access: [ADMIN, MODERATOR]
+  article:
+    articles-management:
+      controller: System
+      action: articlesManagement
+      access: [ADMIN, MODERATOR]
+    # create-article-game:
+    #   controller: System
+    #   action: addArticleGame
+    #   access: [ADMIN, MODERATOR]
+    # create-article-about-game:
+    #   controller: System
+    #   action: addArticleAboutGame
+    #   access: [ADMIN, MODERATOR]
+  dashboard:
+    controller: Dashboard
+    action: index
+    access: [ADMIN, MODERATOR]
+
+
+api:
+  user:
+    list:
+      controller: Api
+      action: userlist
+      params: [length, start, search, draw]
+      access: [ADMIN, MODERATOR]
+  article:
+    list:
+      controller: Api
+      action: articlelist
+      params: [length, start, search, draw]
+      access: [ADMIN, MODERATOR]
