@@ -41,7 +41,7 @@ class View
         }
     }
 
-    public function partial(String $name, array $config, $errors = []): void
+    public function partial(String $name, array $config = [], $errors = []): void
     {
         if (!file_exists("Views/Partials/" . $name . ".ptl.php")) {
             die("Le partial " . $name . " n'existe pas");

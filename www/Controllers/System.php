@@ -150,6 +150,8 @@ class System
         foreach($resultQuery as $category){
             $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
         }
+        $optionsForms["categoriesArticle"] = $optionsCategoriesArticle;
+
         //récuperer toutes les catégoris des jeux qui existe dans la bdd
         $optionsCategoryGames = [];
         $category_jeux = new Category_jeux();
@@ -157,6 +159,8 @@ class System
         foreach($resultQueryAllCategoryGames as $categoryGame){
             $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
         }
+        $optionsForms["categoriesGame"] = $optionsCategoryGames;
+        
         //récuperer tout les jeux qui existe dans la bdd
         $optionsGames= [];
         $Game = new Jeux(); 
@@ -165,43 +169,45 @@ class System
             $optionsGames[$game->getId()] = $game->getTitle();
         }
 
-        //créer le formulaire pour selectionner le type d'article:
-        $formCategoryArticle = new SelectCategoryArticle();
-        $formCategoryArticle->setConfig($optionsCategoriesArticle);  
+        $optionsForms["games"] = $optionsGames;
+        $view->assign("optionsForms", $optionsForms);
+
+        // //créer le formulaire pour selectionner le type d'article:
+        // $formCategoryArticle = new SelectCategoryArticle();
+        // $formCategoryArticle->setConfig($optionsCategoriesArticle);  
         
-        //créer le formulaire pour creer un article game:            
-        $formCreateArticleGame = new CreateArticleGame();        
-        $formCreateArticleGame->setConfig($optionsCategoryGames);
+        // //créer le formulaire pour creer un article game:            
+        // $formCreateArticleGame = new CreateArticleGame();        
+        // $formCreateArticleGame->setConfig($optionsCategoryGames);
 
-        //créer le formulaire pour creer un article about game(truc et astuce):
-        $formCreateArticleAboutGame = new CreateArticleAboutGame();
-        $formCreateArticleAboutGame->setConfig($optionsGames);
+        // //créer le formulaire pour creer un article about game(truc et astuce):
+        // $formCreateArticleAboutGame = new CreateArticleAboutGame();
+        // $formCreateArticleAboutGame->setConfig($optionsGames);
 
-        if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
-            //get the category of article
-            $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
-            if(is_bool($category_article)){
-                die("Erreur: la catégorie d'article n'existe pas");
-            }            
-            else{
-                var_dump($category_article->getCategoryName());
-                switch($category_article->getCategoryName()){
-                    case "Jeux":                        
-                        $view->assign("formCreateArticleGame", $formCreateArticleGame->getConfig());
-                        $view->assign("formCreateArticleGameErrors", $formCreateArticleGame->errors);
-                        break;          
-                    case "Trucs et astuces":
-                        $view->assign("formCreateArticleAboutGame", $formCreateArticleAboutGame->getConfig());
-                        $view->assign("formCreateArticleAboutGameErrors", $formCreateArticleAboutGame->errors);
-                        break;
-                    default:
-                        die("Erreur: la catégorie d'article n'existe pas");
-                }
-            }
-        } else{          
-            $view->assign("formCategoryArticle", $formCategoryArticle->getConfig());
-            $view->assign("formCategoryArticleErrors", $formCategoryArticle->errors);
-        }        
+        // if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
+        //     //get the category of article
+        //     $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
+        //     if(is_bool($category_article)){
+        //         die("Erreur: la catégorie d'article n'existe pas");
+        //     }            
+        //     else{
+        //         switch($category_article->getCategoryName()){
+        //             case "Jeux":                        
+        //                 $view->assign("formCreateArticleGame", $formCreateArticleGame->getConfig());
+        //                 $view->assign("formCreateArticleGameErrors", $formCreateArticleGame->errors);
+        //                 break;          
+        //             case "Trucs et astuces":
+        //                 $view->assign("formCreateArticleAboutGame", $formCreateArticleAboutGame->getConfig());
+        //                 $view->assign("formCreateArticleAboutGameErrors", $formCreateArticleAboutGame->errors);
+        //                 break;
+        //             default:
+        //                 die("Erreur: la catégorie d'article n'existe pas");
+        //         }
+        //     }
+        // } else{          
+        //     $view->assign("formCategoryArticle", $formCategoryArticle->getConfig());
+        //     $view->assign("formCategoryArticleErrors", $formCategoryArticle->errors);
+        // }        
     }
 
     //pas utilisé 

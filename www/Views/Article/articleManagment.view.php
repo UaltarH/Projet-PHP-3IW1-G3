@@ -38,6 +38,15 @@
 <?php $this->partial("form", $formCreateArticleAboutGame, $formCreateArticleAboutGameErrors) ?>
 <?php endif;?>
 
+
+
+<!-- btn pour ouvrir la modal d'ajout d'article  -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#multi-step-modal">Ouvrir le formulaire</button>
+
+<!-- modal d'ajout d'article -->
+<?php $this->partial("modalAddArticle", $optionsForms) ?>
+
+
 <!-- script js pour la datatable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
@@ -98,6 +107,47 @@
                     });
                 }
             }
+        });
+
+
+        
+        // gerer le formulaire d'ajout d'article:
+
+        // Afficher la première étape
+        showStep(1);
+
+        // Gestion des boutons Suivant/Précédent
+        $(".next-step").click(function() {
+        var currentStep = $(this).closest(".form-step");
+        var nextStep = currentStep.next(".form-step");
+        showStep(nextStep);
+        });
+
+        $(".prev-step").click(function() {
+        var currentStep = $(this).closest(".form-step");
+        var prevStep = currentStep.prev(".form-step");
+        showStep(prevStep);
+        });
+
+        // Fonction pour afficher une étape spécifique
+        function showStep(step) {
+        $(".form-step").hide();
+        $(step).show();
+        }
+
+        // Gestion de la logique conditionnelle
+        $("#field1").change(function() {
+        var selectedOption = $(this).val();
+        if (selectedOption === "option1") {
+            $("#step2-option1").show();
+            $("#step2-option2").hide();
+        } else if (selectedOption === "option2") {
+            $("#step2-option1").hide();
+            $("#step2-option2").show();
+        } else {
+            $("#step2-option1").hide();
+            $("#step2-option2").hide();
+        }
         });
     });
 </script>

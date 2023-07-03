@@ -1,6 +1,7 @@
 <h1>User List</h1>
 
 <?php include "Views/Partials/editUserModal.ptl.php" ?>
+
 <nav>
     <ul>
         <li><a href="/sys/user/list?action=faker">Generate</a></li>

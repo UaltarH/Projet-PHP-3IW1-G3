@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    build: docker/site
+    build: site
     ports:
       - "80:80"
     volumes:
@@ -30,7 +30,7 @@ services:
       - 8080:8080
 
   sass:
-    build: docker/sass
+    build: sass
     volumes:
       - ./www:/home
     # command: sass --watch "/home/Assets/scss/main.scss:/home/_style.scss"
