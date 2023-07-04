@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use function App\Core\TokenJwt\generateJWT;
 use function App\Core\TokenJwt\getAllInformationsFromToken;
 use function App\Services\SendEmail\SendMailFunction;
+use function App\Core\TokenJwt\getSpecificDataFromToken;
 
 require_once '/var/www/html/Services/SendEmail.php';
 require_once '/var/www/html/Core/TokenJwt.php';
@@ -246,5 +247,49 @@ class Auth
             }
         }
         $view->assign("formErrors", $formResetPassword->errors);
+    }
+    public function editProfile(): void
+    {
+        $user = new User();
+        $id = getSpecificDataFromToken($_SESSION['token'], "id");
+        $user = $user->getOneWhere(["id" => $id]);
+        foreach ($_POST as $key => $value) {
+            if (!empty($value)) {
+                if ($key == "setPseudo") {
+                    if (!$user->getOneWhere(["pseudo" => $value])) {
+                        $user->$key($value);
+                    }
+                } else {
+                    $user->$key($value);
+                }
+            }
+        }
+        $user->save();
+
+        session_destroy();
+        session_start();
+
+        $role = new Role();
+        $whereSql = ["id" => $user->getRoleId()];
+        $role = $role->getOneWhere($whereSql);
+
+        $payload = array(
+            'id' => $user->getId(), // Identifiant de l'utilisateur
+            'pseudo' => $user->getPseudo(), // Pseudo de l'utilisateur
+            'firstName' => $user->getFirstname(), // Prénom de l'utilisateur
+            'lastName' => $user->getLastname(), // Nom de l'utilisateur
+            'email' => $user->getEmail(), // Email de l'utilisateur
+            'phoneNumber' => $user->getPhoneNumber(), // Numéro de téléphone de l'utilisateur
+            'confirmAndResetToken' => $user->getConfirmAndResetToken(), // Token de confirmation et de réinitialisation de mot de passe de l'utilisateur
+            'dateInscription' => $user->getDateInscription(), // Date d'inscription de l'utilisateur
+            'roleId' => $user->getRoleId(), //  id role de l'utilisateur
+            'roleName' => $role->getRoleName(), // nom du role de l'utilisateur
+            'iat' => time(), // Horodatage de création du JWT (émetteur)
+            'exp' => time() + 7200 // Horodatage d'expiration du JWT (2 heure)
+        );
+        $token = generateJWT($payload);
+        $_SESSION['token'] = $token;
+
+        header("Location: /profil");
     }
 }

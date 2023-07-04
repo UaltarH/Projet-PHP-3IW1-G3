@@ -36,7 +36,7 @@ if (isset($_SESSION["token"])) {
                     <?php if (isset($_SESSION["token"])) : ?>
                         <!-- test si le token est set, donc cest un utilisateur -->
                         <li class="nav-item">
-                            <a class='nav-link' href="/profil">Profile</a>
+                            <a class='nav-link' href="/profil">Profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">Se déconnecter</a>

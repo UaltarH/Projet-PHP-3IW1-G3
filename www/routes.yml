@@ -38,6 +38,11 @@ profil:
   action: profile
   access: [USER, MODERATOR, ADMIN]
 
+edit-profile:
+  controller: Auth
+  action: editProfile
+  access: [ USER, MODERATOR, ADMIN ]
+
 reset-password:
   controller: Auth
   action: resetPassword
