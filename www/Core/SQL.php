@@ -74,14 +74,38 @@ class SQL
 
     public function getOneWhere(array $where)
     {
-        $sqlWhere = [];
         foreach ($where as $column => $value) {
-            $sqlWhere[] = $column . "=:" . $column;
+            $sqlWhere[] = $column . " = :" . $column;
+            if (is_bool($value)) {
+                $values[$column] = $value ? 1 : 0;
+            } else {
+                $values[$column] = $value;
+            }
         }
+
         $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
-        $queryPrepared->execute($where);
+        $queryPrepared->execute($values);
+
         return $queryPrepared->fetch();
+    }
+
+    public function getAllWhere(array $where)
+    {
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . " = :" . $column;
+            if (is_bool($value)) {
+                $values[$column] = $value ? 1 : 0;
+            } else {
+                $values[$column] = $value;
+            }
+        }
+
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        $queryPrepared->execute($values);
+
+        return $queryPrepared->fetchAll();
     }
 
     public function selectAll(): array
@@ -117,20 +141,20 @@ class SQL
     public function selectWithFkAndWhere(array $fkInfos, array $where): array
     {
         $sqlJoin = [];
-        foreach($fkInfos as $fkInfo){
-            $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".static::getTable().".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+        foreach ($fkInfos as $fkInfo) {
+            $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
         }
         $sqlWhere = [];
-        foreach ($where as $column=>$value) {
-            $sqlWhere[] = $column."=:".$column;
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . "=:" . $column;
         }
-        $queryPrepared = self::$connection->prepare("SELECT * FROM ".static::getTable()." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
-        $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " " . implode(" ", $sqlJoin) . " WHERE " . implode(" AND ", $sqlWhere));
+        $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
         return $queryPrepared->fetchAll();
     }
 
-    public function insertIntoJoinTable():bool
+    public function insertIntoJoinTable(): bool
     {
         $columns = get_object_vars($this);
         $columnsToExclude = get_class_vars(get_class());
@@ -198,14 +222,25 @@ class SQL
         $length = $params["length"];
         $search = $params["search"];
         $columnToSort = $params["columnToSort"];
-        $sortOrder = $params["sortOrder"];
-
+        $sortOrder = $params["sortOrder"];        
         $uriExploded = explode("?", $_SERVER["REQUEST_URI"]);
         $uriStr = strtolower(trim($uriExploded[0], "/"));
         $uri = explode('/', $uriStr);
 
-        $query = "SELECT id, " . implode(", ", array_values($columns)) .
+        //add join constraint:
+        if(isset($params["join"])){
+            $sqlJoin = [];
+            foreach ($params["join"] as $fkInfo) {
+                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+            }
+            implode(" ", $sqlJoin);
+            $query = "SELECT " . static::getTable() . ".id, " . implode(", ", array_values($columns)) .
+            " FROM " . static::getTable() . " " . implode(" ", $sqlJoin);
+        } else{
+            $query = "SELECT id, " . implode(", ", array_values($columns)) .
             " FROM " . static::getTable();
+        }
+
         if (strlen($search) > 0) {
             $query .= " WHERE";
             foreach ($columns as $key => $column) {
@@ -226,7 +261,6 @@ class SQL
         $queryPrepared->execute();
         $result = [];
         $cpt = 0;
-        // TODO :  do join table for role
         while ($row = $queryPrepared->fetch()) {
             $result[$cpt]['id'] = $row['id'];
             foreach ($columns as $column) {
@@ -249,12 +283,6 @@ class SQL
         $query = "DELETE FROM " . static::getTable() . " WHERE id = '" . $this->getId() . "'";
         $queryPrepared = self::$connection->prepare($query);
         return $queryPrepared->execute();
-    }
-
-    public function faker($query): void
-    {
-        $queryPrepared = self::$connection->prepare($query);
-        $queryPrepared->execute();
     }
 
     public function getTotalCount(): int

@@ -20,7 +20,7 @@ class User extends SQL
     protected bool $email_confirmation;
     protected int $phone_number;
     protected string $date_inscription;
-    protected string $role_id ; 
+    protected string $role_id ;
     protected ?string $confirm_and_reset_token;
 
     public function __construct()

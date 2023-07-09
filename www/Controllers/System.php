@@ -43,7 +43,6 @@ class System
         $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
 
         if(!empty($_GET["action"])) {
-
             $action = strtolower(trim($_GET["action"]));
             try{
                 if($action == "faker") {
@@ -57,18 +56,78 @@ class System
         $view->assign("editUserFormErrors", $editUserModalForm->errors);
     } // end of userList()
 
-    public function useredit(): void
-    {
-        $form = new CreateUser();
-        $view = new View("System/userlist", "back");
-        $view->assign("form", $form->getConfig());
-    }
 
     public function articlesManagement(): void
     {
+        $view = new View("Article/articleManagment", "back");
+
+        //récuperer toutes les category d'article qui existe dans la bdd, 
+        $optionsCategoriesArticle = [];
+        $category_article = new Category_article();
+        $resultQuery = $category_article->selectAll();
+        foreach($resultQuery as $category){
+            $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
+        }
+        //récuperer toutes les catégoris des jeux qui existe dans la bdd
+        $optionsCategoryGames = [];
+        $category_jeux = new Category_jeux();
+        $resultQueryAllCategoryGames = $category_jeux->selectAll();
+        foreach($resultQueryAllCategoryGames as $categoryGame){
+            $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
+        }
+        //récuperer tout les jeux qui existe dans la bdd
+        $optionsGames= [];
+        $Game = new Jeux(); 
+        $resultQueryAllGames = $Game->selectAll();
+        foreach($resultQueryAllGames as $game){
+            $optionsGames[$game->getId()] = $game->getTitle();
+        }
+
+        //créer le formulaire pour selectionner le type d'article:
+        $formCategoryArticle = new SelectCategoryArticle();
+        $formCategoryArticle->setConfig($optionsCategoriesArticle);  
+        
+        //créer le formulaire pour creer un article game:            
+        $formCreateArticleGame = new CreateArticleGame();        
+        $formCreateArticleGame->setConfig($optionsCategoryGames);
+
+        //créer le formulaire pour creer un article about game(truc et astuce):
+        $formCreateArticleAboutGame = new CreateArticleAboutGame();
+        $formCreateArticleAboutGame->setConfig($optionsGames);
+
+        if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
+            //get the category of article
+            $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
+            if(is_bool($category_article)){
+                die("Erreur: la catégorie d'article n'existe pas");
+            }            
+            else{
+                var_dump($category_article->getCategoryName());
+                switch($category_article->getCategoryName()){
+                    case "Jeux":                        
+                        $view->assign("formCreateArticleGame", $formCreateArticleGame->getConfig());
+                        $view->assign("formCreateArticleGameErrors", $formCreateArticleGame->errors);
+                        break;          
+                    case "Trucs et astuces":
+                        $view->assign("formCreateArticleAboutGame", $formCreateArticleAboutGame->getConfig());
+                        $view->assign("formCreateArticleAboutGameErrors", $formCreateArticleAboutGame->errors);
+                        break;
+                    default:
+                        die("Erreur: la catégorie d'article n'existe pas");
+                }
+            }
+        } else{          
+            $view->assign("formCategoryArticle", $formCategoryArticle->getConfig());
+            $view->assign("formCategoryArticleErrors", $formCategoryArticle->errors);
+        }        
+    }
+
+    //pas utilisé 
+    public function articlesManagementv0(): void
+    {
         //utilisateur connecter et admin:
 
-        $view = new View("Article/articleManagment", "back", 2);
+        $view = new View("Article/articleManagment", "back");
         //récuperer toutes les category d'article qui existe dans la bdd, 
         $optionsCategoriesArticle = [];
         $category_article = new Category_article();
@@ -106,7 +165,7 @@ class System
             $view->assign("formCategoryArticleErrors", $formCategoryArticle->errors);
         }
     }
-
+    //pas utilisé 
     public function addArticleGame():void 
     {
         //utilisateur connecter et admin:
@@ -263,12 +322,12 @@ class System
             $view->assign("FormCreateArticleGameErrors", $formCreateArticleGame->errors);
         }
     }
-
+    //pas utilisé 
     public function addArticleAboutGame():void
     {
         //utilisateur connecter et admin:
 
-        $view = new View("Article/articleManagment", "back", 2);
+        $view = new View("Article/articleManagment", "back");
 
         //récuperer tout les jeux qui existe dans la bdd
         $optionsGames= [];

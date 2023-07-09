@@ -81,7 +81,7 @@ class Register extends Validator
                         "label"=>"Mot de passe",
                         "placeholder"=>"Votre mot de passe",
                         "type"=>"password",
-                        "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec minuscules, majuscules et chiffres",
+                        "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec minimum 1 minuscules, 1 majuscules et 1 chiffre",
                         "min"=>8,
                         "required"=>true
                     ],

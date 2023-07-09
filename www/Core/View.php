@@ -2,10 +2,6 @@
 
 namespace App\Core;
 
-use App\Models\Article;
-use App\Models\Category_article;
-
-
 class View
 {
 

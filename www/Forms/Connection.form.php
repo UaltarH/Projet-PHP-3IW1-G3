@@ -1,7 +1,6 @@
 <?php
 namespace App\Forms;
 use App\Core\Validator;
-use App\Core\SQL;
 
 class Connection extends Validator
 {

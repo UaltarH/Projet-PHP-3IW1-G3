@@ -21,7 +21,7 @@ login:
 logout:
   controller: Auth
   action: logout
-  access: [USER, MODERATOR, ADMIN]
+  access: [ALL]
 
 s-inscrire:
   controller: Auth
@@ -32,6 +32,16 @@ email-confirmation:
   controller: Auth
   action: emailConfirmation
   access: [ALL]
+
+profil:
+  controller: Auth
+  action: profil
+  access: [USER, MODERATOR, ADMIN]
+
+reset-password:
+  controller: Auth
+  action: resetPassword
+  access: [USER, MODERATOR, ADMIN]
 
 page:
   controller: Article
@@ -66,14 +76,18 @@ sys:
       controller: System
       action: articlesManagement
       access: [ADMIN, MODERATOR]
-    create-article-game:
-      controller: System
-      action: addArticleGame
-      access: [ADMIN, MODERATOR]
-    create-article-about-game:
-      controller: System
-      action: addArticleAboutGame
-      access: [ADMIN, MODERATOR]
+    # create-article-game:
+    #   controller: System
+    #   action: addArticleGame
+    #   access: [ADMIN, MODERATOR]
+    # create-article-about-game:
+    #   controller: System
+    #   action: addArticleAboutGame
+    #   access: [ADMIN, MODERATOR]
+  dashboard:
+    controller: Dashboard
+    action: index
+    access: [ADMIN, MODERATOR]
 
 ## todo : test method for Api calls
 api:
@@ -99,3 +113,9 @@ api:
       action: userdelete
       method: DELETE
       access: [ADMIN]
+  article:
+    list:
+      controller: Api
+      action: articlelist
+      params: [length, start, search, draw]
+      access: [ADMIN, MODERATOR]

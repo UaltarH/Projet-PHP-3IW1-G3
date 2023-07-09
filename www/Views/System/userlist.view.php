@@ -1,8 +1,5 @@
 <h1>User List</h1>
-<?php
 
-// TODO : test if user is connected and can show this page
-?>
 <?php include "Views/Partials/editUserModal.ptl.php" ?>
 <nav>
     <ul>
@@ -56,7 +53,7 @@
                 { data: 'last_name' },
                 { data: 'email' },
                 { data: 'date_inscription' },
-                { data: 'role_id' },
+                { data: 'role_name' },
                 { data: 'action'}
             ],
             'drawCallback': function() {
