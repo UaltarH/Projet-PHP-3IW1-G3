@@ -136,7 +136,7 @@ class Auth
             $key = htmlspecialchars($_GET['key']);
 
             $user = new User();
-            $whereSql = ["pseudo" => $pseudo, "confirmAndResetToken" => $key];
+            $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
             $result = $user->getOneWhere($whereSql);
             if(is_bool($result)){
                 $messageInfo[] = "utilisateur introuvable belec au hack !";

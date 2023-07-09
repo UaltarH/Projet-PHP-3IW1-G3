@@ -10,8 +10,8 @@ class CreateUser extends Validator
         $this->config = [
             "config"=>[
                 "method"=>$this->method,
-                "action"=>"/sys/user/list?action=add",
-                "id"=>"createUser-form",
+                "action"=>"",
+                "id"=>"create-user-form",
                 "class"=>"form inline-form",
                 "enctype"=>"",
                 "submitLabel"=>"Ajouter un utilisateur",

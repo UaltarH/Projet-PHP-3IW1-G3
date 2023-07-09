@@ -226,13 +226,13 @@ class SQL
         $queryPrepared->execute();
         $result = [];
         $cpt = 0;
-        // TODO : put data in object and assign $result[$cpt][$column] with $object->getProperty();
+        // TODO :  do join table for role
         while ($row = $queryPrepared->fetch()) {
             $result[$cpt]['id'] = $row['id'];
             foreach ($columns as $column) {
                 $result[$cpt][trim($column)] = $row[trim($column)];
             }
-            $result[$cpt]["action"] = "<a href='/sys/" . $uri[1] . "/list?action=edit&id=" . $row['id'] . "' class='row-edit-button'>Edit</a> | <a href='/sys/" . $uri[1] . "/list?action=delete&id=" . $row['id'] . "''>Delete</a>";
+            $result[$cpt]["action"] = "<span class='row-edit-button crud-button'>Edit</span> | <span class='row-delete-button crud-button'>Delete</a>";
             $cpt++;
         }
 
@@ -244,9 +244,9 @@ class SQL
         ];
     }
 
-    public function delete($id): bool
+    public function delete(): bool
     {
-        $query = "DELETE FROM " . static::getTable() . " WHERE id = '" . $id . "'";
+        $query = "DELETE FROM " . static::getTable() . " WHERE id = '" . $this->getId() . "'";
         $queryPrepared = self::$connection->prepare($query);
         return $queryPrepared->execute();
     }

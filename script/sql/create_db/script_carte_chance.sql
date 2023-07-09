@@ -197,7 +197,9 @@ INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, passwor
 VALUES (uuid_generate_v4(), 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001,
         '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
        (uuid_generate_v4(), 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL,
-        60000000, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
+        60000000, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin')),
+       (uuid_generate_v4(), 'admin', 'admin', 'admin', 'admin@admion.com', '$2y$10$vJO4N69zIr.t16lOq9VZFeDV4VP0xq/rQp8oALnKyXW14hqwLSUYK', TRUE, NULL,
+        61111111, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
 
 
 -- carte_chance_category_article

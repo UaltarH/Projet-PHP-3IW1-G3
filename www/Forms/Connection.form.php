@@ -24,6 +24,7 @@ class Connection extends Validator
                     "pseudo"=>[
                         "id"=>"connection-form-pseudo",
                         "class"=>"form-input",
+                        "label"=>"Pseudo",
                         "placeholder"=>"Votre pseudo",
                         "type"=>"text",
                         "error"=>"Votre pseudo n'existe pas",
@@ -32,6 +33,7 @@ class Connection extends Validator
                     "password"=>[
                         "id"=>"connection-form-pwd",
                         "class"=>"form-input",
+                        "label"=>"Mont de passe",
                         "placeholder"=>"Votre mot de passe",
                         "type"=>"password",
                         "error"=>"Votre mot de passe ne correspond pas",
