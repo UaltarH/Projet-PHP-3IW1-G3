@@ -90,7 +90,7 @@ class SQL
         return $queryPrepared->fetch();
     }
 
-    public function getAllWhere(array $where)
+    public function getAllWhere(array $where): bool|array
     {
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . " = :" . $column;
@@ -101,7 +101,25 @@ class SQL
             }
         }
 
-        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        $queryPrepared->execute($values);
+
+        return $queryPrepared->fetchAll();
+    }
+
+    public function getAllWhereInsensitiveLike(array $where): bool|array
+    {
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . " ILIKE :" . $column;
+            if (is_bool($value)) {
+                $values[$column] = $value ? 1 : 0;
+            } else {
+                $values[$column] = '%' . $value . '%';
+            }
+        }
+
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         $queryPrepared->execute($values);
 

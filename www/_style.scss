@@ -11997,6 +11997,22 @@ form.inline-form .form-input-row.submit {
   flex-direction: row;
   align-items: flex-end;
 }
+form label.req::before {
+  content: "*";
+  color: red;
+}
+
+.crud-button {
+  cursor: pointer;
+  color: #118ab2;
+  text-decoration: underline;
+}
+.response-message {
+  display: none;
+}
+.response-message.active {
+  display: block;
+}
 
 .error {
   color: red;

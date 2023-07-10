@@ -28,6 +28,11 @@ s-inscrire:
   action: register
   access: [ALL]
 
+search:
+  controller: Main
+  action: search
+  access: [ALL]
+
 email-confirmation:
   controller: Auth
   action: emailConfirmation

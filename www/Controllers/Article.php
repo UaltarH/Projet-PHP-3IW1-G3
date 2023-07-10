@@ -2,11 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Core\SQL;
 use App\Core\View;
 
 use App\Models\Article AS ArticleModel;
 
-class Article
+class Article extends SQL
 {
     public function getArticle(){
         $view = new View("Article/article", "front");
