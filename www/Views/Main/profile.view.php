@@ -33,6 +33,7 @@
                                             type="<?= $inputConfig["type"] ?>"
                                             class="form-control"
                                             placeholder="<?= $value ?>"
+                                            pattern="<?= $inputConfig["pattern"] ?>"
                                         <?= isset($configInput["required"]) ? "required" : "" ?>
                                     >
                                 </div>

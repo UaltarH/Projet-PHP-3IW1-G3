@@ -19,17 +19,6 @@ class EditProfileFront extends Validator
                 "reset"=>"Annuler"
             ],
             "inputs"=>[
-                "pseudo"=>[
-                    "id"=>"edit-user-form-pseudo",
-                    "name"=>"setPseudo",
-                    "class"=>"form-input",
-                    "label"=>"Pseudo",
-                    "placeholder"=>"Pseudo",
-                    "type"=>"text",
-                    "error"=>"Le pseudo existe dèja",
-                    "min"=>2,
-                    "max"=>60,
-                ],
                 "first_name"=>[
                     "id"=>"edit-user-form-firstName",
                     "name"=>"setFirstName",
@@ -38,6 +27,7 @@ class EditProfileFront extends Validator
                     "placeholder"=>"Prénom",
                     "type"=>"text",
                     "error"=>"Le prénom doit faire entre 2 et 60 caractères",
+                    "pattern"=>"*",
                     "min"=>2,
                     "max"=>60,
                 ],
@@ -49,6 +39,7 @@ class EditProfileFront extends Validator
                     "placeholder"=>"Nom",
                     "type"=>"text",
                     "error"=>"Le nom doit faire entre 2 et 120 caractères",
+                    "pattern"=>"*",
                     "min"=>2,
                     "max"=>120,
                 ],
