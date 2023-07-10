@@ -3,9 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="multi-step-modal-label">Formulaire à plusieurs étapes</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="multi-step-form" action="#" method="POST">
@@ -14,6 +12,7 @@
                         <h2>Étape 1 choix du type d'article:</h2>
                         <div class="form-group">
                             <select class="form-control" id="field1" name="categoriesArticle" required>
+                                <option value="" selected disabled hidden>Choisir le type d'article</option>
                             <?php foreach ($config["categoriesArticle"] as $value=>$name): ?>
                                 <option value=<?= $value?>> <?= $name ?> </option>
                             <?php endforeach;?>
@@ -71,44 +70,3 @@
         </div>
     </div>
 </div>
-
-<!-- <script>
-    $(document).ready(function() {
-      // Afficher la première étape
-      showStep(1);
-
-      // Gestion des boutons Suivant/Précédent
-      $(".next-step").click(function() {
-        var currentStep = $(this).closest(".form-step");
-        var nextStep = currentStep.next(".form-step");
-        showStep(nextStep);
-      });
-
-      $(".prev-step").click(function() {
-        var currentStep = $(this).closest(".form-step");
-        var prevStep = currentStep.prev(".form-step");
-        showStep(prevStep);
-      });
-
-      // Fonction pour afficher une étape spécifique
-      function showStep(step) {
-        $(".form-step").hide();
-        $(step).show();
-      }
-
-      // Gestion de la logique conditionnelle
-      $("#field1").change(function() {
-        var selectedOption = $(this).val();
-        if (selectedOption === "option1") {
-          $("#step2-option1").show();
-          $("#step2-option2").hide();
-        } else if (selectedOption === "option2") {
-          $("#step2-option1").hide();
-          $("#step2-option2").show();
-        } else {
-          $("#step2-option1").hide();
-          $("#step2-option2").hide();
-        }
-      });
-    });
-  </script> -->

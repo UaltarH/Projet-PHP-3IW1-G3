@@ -32,6 +32,8 @@ if (isset($_SESSION["token"])) {
     <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/Assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/Assets/css/style.css"/>
+
+    
 </head>
 <body>
 <header id="header" class="header fixed-top d-flex align-items-center">

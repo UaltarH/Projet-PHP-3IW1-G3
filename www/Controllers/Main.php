@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\View;
 
 use function App\Core\TokenJwt\getSpecificDataFromToken;
+use function App\Core\TokenJwt\validateJWT;
 require_once '/var/www/html/Core/TokenJwt.php';
 
 class Main
@@ -13,7 +14,7 @@ class Main
     {
         //utilisateur connecter:        
         $view = new View("Main/home", "front");
-        if(isset($_SESSION['token'])){
+        if(isset($_SESSION['token']) && validateJWT($_SESSION['token'])){
             $view->assign("pseudo", getSpecificDataFromToken($_SESSION['token'], "pseudo"));
             $view->assign("roleId", getSpecificDataFromToken($_SESSION['token'], "roleId"));
         }
