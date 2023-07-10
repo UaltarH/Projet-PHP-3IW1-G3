@@ -46,9 +46,8 @@ reset-password:
 page:
   controller: Article
   action: getArticle
-  access: [ALL]
 
-page:
+  access: [ALL]
   allgames:
     controller: Article
     action: GetAllArticlesGame
@@ -90,14 +89,30 @@ sys:
     action: index
     access: [ADMIN, MODERATOR]
 
-
+## todo : test method for Api calls
 api:
   user:
+    add:
+      controller: Api
+      action: usercreate
+      method: POST
+      access: [ADMIN, MODERATOR]
     list:
       controller: Api
       action: userlist
+      method: GET
       params: [length, start, search, draw]
       access: [ADMIN, MODERATOR]
+    edit:
+      controller: Api
+      action: useredit
+      method: POST
+      access: [ADMIN]
+    delete:
+      controller: Api
+      action: userdelete
+      method: DELETE
+      access: [ADMIN]
   article:
     list:
       controller: Api

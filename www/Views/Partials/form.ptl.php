@@ -15,7 +15,7 @@
     <?php foreach ($config["inputs"] as $name=>$configInput): ?>
         <div class="form-input-row">
         <?php if(isset($configInput["label"])): ?>
-            <label for="<?=$name?>"><?=$configInput["label"]?> :</label>
+            <label for="<?=$name?>" class="<?= isset($configInput["required"]) ? "req":"" ?>"><?=$configInput["label"]?> :</label>
         <?php endif; ?>
         <?php if($configInput["type"] != "select" && $configInput["type"] !== "file"): ?>
             <input

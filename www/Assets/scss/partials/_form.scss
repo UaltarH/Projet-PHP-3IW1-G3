@@ -35,4 +35,8 @@ form {
       }
     }
   }
+  label.req::before {
+    content: "*";
+    color: red;
+  }
 }

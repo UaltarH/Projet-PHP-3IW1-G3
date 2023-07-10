@@ -10,7 +10,7 @@ class EditUser extends Validator
         $this->config = [
             "config"=>[
                 "method"=>$this->method,
-                "action"=>"/sys/user/list?action=edit",
+                "action"=>"",
                 "id"=>"edit-user-form",
                 "class"=>"form",
                 "enctype"=>"",
@@ -91,7 +91,7 @@ class EditUser extends Validator
                     "id"=>"edit-user-form-pwd-confirm",
                     "class"=>"form-input",
                     "label"=>"Confirmation",
-                    "placeholder"=>"Confirmation",
+                    "placeholder"=>"Confirmez votre mot de passe",
                     "type"=>"password",
                     "error"=>"Le mot de passe de confirmation ne correspond pas",
                 ],

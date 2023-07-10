@@ -17,11 +17,11 @@ class User extends SQL
     protected string $last_name;
     protected string $email;
     protected string $password;
-    protected bool $email_confirmation = false;
+    protected bool $email_confirmation;
     protected int $phone_number;
     protected string $date_inscription;
-    protected string $role_id ; 
-    protected string $confirm_and_reset_token;
+    protected string $role_id ;
+    protected ?string $confirm_and_reset_token;
 
     public function __construct()
     {
@@ -47,7 +47,7 @@ class User extends SQL
      */
     public function setId(string $id): void
     {
-        $this->id = $id;
+        $this->id = strtolower(trim($id));
     }
 
     /**
@@ -199,7 +199,7 @@ class User extends SQL
     }
 
     /**
-     * @param String $ConfirmAndResetToken
+     * @param string $confirmAndResetToken
      */
     public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {

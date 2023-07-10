@@ -20,7 +20,7 @@ class UserRepository extends User
     {
         $query = "INSERT INTO carte_chance_user (pseudo, first_name, last_name, email, password, email_confirmation, phone_number, date_inscription, role_id) VALUES";
         for ($i = 0; $i < 100; $i++) {
-            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '0123456" . str_pad($i, 3, "0", STR_PAD_LEFT) . "', '" . date("Y-m-d H:i:s") . "', 1)";
+            $query .= "('pseudo$i', 'firstname$i', 'lastname$i', 'email$i@email.com', 'Test$i', true, '0123456" . str_pad($i, 3, "0", STR_PAD_LEFT) . "', '" . date("Y-m-d H:i:s") . "', (SELECT id FROM carte_chance_role WHERE role_name = 'user'))";
             if ($i !== 99) $query .= ",";
         }
         $query .= ";";
