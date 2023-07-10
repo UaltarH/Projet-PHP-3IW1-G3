@@ -25,7 +25,7 @@
                             >
                                 <?php foreach ($moderateCommentForm["inputs"] as $inputName => $inputConfig): ?>
                                     <?php if (!in_array($inputConfig['label'], array("Role", "Email", "Mot de passe", "Confirmation"))): ?>
-                                        <div class="">
+                                        <div>
                                             <label class="labels"><?= $inputConfig["label"] ?></label>
                                             <input
                                                     id="<?= $inputConfig["id"] ?>"
@@ -33,10 +33,15 @@
                                                     class="<?= $inputConfig["class"] ?>"
                                                 <?= $inputConfig["readonly"] ? "readonly" : "" ?>
                                                     value="<?= $inputConfig["value"] ?>"
+                                                    name="<?= $inputConfig["name"] ?>"
                                             >
                                         </div>
                                     <?php endif; ?>
                                 <?php endforeach; ?>
+                                <div style="display: none">
+                                    <label></label>
+                                    <input name="id" value="<?= $commentInfos->getId() ?>">
+                                </div>
                                 <div class="mt-5 text-center">
                                     <input
                                             class="btn" style="background-color: var(--secondary); color: white"

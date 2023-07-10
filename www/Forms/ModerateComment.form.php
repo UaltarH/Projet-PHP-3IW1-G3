@@ -26,6 +26,7 @@ class ModerateComment extends Validator
                     "readonly"=>true,
                     "label"=>"Date de création :",
                     "type"=>"text",
+                    "name"=>"creation_date",
                 ],
                 "content"=>[
                     "id"=>"moderate-comment-form-content",
@@ -34,6 +35,7 @@ class ModerateComment extends Validator
                     "readonly"=>true,
                     "label"=>"Contenu du commentaire :",
                     "type"=>"text",
+                    "name"=>"content",
                 ],
                 "accepted"=>[
                     "id"=>"moderate-comment-form-accepted",
@@ -42,6 +44,7 @@ class ModerateComment extends Validator
                     "readonly"=>false,
                     "type"=>"checkbox",
                     "label"=>"Accepter :",
+                    "name"=>"accepted",
                 ],
             ]
         ];

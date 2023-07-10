@@ -99,6 +99,10 @@ sys:
       action: edit
       params: [id]
       access: [ADMIN, MODERATOR]
+    moderate:
+      controller: CommentController
+      action: moderate
+      access: [ADMIN, MODERATOR]
 
 
 api:

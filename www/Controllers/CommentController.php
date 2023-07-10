@@ -42,4 +42,19 @@ class CommentController {
         $view->assign('commentInfos', $commentInfos);
         $view->assign("moderateCommentForm", $moderateCommentForm->getConfig($commentInfos));
     }
+
+    public function moderate() {
+        var_dump($_POST);
+        $id = $_POST["id"];
+        $accepted = $_POST['accepted'] ?? false;
+        $commentaireModel = new Comment();
+
+        $whereSql = ["id" => $id];
+        $comment = $commentaireModel->getOneWhere($whereSql);
+        $comment->setModerated(true);
+        $comment->setAccepted($accepted);
+        $comment->save();
+
+        header("Location: /sys/comment/list");
+    }
 }
