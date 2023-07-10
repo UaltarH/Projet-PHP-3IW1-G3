@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\View;
+use App\Forms\EditProfileFront;
 use App\Forms\Register;
 use App\Forms\Connection;
 use App\Models\Role;
@@ -14,6 +15,7 @@ use App\Repository\UserRepository;
 use function App\Core\TokenJwt\generateJWT;
 use function App\Core\TokenJwt\getAllInformationsFromToken;
 use function App\Services\SendEmail\SendMailFunction;
+use function App\Core\TokenJwt\getSpecificDataFromToken;
 
 require_once '/var/www/html/Services/SendEmail.php';
 require_once '/var/www/html/Core/TokenJwt.php';
@@ -28,24 +30,25 @@ class Auth
         $formConfig = $formConnection->getConfig();
         if($formConnection->isSubmited() && $formConnection->isValid()){
             $user = new User();
-            $whereSql = ["pseudo" => $_POST['pseudo']];
-            $user = $user->getOneWhere($whereSql);
+                        $whereSql = ["pseudo" => $_POST['pseudo']];
+                        $user = $user->getOneWhere($whereSql);
 
-            if(!is_bool($user)){ //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur 
-                if (password_verify($_POST['password'], $user->getPassword())) {
-                    // Le mot de passe est correct   
-                    if($user->getEmailConfirmation() == false) { //tester si l'email est confirmé   
-                        $formConnection->errors[] = "l'email n'est pas confirmer";
-                    } else {
+                        if(!is_bool($user)){
+                            //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur
+                            if (password_verify($_POST['password'], $user->getPassword())) {
+                                // Le mot de passe est correct
+                                if($user->getEmailConfirmation() == false) { //tester si l'email est confirmé
+                                    $formConnection->errors[] = "l'email n'est pas confirmer";
+                                } else {
                         //get the name of the role of the user
                         $role = new Role();
                         $whereSql = ["id" => $user->getRoleId()];
                         $role = $role->getOneWhere($whereSql);
                         //l'utilisateur est bien connecter du coup on le redirige vers la home page 
-                        
-                        //creer le token jwt et le set en variable session 
+
+                        //creer le token jwt et le set en variable session
                         $payload = array(
-                            'id' => $user->getId(), // Identifiant de l'utilisateur 
+                            'id' => $user->getId(), // Identifiant de l'utilisateur
                             'pseudo' => $user->getPseudo(), // Pseudo de l'utilisateur
                             'firstName' => $user->getFirstname(), // Prénom de l'utilisateur
                             'lastName' => $user->getLastname(), // Nom de l'utilisateur
@@ -71,7 +74,7 @@ class Auth
                 }
             }
             else{
-                //pseudo nexiste pas 
+                //pseudo nexiste pas
                 $formConnection->errors[] = $formConfig["inputs"]["pseudo"]["error"];
             }
         }
@@ -168,14 +171,14 @@ class Auth
     public function profil(): void {
         $view = new View("Main/profil", "front");
         $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
-        $view->assign("informationsUser", $informationsUser);        
+        $view->assign("informationsUser", $informationsUser);
 
         //create form for reset password
         $formResetPassword = new ResetPassword();
         $view->assign("form", $formResetPassword->getConfig());
         if($formResetPassword->isSubmited() && $formResetPassword->isValid()){
             if($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])){
-                //send mail for reset password 
+                //send mail for reset password
                 $to = $informationsUser['email'];
                 $contentMail = "<b>Hello ".$informationsUser['pseudo'].", <a href='http://localhost/reset-password?pseudo=".urlencode($informationsUser['pseudo'])."&key=".$informationsUser['confirmAndResetToken']."&pwd=".$_POST['password']."'> Réinitialiser votre mot de passe </a></b>";
                 $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
@@ -186,7 +189,7 @@ class Auth
         $view->assign("formErrors", $formResetPassword->errors);
     }
 
-    public function resetPassword():void 
+    public function resetPassword():void
     {
         $view = new View("Auth/resetPassword", "front");
         $messageInfo = [];
@@ -214,5 +217,79 @@ class Auth
             $messageInfo[] = "les parametres de l'url sont incorrect";
         }
         $view->assign("messageInfo", $messageInfo);
+    }
+
+    public function profile(): void
+    {
+        $editUserModalForm = new EditProfileFront();
+        $roles = UserRepository::fetchRoles();
+        $rolesOption = [];
+        foreach ($roles as $role) {
+            $rolesOption[$role["id"]] = $role["role_name"];
+        }
+
+        $view = new View("Main/profile", "front");
+        $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
+        $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
+        $view->assign("informationsUser", $informationsUser);
+
+        //create form for reset password
+        $formResetPassword = new ResetPassword();
+        $view->assign("form", $formResetPassword->getConfig());
+        if ($formResetPassword->isSubmited() && $formResetPassword->isValid()) {
+            if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
+                //send mail for reset password
+                $to = $informationsUser['email'];
+                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='http://localhost/reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
+                $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
+                $resultSendMail = SendMailFunction($to, $contentMail, $subject);
+                $view->assign("messageInfoSendMail", $resultSendMail);
+            }
+        }
+        $view->assign("formErrors", $formResetPassword->errors);
+    }
+    public function editProfile(): void
+    {
+        $user = new User();
+        $id = getSpecificDataFromToken($_SESSION['token'], "id");
+        $user = $user->getOneWhere(["id" => $id]);
+        foreach ($_POST as $key => $value) {
+            if (!empty($value)) {
+                if ($key == "setPseudo") {
+                    if (!$user->getOneWhere(["pseudo" => $value])) {
+                        $user->$key($value);
+                    }
+                } else {
+                    $user->$key($value);
+                }
+            }
+        }
+        $user->save();
+
+        session_destroy();
+        session_start();
+
+        $role = new Role();
+        $whereSql = ["id" => $user->getRoleId()];
+        $role = $role->getOneWhere($whereSql);
+
+        $payload = array(
+            'id' => $user->getId(), // Identifiant de l'utilisateur
+            'pseudo' => $user->getPseudo(), // Pseudo de l'utilisateur
+            'firstName' => $user->getFirstname(), // Prénom de l'utilisateur
+            'lastName' => $user->getLastname(), // Nom de l'utilisateur
+            'email' => $user->getEmail(), // Email de l'utilisateur
+            'phoneNumber' => $user->getPhoneNumber(), // Numéro de téléphone de l'utilisateur
+            'confirmAndResetToken' => $user->getConfirmAndResetToken(), // Token de confirmation et de réinitialisation de mot de passe de l'utilisateur
+            'dateInscription' => $user->getDateInscription(), // Date d'inscription de l'utilisateur
+            'roleId' => $user->getRoleId(), //  id role de l'utilisateur
+            'roleName' => $role->getRoleName(), // nom du role de l'utilisateur
+            'iat' => time(), // Horodatage de création du JWT (émetteur)
+            'exp' => time() + 7200 // Horodatage d'expiration du JWT (2 heure)
+        );
+        $token = generateJWT($payload);
+        $_SESSION['token'] = $token;
+
+        header("Location: /profil");
     }
 }
