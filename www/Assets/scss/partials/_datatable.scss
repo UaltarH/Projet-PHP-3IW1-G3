@@ -1,0 +1,17 @@
+.crud-button {
+  cursor: pointer;
+  color: $primary;
+  text-decoration: underline;
+  &.row-edit-button {
+
+  }
+  &.row-delete-button {
+
+  }
+}
+.response-message {
+  display: none;
+  &.active {
+    display: block;
+  }
+}

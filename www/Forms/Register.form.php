@@ -24,6 +24,7 @@ class Register extends Validator
                     "pseudo"=>[
                         "id"=>"register-form-pseudo",
                         "class"=>"form-input",
+                        "label"=>"Pseudo",
                         "placeholder"=>"Votre pseudo",
                         "type"=>"text",
                         "error"=>"Votre pseudo existe dèja",
@@ -34,6 +35,7 @@ class Register extends Validator
                     "first_name"=>[
                         "id"=>"register-form-firstname",
                         "class"=>"form-input",
+                        "label"=>"Prénom",
                         "placeholder"=>"Votre prénom",
                         "type"=>"text",
                         "error"=>"Votre prénom doit faire entre 2 et 60 caractères",
@@ -44,6 +46,7 @@ class Register extends Validator
                     "last_name"=>[
                         "id"=>"register-form-lastname",
                         "class"=>"form-input",
+                        "label"=>"Nom",
                         "placeholder"=>"Votre nom",
                         "type"=>"text",
                         "error"=>"Votre nom doit faire entre 2 et 120 caractères",
@@ -54,6 +57,7 @@ class Register extends Validator
                     "email"=>[
                         "id"=>"register-form-email",
                         "class"=>"form-input",
+                        "label"=>"E-mail",
                         "placeholder"=>"Votre email",
                         "type"=>"email",
                         "error"=>"Votre email est incorrect",
@@ -62,6 +66,7 @@ class Register extends Validator
                     "phone_number"=>[
                         "id"=>"register-form-phoneNumber",
                         "class"=>"form-input",
+                        "label"=>"Téléphone",
                         "placeholder"=>"ex : 06 12 34 56 78",
                         "type"=>"tel",
                         "pattern"=>"^0[67][0-9]{8}$",
@@ -73,6 +78,7 @@ class Register extends Validator
                     "password"=>[
                         "id"=>"register-form-pwd",
                         "class"=>"form-input",
+                        "label"=>"Mot de passe",
                         "placeholder"=>"Votre mot de passe",
                         "type"=>"password",
                         "error"=>"Votre mot de passe doit faire au minimum 8 caractères avec minimum 1 minuscules, 1 majuscules et 1 chiffre",
@@ -82,7 +88,8 @@ class Register extends Validator
                     "passwordConfirm"=>[
                         "id"=>"register-form-pwd-confirm",
                         "class"=>"form-input",
-                        "placeholder"=>"Confirmation",
+                        "label"=>"Confirmation",
+                        "placeholder"=>"Confirmation votre mot de passe",
                         "type"=>"password",
                         "error"=>"Votre mot de passe de confirmation ne correspond pas",
                         "required"=>true

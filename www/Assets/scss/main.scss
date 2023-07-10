@@ -23,9 +23,9 @@ $font-family-base: "Poppins", sans-serif;
 @import "./partials/_footer.scss";
 @import "./partials/editUserModal";
 @import "./partials/form";
+@import "./partials/datatable";
 
 // Views
-@import "./views/_dashboardSummary.scss";
 @import "./views/_back.tpl.scss";
 @import "./views/_form.scss";
 
