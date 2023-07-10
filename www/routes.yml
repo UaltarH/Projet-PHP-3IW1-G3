@@ -89,6 +89,16 @@ sys:
     controller: Dashboard
     action: index
     access: [ADMIN, MODERATOR]
+  comment:
+    list:
+      controller: CommentController
+      action: index
+      access: [ADMIN, MODERATOR]
+    edit:
+      controller: CommentController
+      action: edit
+      params: [id]
+      access: [ADMIN, MODERATOR]
 
 
 api:
