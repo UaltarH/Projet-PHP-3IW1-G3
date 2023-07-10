@@ -3,6 +3,8 @@
 namespace App\Core;
 
 use App\Models\User;
+use App\Repository\RoleRepository;
+use App\Repository\UserRepository;
 
 class Validator
 {
@@ -19,11 +21,7 @@ class Validator
     }
     public function isValid(): bool
     {
-        //TODO 
-        //ajouter la verification si l'email et le pseudo existe deja 
-        //ajouter une verification pour le numéro de telephone 
-
-        //La bonne method ? -> tester si la request method (POST / GET / PUT ect...) est la meme que celle qui est attendu par la classe enfant
+        //La bonne methode ? -> tester si la request method (POST / GET / PUT ect...) est la meme que celle qui est attendu par la classe enfant
         if($_SERVER["REQUEST_METHOD"] != $this->method){
             die("Tentative de Hack methode differente");
         }
@@ -44,7 +42,7 @@ class Validator
             if(!isset($this->data[$name])){
                 die("Tentative de Hack, input non attendu");
             }
-            //tester dans le cas ou l'input ne doit pas etre vide(required) 
+            //tester dans le cas ou l'input ne doit pas etre vide(required)
             if(isset($configInput["required"]) && self::isEmpty($this->data[$name])){
                 die("Tentative de Hack, input vide");
             }
@@ -88,7 +86,9 @@ class Validator
     }
     public function isFieldsInfoValid($model, array $fields): bool
     {
-        $resultQuery = $model->existOrNot($fields);
+        $class = explode('\\', get_class($model));
+        $repo = "App\\Repository\\".ucfirst(end($class))."Repository";
+        $resultQuery = $repo::existOrNot($fields, $model);
         if(is_bool($resultQuery)){
             //il n'y a aucun elements dans la table donc on return true
             return true;

@@ -8,11 +8,15 @@ use App\Models\Category_jeux;
 use App\Models\Comment;
 use App\Models\Jeux;
 use App\Models\User;
-
+use App\Repository\UserRepository;
 
 
 class Dashboard {
-    public function index() {
+    /**
+     * @throws \Exception
+     */
+    public function index(): void
+    {
         $userModel = new User();
         $articleModel = new Article();
         $jeuxModel = new Jeux();
@@ -20,7 +24,7 @@ class Dashboard {
         $commentaireModel = new Comment();
 
         $totalUsers = $userModel->getTotalCount();
-        $newUsersPerDay = $userModel->getNewUsersPerDay();
+        $newUsersPerDay = UserRepository::getNewUsersPerDay();
 
         $totalArticles = $articleModel->getTotalCount();
 

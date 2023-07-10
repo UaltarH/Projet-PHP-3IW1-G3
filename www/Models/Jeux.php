@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Jeux extends SQL
+class Jeux
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $title;
     protected string $category_id = "0";

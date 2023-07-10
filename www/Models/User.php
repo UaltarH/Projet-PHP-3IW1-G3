@@ -8,9 +8,8 @@ use DatePeriod;
 use DateTime;
 use PDO;
 
-class User extends SQL
+class User
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $pseudo;
     protected string $first_name;
@@ -21,11 +20,10 @@ class User extends SQL
     protected int $phone_number;
     protected string $date_inscription;
     protected string $role_id ; 
-    protected string $confirm_and_reset_token;
+    protected ?string $confirm_and_reset_token;
 
     public function __construct()
     {
-        $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
     public static function getTable(): string
@@ -195,7 +193,7 @@ class User extends SQL
      */
     public function getConfirmAndResetToken(): string
     {
-        return $this->confirm_and_reset_token;
+        return empty($this->confirm_and_reset_token) ? '' : $this->confirm_and_reset_token;
     }
 
     /**
@@ -206,27 +204,4 @@ class User extends SQL
         $this->confirm_and_reset_token = $confirmAndResetToken;
     }
 
-    public function getNewUsersPerDay(): array
-    {
-        $dateDebut = date('Y-m-d', strtotime('-1 month'));
-        $dateFin = date('Y-m-d', strtotime('+1 day'));
-        $interval = new DateInterval('P1D');
-        $dateRange = new DatePeriod(new DateTime($dateDebut), $interval, new DateTime($dateFin));
-
-        $newUsersPerDay = [];
-
-        foreach ($dateRange as $date) {
-            $dateCourante = $date->format('Y-m-d');
-
-            $requete = $this->db_connexion->prepare("SELECT COUNT(*) AS count FROM carte_chance_user WHERE DATE(date_inscription) = ?");
-            $requete->execute([$dateCourante]);
-            $resultat = $requete->fetch(PDO::FETCH_ASSOC);
-
-            $newUsersPerDay[] = [
-                'date' => $dateCourante,
-                'count' => (int)$resultat['count']
-            ];
-        }
-        return $newUsersPerDay;
-    }
 }

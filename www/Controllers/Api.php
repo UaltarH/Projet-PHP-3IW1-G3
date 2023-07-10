@@ -5,9 +5,13 @@ namespace App\Controllers;
 use App\Core\View;
 use App\Models\User;
 use App\Models\Article;
+use App\Repository\UserRepository;
 
 class Api
 {
+    /**
+     * @throws \Exception
+     */
     public function userlist(): void
     {
         //TODO: access right
@@ -39,7 +43,7 @@ class Api
                     ]
                 ]
             ]
-        ]));
+        ], $user));
     }
 
     public function articlelist(): void
@@ -73,6 +77,6 @@ class Api
                     ]
                 ]
             ]
-        ]));
+        ], $article));
     }
 }

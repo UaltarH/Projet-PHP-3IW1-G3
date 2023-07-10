@@ -4,9 +4,8 @@ namespace App\Models\JoinTable;
 
 use App\Core\SQL;
 
-class Article_content extends SQL
+class Article_content
 {
-    private $db_connexion;
     protected string $article_id;
     protected string $content_id;
 

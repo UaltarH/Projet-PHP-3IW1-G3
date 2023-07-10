@@ -5,9 +5,8 @@ namespace App\Models;
 use App\Core\SQL;
 use PDO;
 
-class Category_jeux extends SQL
+class Category_jeux
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $category_name;
     protected string $description;

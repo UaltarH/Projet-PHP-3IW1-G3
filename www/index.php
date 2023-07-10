@@ -3,9 +3,12 @@
 
 namespace App;
 session_start();
+
+use App\Core\Config;
 use App\Models\Role;
 use App\Controllers\Errors;
 
+use App\Repository\AbstractRepository;
 use function App\Core\TokenJwt\validateJWT;
 use function App\Core\TokenJwt\getSpecificDataFromToken;
 require_once '/var/www/html/Core/TokenJwt.php';
@@ -26,7 +29,7 @@ spl_autoload_register(function ($class) {
         include $classForm;
     }
 });
-
+echo Config::getInstance()->getEnvironment();
 //Afficher le controller et l'action correspondant à l'URI
 
 $uriStr = $_SERVER["REQUEST_URI"];
@@ -114,7 +117,7 @@ if(isset($routeArray["access"])) {
     
                 $role = new Role(); 
                 $whereSql = ["id" => $roleId];
-                $role = $role->getOneWhere($whereSql);
+                $role = AbstractRepository::getOneWhere($whereSql, $role);
                 if(is_bool($role)){
                     die("Error 500 Internal Server Error : Le role n'existe pas");
                 } else{

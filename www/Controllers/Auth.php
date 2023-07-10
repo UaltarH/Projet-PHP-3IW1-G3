@@ -9,6 +9,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Forms\ResetPassword;
 
+use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 
 use function App\Core\TokenJwt\generateJWT;
@@ -29,7 +30,7 @@ class Auth
         if($formConnection->isSubmited() && $formConnection->isValid()){
             $user = new User();
             $whereSql = ["pseudo" => $_POST['pseudo']];
-            $user = $user->getOneWhere($whereSql);
+            $user = UserRepository::getOneWhere($whereSql, $user);
 
             if(!is_bool($user)){ //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur 
                 if (password_verify($_POST['password'], $user->getPassword())) {
@@ -40,8 +41,8 @@ class Auth
                         //get the name of the role of the user
                         $role = new Role();
                         $whereSql = ["id" => $user->getRoleId()];
-                        $role = $role->getOneWhere($whereSql);
-                        //l'utilisateur est bien connecter du coup on le redirige vers la home page 
+                        $role = RoleRepository::getOneWhere($whereSql, $role);
+                        //l'utilisateur est bien connecter du coup on le redirige vers la home page
                         
                         //creer le token jwt et le set en variable session 
                         $payload = array(

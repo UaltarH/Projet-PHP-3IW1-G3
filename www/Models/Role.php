@@ -3,14 +3,12 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Role extends SQL 
+class Role
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $role_name;
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
     }
 
     public static function getTable(): string

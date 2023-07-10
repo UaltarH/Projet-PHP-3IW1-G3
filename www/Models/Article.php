@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Article extends SQL
+class Article
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $content;
     protected string $title;

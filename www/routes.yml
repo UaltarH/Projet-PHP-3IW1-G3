@@ -47,8 +47,6 @@ page:
   controller: Article
   action: getArticle
   access: [ALL]
-
-page:
   allgames:
     controller: Article
     action: GetAllArticlesGame

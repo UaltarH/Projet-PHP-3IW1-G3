@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Category_article extends SQL
+class Category_article
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $category_name;
     protected string $description;

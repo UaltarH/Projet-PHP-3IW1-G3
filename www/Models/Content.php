@@ -3,9 +3,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Content extends SQL
+class Content
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $path_content;
 
