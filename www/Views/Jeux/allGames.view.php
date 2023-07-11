@@ -11,7 +11,7 @@
             <tbody>
             <?php $counter = 0; ?>
             <?php foreach ($jeux as $jeu): ?>
-                <tr style="cursor: pointer" onclick="rowClicked('<?= $jeu['title'] ?>')" class="border-1">
+                <tr style="cursor: pointer" onclick="rowClicked('jeu?id=<?= $jeu['title'] ?>')" class="border-1">
                     <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?=$jeu['title'] ?></td>
                     <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?=$jeu['categorie'] ?></td>
                 </tr>
