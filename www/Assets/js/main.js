@@ -32,7 +32,7 @@
   }
 
   /**
-   * Easy on scroll event listener 
+   * Easy on scroll event listener
    */
   const onscroll = (el, listener) => {
     el.addEventListener('scroll', listener)
@@ -319,3 +319,9 @@
   }
 
 })();
+
+
+function rowClicked(row) {
+    console.log("hello");
+    window.location.href = row;
+}
