@@ -9,29 +9,31 @@ foreach ($articleWhere as $subArray) {
 }
 
 if ($hasNonEmptySubArray): ?>
-<h2>Articles</h2>
-<div class="container mt-5 px-2">
-    <div class="table-responsive">
-        <table class="table table-responsive table-borderless">
-            <thead>
-            <tr class="bg-light">
-                <th scope="col" width="10%">Date</th>
-                <th scope="col" width="33%">Titre</th>
-                <th scope="col" width="33%">Contenu</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($articleWhere as $article): ?>
-                <tr>
-                    <td><?= $article[0]->getCreatedDate() ?></td>
-                    <td><?= $article[0]->getTitle() ?></td>
-                    <td><?= $article[0]->getContent() ?></td>
+    <h4>Articles</h4>
+    <div class="container mt-2 px-2">
+        <div class="table-responsive">
+            <table class="table table-responsive table-borderless">
+                <thead>
+                <tr class="bg-light border-1">
+                    <th scope="col" width="10%">Date</th>
+                    <th scope="col" width="33%">Titre</th>
+                    <th scope="col" width="33%">Contenu</th>
                 </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <?php $counter = 0; ?>
+                <?php foreach ($articleWhere as $articles): ?>
+                        <tr style="cursor: pointer" onclick="rowClicked('article/<?= $articles->getTitle() ?>')" class="border-1">
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getCreatedDate() ?></td>
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getTitle() ?></td>
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getContent() ?></td>
+                        </tr>
+                        <?php $counter++; ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 <?php endif; ?>
 
 <?php
@@ -45,22 +47,24 @@ foreach ($categorieArticlesWhere as $subArray) {
 }
 
 if ($hasNonEmptySubArray): ?>
-    <h2>Catégories Articles</h2>
-    <div class="container mt-5 px-2">
+    <h4>Catégories Articles</h4>
+    <div class="container mt-2 px-2">
         <div class="table-responsive">
             <table class="table table-responsive table-borderless">
                 <thead>
-                <tr class="bg-light">
+                <tr class="bg-light border-1">
                     <th scope="col" width="33%">Nom de la catégorie</th>
                     <th scope="col" width="33%">Description</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($categorieArticlesWhere as $article_categorie):?>
-                    <tr>
-                        <td><?= $article_categorie[0]->getCategoryName() ?></td>
-                        <td><?= $article_categorie[0]->getDescription() ?></td>
-                    </tr>
+                <?php $counter = 0; ?>
+                <?php foreach ($categorieArticlesWhere as $article_categories): ?>
+                        <tr style="cursor: pointer" onclick="rowClicked('categorie_article/<?= $article_categories->getCategoryName() ?>')" class="border-1">
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $article_categories->getCategoryName() ?></td>
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $article_categories->getDescription() ?></td>
+                        </tr>
+                        <?php $counter++; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
@@ -79,20 +83,22 @@ foreach ($jeuxWhere as $subArray) {
 }
 
 if ($hasNonEmptySubArray): ?>
-    <h2>Jeux</h2>
-    <div class="container mt-5 px-2">
+    <h4>Jeux</h4>
+    <div class="container mt-2 px-2">
         <div class="table-responsive">
             <table class="table table-responsive table-borderless">
                 <thead>
-                <tr class="bg-light">
+                <tr class="bg-light border-1">
                     <th scope="col" width="33%">Titre</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($jeuxWhere as $jeu): ?>
-                    <tr>
-                        <td><?= $jeu[0]->getTitle() ?></td>
-                    </tr>
+                <?php $counter = 0; ?>
+                <?php foreach ($jeuxWhere as $jeux): ?>
+                        <tr style="cursor: pointer" onclick="rowClicked('jeux/<?= $jeux->getTitle() ?>')" class="border-1">
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $jeux->getTitle() ?></td>
+                        </tr>
+                        <?php $counter++; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
@@ -111,25 +117,33 @@ foreach ($categorieJeuxWhere as $subArray) {
 }
 
 if ($hasNonEmptySubArray): ?>
-    <h2>Catégories Jeux</h2>
-    <div class="container mt-5 px-2">
+    <h4>Catégories Jeux</h4>
+    <div class="container mt-2 px-2">
         <div class="table-responsive">
             <table class="table table-responsive table-borderless">
                 <thead>
-                <tr class="bg-light">
+                <tr class="bg-light border-1">
                     <th scope="col" width="33%">Nom de la catégorie</th>
                     <th scope="col" width="33%">Description</th>
                 </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($categorieJeuxWhere as $categorie_jeu): ?>
-                    <tr>
-                        <td><?= $categorie_jeu[0]->getCategoryName() ?></td>
-                        <td><?= $categorie_jeu[0]->getDescription() ?></td>
-                    </tr>
+                <?php $counter = 0; ?>
+                <?php foreach ($categorieJeuxWhere as $categorie_jeux): ?>
+                        <tr style="cursor: pointer" onclick="rowClicked('categorie_jeu/<?= $categorie_jeux->getCategoryName() ?>')" class="border-1">
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $categorie_jeux->getCategoryName() ?></td>
+                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $categorie_jeux->getDescription() ?></td>
+                        </tr>
+                        <?php $counter++; ?>
                 <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 <?php endif; ?>
+
+<script>
+    function rowClicked(row) {
+        window.location.href = row;
+    }
+</script>

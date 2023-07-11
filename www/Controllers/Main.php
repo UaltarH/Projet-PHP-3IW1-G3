@@ -45,28 +45,52 @@ class Main
         $articleWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $articleWhere[] = $articleModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $articleModel->getAllWhereInsensitiveLike($whereSql);
+
+            foreach ($results as $result) {
+                if (!in_array($result, $articleWhere)) {
+                    $articleWhere[] = $result;
+                }
+            }
         }
 
         $attributes = ["title"];
         $jeuxWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $jeuxWhere[] = $jeuxModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $jeuxModel->getAllWhereInsensitiveLike($whereSql);
+
+            foreach ($results as $result) {
+                if (!in_array($result, $jeuxWhere)) {
+                    $jeuxWhere[] = $result;
+                }
+            }
         }
 
         $attributes = ["category_name", "description"];
         $categorieJeuxWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $categorieJeuxWhere[] = $categorieJeuxModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $categorieJeuxModel->getAllWhereInsensitiveLike($whereSql);
+
+            foreach ($results as $result) {
+                if (!in_array($result, $categorieJeuxWhere)) {
+                    $categorieJeuxWhere[] = $result;
+                }
+            }
         }
 
         $attributes = ["category_name", "description"];
         $categorieArticlesWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $categorieArticlesWhere[] = $categorieArticleModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $categorieArticleModel->getAllWhereInsensitiveLike($whereSql);
+
+            foreach ($results as $result) {
+                if (!in_array($result, $categorieArticlesWhere)) {
+                    $categorieArticlesWhere[] = $result;
+                }
+            }
         }
 
         $view = new View("Main/search", "front");
