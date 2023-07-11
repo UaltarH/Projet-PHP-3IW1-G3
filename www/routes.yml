@@ -35,8 +35,13 @@ email-confirmation:
 
 profil:
   controller: Auth
-  action: profil
+  action: profile
   access: [USER, MODERATOR, ADMIN]
+
+edit-profile:
+  controller: Auth
+  action: editProfile
+  access: [ USER, MODERATOR, ADMIN ]
 
 reset-password:
   controller: Auth
@@ -44,23 +49,23 @@ reset-password:
   access: [USER, MODERATOR, ADMIN]
 
 page:
-  controller: Article
+  controller: ArticleController
   action: getArticle
   access: [ALL]
   allgames:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesGame
     access: [ALL]
   allaboutgames:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesAboutGame
     access: [ALL]
   allgamesbycategory:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesGamesByCategory
     access: [ALL]
   allaboutgamesbygame:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesAboutGamesByGame
     access: [ALL]
 
@@ -88,14 +93,30 @@ sys:
     action: index
     access: [ADMIN, MODERATOR]
 
-
+## todo : test method for Api calls
 api:
   user:
+    add:
+      controller: Api
+      action: usercreate
+      method: POST
+      access: [ADMIN, MODERATOR]
     list:
       controller: Api
       action: userlist
+      method: GET
       params: [length, start, search, draw]
       access: [ADMIN, MODERATOR]
+    edit:
+      controller: Api
+      action: useredit
+      method: POST
+      access: [ADMIN]
+    delete:
+      controller: Api
+      action: userdelete
+      method: DELETE
+      access: [ADMIN]
   article:
     list:
       controller: Api

@@ -2,6 +2,7 @@
 
 namespace App\Core;
 
+// TODO : @Mathvss move this
 class ResponseSave
 {
     public bool $success;
@@ -11,7 +12,7 @@ class ResponseSave
 class SQL
 {
     private static $instance;
-    private static $connection;
+    private static \PDO $connection;
 
     protected function __construct()
     {
@@ -37,9 +38,8 @@ class SQL
         die("Pas de class d'appel");
     }
 
-    public function getConnection()
+    public static function getConnection(): \PDO
     {
         return self::$connection;
     }
-
 }

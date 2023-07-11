@@ -4,20 +4,13 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Jeux
+class Game extends AbstractModel
 {
     private string $id = "0";
     protected string $title;
     protected string $category_id = "0";
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**

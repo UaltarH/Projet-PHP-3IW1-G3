@@ -10,7 +10,7 @@ class Validator
 {
     private array $data = [];
     public array $errors = [];
-    
+
     public function isSubmited(): bool
     {
         $this->data = ($this->method == "POST")?$_POST:$_GET;
@@ -42,16 +42,16 @@ class Validator
             if(!isset($this->data[$name])){
                 die("Tentative de Hack, input non attendu");
             }
-            //tester dans le cas ou l'input ne doit pas etre vide(required)
-            if(isset($configInput["required"]) && self::isEmpty($this->data[$name])){
+            //tester dans le cas ou l'input ne doit pas etre vide(required) 
+            if(isset($configInput["required"]) && $this->isEmpty($this->data[$name])){
                 die("Tentative de Hack, input vide");
             }
             //tester si l'input a un minimum de taille
-            if(isset($configInput["min"]) && !self::isMinLength($this->data[$name], $configInput["min"]) && !self::isEmpty($this->data[$name])){
+            if(isset($configInput["min"]) && !$this->isMinLength($this->data[$name], $configInput["min"]) && !$this->isEmpty($this->data[$name])){
                 $this->errors[]=$configInput["error"];
             }
             //tester si l'input a un maximum de taille
-            if(isset($configInput["max"]) && !self::isMaxLength($this->data[$name], $configInput["max"]) && !self::isEmpty($this->data[$name])){
+            if(isset($configInput["max"]) && !$this->isMaxLength($this->data[$name], $configInput["max"]) && !$this->isEmpty($this->data[$name])){
                 $this->errors[]=$configInput["error"];
             }
         }
@@ -88,7 +88,7 @@ class Validator
     {
         $class = explode('\\', get_class($model));
         $repo = "App\\Repository\\".ucfirst(end($class))."Repository";
-        $resultQuery = $repo::existOrNot($fields, $model);
+        $resultQuery = (new $repo)->existOrNot($fields, $model);
         if(is_bool($resultQuery)){
             //il n'y a aucun elements dans la table donc on return true
             return true;
@@ -112,15 +112,15 @@ class Validator
         }
         return true;
     }
-    public static function isEmpty(String $string): bool
+    public function isEmpty(String $string): bool
     {
         return empty(trim($string));
     }
-    public static function isMinLength(String $string, $length): bool
+    public function isMinLength(String $string, $length): bool
     {
         return strlen(trim($string))>=$length;
     }
-    public static function isMaxLength(String $string, $length): bool
+    public function isMaxLength(String $string, $length): bool
     {
         return strlen(trim($string))<=$length;
     }

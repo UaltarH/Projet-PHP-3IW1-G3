@@ -4,20 +4,13 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Category_article
+class Article_Category extends AbstractModel
 {
     private string $id = "0";
     protected string $category_name;
     protected string $description;
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-    
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**

@@ -34,6 +34,7 @@ if (isset($_SESSION["token"])) {
     <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
 </head>
 <body>
+
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="dashboard" class="logo d-flex align-items-center">
@@ -124,6 +125,7 @@ if (isset($_SESSION["token"])) {
 </aside>
 
 <main id="main" class="main">
+    <div class="response-message"></div>
     <?php include $this->view; ?>
 </main>
 

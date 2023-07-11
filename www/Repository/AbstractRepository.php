@@ -10,19 +10,30 @@ use App\Core\SQL;
  */
 abstract class AbstractRepository
 {
+    /**
+     * Returns table name of the model
+     *
+     * @param $model : the model
+     * @return string
+     */
+    public function getTable($model): string
+    {
+        $classExploded = explode("\\", $model::class);
+        return "carte_chance_" . strtolower(end($classExploded));
+    }
     /** Le resultat sera sous d'un tableau associatif, l'unique colonne qu'on aura se nomme "column_exists" avec comme contenu soit
      * "the value for column the nom_colonne_concerné already exists" ou "none_exists".
      * Si le resultat de cette methode renvoie un bool (false), ça veut dire que dans la table il n'y a aucune donnée
      */
-    public static function existOrNot(array $where, mixed $model): array|bool
+    public function existOrNot(array $where, mixed $model): array|bool
     {
         if(empty($where))
             return true;
         $sqlWhere = [];
         foreach ($where as $column => $value) {
-            $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM " . $model::getTable() . " WHERE " . $column . "=:" . $column . ") THEN 'the value for column the " . $column . " already exists'";
+            $sqlWhere[] = "WHEN EXISTS (SELECT 1 FROM " . self::getTable($model) . " WHERE " . $column . "=:" . $column . ") THEN 'the value for column the " . $column . " already exists'";
         }
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT CASE " . implode("  ", $sqlWhere) . " ELSE 'none_exists' END AS column_exists FROM " . $model::getTable() . " LIMIT 1;");
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT CASE " . implode("  ", $sqlWhere) . " ELSE 'none_exists' END AS column_exists FROM " . self::getTable($model) . " LIMIT 1;");
         $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
 
@@ -34,13 +45,13 @@ abstract class AbstractRepository
      * @param mixed $model
      * @return mixed
      */
-    public static function getOneWhere(array $where, mixed $model): mixed
+    public function getOneWhere(array $where, mixed $model): mixed
     {
         $sqlWhere = [];
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . "=:" . $column;
         }
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . $model::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . self::getTable($model) . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, $model::class);
         $queryPrepared->execute($where);
         return $queryPrepared->fetch();
@@ -52,18 +63,42 @@ abstract class AbstractRepository
      */
     public function selectAll($model): array
     {
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . $model::getTable());
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . self::getTable($model));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         $queryPrepared->execute();
         return $queryPrepared->fetchAll();
     }
 
     /**
+     * @param array $where
+     * @param $model
+     * @return array|false
+     */
+    public function getAllWhere(array $where, $model): false|array
+    {
+        $sqlWhere = [];
+        $values = [];
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . " = :" . $column;
+            if (is_bool($value)) {
+                $values[$column] = $value ? 1 : 0;
+            } else {
+                $values[$column] = $value;
+            }
+        }
+
+        $queryPrepared = SQL::getConnection()->prepare("SELECT * FROM " . $this->getTable($model) . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, $model::class);
+        $queryPrepared->execute($values);
+
+        return $queryPrepared->fetchAll();
+    }
+    /**
      *
      * Exemple de $fkInfos:
      *   $FkInfos = [
      *      [0]=>[
-     *          "table"=>"category_article",
+     *          "table"=>"article_category",
      *          "fkColumns"=> [
      *              "fkOriginId"=>category_id,
      *              "idTargetTable"=>"id",
@@ -78,9 +113,9 @@ abstract class AbstractRepository
     {
         $sqlJoin = [];
         foreach ($fkInfos as $fkInfo) {
-            $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . $model::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+            $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . self::getTable($model) . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
         }
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . $model::getTable() . " " . implode(" ", $sqlJoin));
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . self::getTable($model) . " " . implode(" ", $sqlJoin));
         $queryPrepared->setFetchMode(\PDO::FETCH_ASSOC);
         $queryPrepared->execute();
 
@@ -97,13 +132,13 @@ abstract class AbstractRepository
     {
         $sqlJoin = [];
         foreach($fkInfos as $fkInfo){
-            $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".$model::getTable().".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
+            $sqlJoin[] = "JOIN ".$fkInfo["table"]." ON ".self::getTable($model).".".$fkInfo["foreignKeys"]["originColumn"]."=".$fkInfo["table"].".".$fkInfo["foreignKeys"]["targetColumn"];
         }
         $sqlWhere = [];
         foreach ($where as $column=>$value) {
             $sqlWhere[] = $column."=:".$column;
         }
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM ".$model::getTable()." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM ".self::getTable($model)." ".implode(" ", $sqlJoin)." WHERE ".implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode( \PDO::FETCH_ASSOC);
         $queryPrepared->execute($where);
         return $queryPrepared->fetchAll();
@@ -119,7 +154,7 @@ abstract class AbstractRepository
         $columnsToExclude = get_class_vars(get_class());
         $columns = array_diff_key($columns, $columnsToExclude);
 
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("INSERT INTO " . $model::getTable() .
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("INSERT INTO " . self::getTable($model) .
             " (" . implode(",", array_keys($columns)) . ") 
             VALUES
             (:" . implode(" , :", array_keys($columns)) . ") ");
@@ -133,23 +168,21 @@ abstract class AbstractRepository
      */
     public function save($model): ResponseSave
     {
-        $columns = get_object_vars($this);
-        $columnsToExclude = get_class_vars(get_class());
-        $columns = array_diff_key($columns, $columnsToExclude);
+        $columns = $model->getColumns();
         $methode = "";
 
-        if ($this->getId() != "0") {
+        if ($model->getId() != "0") {
             $methode = "update";
             $sqlUpdate = [];
             foreach ($columns as $column=>$value) {
                 $sqlUpdate[] = $column."=:".$column;
             }
-            $query = "UPDATE ".$model::getTable().
-                " SET ".implode(",", $sqlUpdate). " WHERE id='".$this->getId()."'";
+            $query = "UPDATE ".self::getTable($model).
+                " SET ".implode(",", $sqlUpdate). " WHERE id='".$model->getId()."'";
             $queryPrepared = SQL::getInstance()->getConnection()->prepare($query);
         } else{
             $methode = "insert";
-            $queryPrepared = SQL::getInstance()->getConnection()->prepare("INSERT INTO " . $model::getTable() .
+            $queryPrepared = SQL::getInstance()->getConnection()->prepare("INSERT INTO " . self::getTable($model) .
                 " (" . implode(",", array_keys($columns)) . ") 
             VALUES
             (:" . implode(" , :", array_keys($columns)) .  ") RETURNING id ");
@@ -176,9 +209,9 @@ abstract class AbstractRepository
      * @return array : array for datatable with data's we fetched
      * @throws \Exception
      */
-    public function list(array $params): array
+    public function list(array $params, $model): array
     {
-        $query = self::$connection->query("SELECT count(id) FROM " . static::getTable());
+        $query = SQL::getConnection()->query("SELECT count(id) FROM " . $this->getTable($model));
         $totalRecords = $query->fetch()[0];
 
         $columns = $params["columns"];
@@ -195,14 +228,14 @@ abstract class AbstractRepository
         if(isset($params["join"])){
             $sqlJoin = [];
             foreach ($params["join"] as $fkInfo) {
-                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . $this->getTable($model) . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
             }
             implode(" ", $sqlJoin);
-            $query = "SELECT " . static::getTable() . ".id, " . implode(", ", array_values($columns)) .
-                " FROM " . static::getTable() . " " . implode(" ", $sqlJoin);
+            $query = "SELECT " . $this->getTable($model) . ".id, " . implode(", ", array_values($columns)) .
+                " FROM " . $this->getTable($model) . " " . implode(" ", $sqlJoin);
         } else{
             $query = "SELECT id, " . implode(", ", array_values($columns)) .
-                " FROM " . static::getTable();
+                " FROM " . $this->getTable($model);
         }
 
         if (strlen($search) > 0) {
@@ -221,11 +254,10 @@ abstract class AbstractRepository
             }
         }
         $query .= " LIMIT $length OFFSET $start";
-        $queryPrepared = self::$connection->prepare($query);
+        $queryPrepared = SQL::getConnection()->prepare($query);
         $queryPrepared->execute();
         $result = [];
         $cpt = 0;
-
         while ($row = $queryPrepared->fetch()) {
             $result[$cpt]['id'] = $row['id'];
             foreach ($columns as $column) {
@@ -249,9 +281,9 @@ abstract class AbstractRepository
      * @param $model
      * @return bool
      */
-    public function delete($id, $model): bool
+    public function delete($model): bool
     {
-        $query = "DELETE FROM " . $model::getTable() . " WHERE id = '" . $id . "'";
+        $query = "DELETE FROM " . self::getTable($model) . " WHERE id = '" . $model->getId() . "'";
         $queryPrepared = SQL::getInstance()->getConnection()->prepare($query);
         return $queryPrepared->execute();
     }
@@ -262,7 +294,7 @@ abstract class AbstractRepository
      */
     public function getTotalCount($model): int
     {
-        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT COUNT(*) FROM " . $model::getTable());
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT COUNT(*) FROM " . self::getTable($model));
         $queryPrepared->execute();
         return $queryPrepared->fetch()['count'];
     }

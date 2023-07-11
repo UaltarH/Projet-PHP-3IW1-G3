@@ -3,18 +3,12 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Role
+class Role extends AbstractModel
 {
     private string $id = "0";
     protected string $role_name;
 
     public function __construct(){
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**

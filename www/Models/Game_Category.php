@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Core\SQL;
 use PDO;
 
-class Category_jeux
+class Game_Category extends AbstractModel
 {
     private string $id = "0";
     protected string $category_name;
@@ -13,13 +13,6 @@ class Category_jeux
 
     public function __construct()
     {
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**
@@ -72,10 +65,10 @@ class Category_jeux
 
     public function getTotalGamesByCategories(): array
     {
-        $queryPrepared = $this->db_connexion->prepare(
+        $queryPrepared = SQL::getConnection()->prepare(
             "SELECT cc.category_name, COUNT(cj.id) AS jeux_count
                     FROM carte_chance_category_jeux cc
-                    LEFT JOIN carte_chance_jeux cj ON cc.id = cj.category_id
+                    LEFT JOIN carte_chance_game cj ON cc.id = cj.category_id
                     GROUP BY cc.category_name;"
         );
         $queryPrepared->execute();

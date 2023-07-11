@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Comment extends SQL
+class Comment  extends AbstractModel
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $content;
     protected string $creation_date;
@@ -16,13 +15,6 @@ class Comment extends SQL
 
     public function __construct()
     {
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**

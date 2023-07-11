@@ -2,13 +2,7 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
-use DateInterval;
-use DatePeriod;
-use DateTime;
-use PDO;
-
-class User
+class User extends AbstractModel
 {
     private string $id = "0";
     protected string $pseudo;
@@ -16,20 +10,14 @@ class User
     protected string $last_name;
     protected string $email;
     protected string $password;
-    protected bool $email_confirmation = false;
+    protected bool $email_confirmation;
     protected int $phone_number;
     protected string $date_inscription;
-    protected string $role_id ; 
+    protected string $role_id ;
     protected ?string $confirm_and_reset_token;
 
     public function __construct()
     {
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**
@@ -45,7 +33,7 @@ class User
      */
     public function setId(string $id): void
     {
-        $this->id = $id;
+        $this->id = strtolower(trim($id));
     }
 
     /**
@@ -149,7 +137,7 @@ class User
     }
 
     /**
-     * @param Int $phone_number
+     * @param int $phoneNumber
      */
     public function setPhoneNumber(int $phoneNumber): void
     {
@@ -165,7 +153,7 @@ class User
     }
 
     /**
-     * @param String $date_inscription
+     * @param string $dateInscription
      */
     public function setDateInscription(string $dateInscription): void
     {
@@ -181,7 +169,7 @@ class User
     }
 
     /**
-     * @param string $role_id
+     * @param string $roleId
      */
     public function setRoleId(string $roleId): void
     {
@@ -197,7 +185,7 @@ class User
     }
 
     /**
-     * @param String $ConfirmAndResetToken
+     * @param string $confirmAndResetToken
      */
     public function setConfirmAndResetToken(string $confirmAndResetToken): void
     {
