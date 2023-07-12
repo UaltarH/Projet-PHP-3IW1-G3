@@ -17,6 +17,7 @@ class ArticleController extends AbstractRepository
         $this->config = Config::getInstance()->getConfig();
         $this->articleRepository = new ArticleRepository();
     }
+    
     public function getArticle(): void
     {
         $view = new View("Article/article", "front");
