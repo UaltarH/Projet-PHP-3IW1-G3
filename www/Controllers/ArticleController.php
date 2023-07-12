@@ -2,20 +2,30 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\View;
 
-use App\Models\Article AS ArticleModel;
+use App\Models\Article;
+use App\Repository\AbstractRepository;
+use App\Repository\ArticleRepository;
 
-class Article
+class ArticleController extends AbstractRepository
 {
-    public function getArticle(){
+    private array $config;
+    private ArticleRepository $articleRepository;
+    public function __construct() {
+        $this->config = Config::getInstance()->getConfig();
+        $this->articleRepository = new ArticleRepository();
+    }
+    public function getArticle(): void
+    {
         $view = new View("Article/article", "front");
         //tester si il y a un id dans l'url( avec GET )(le numéro represente l'id de l'article en bdd)
         if(isset($_GET['number'])){
             //si oui tester si il existe en base un article qui possede cette id :
-            $article = new ArticleModel();
+            $article = new Article();
             $whereSql = ["id" => $_GET['number']];
-            $resultQuery = $article->getOneWhere($whereSql);
+            $resultQuery = $this->articleRepository->getOneWhere($whereSql, $article);
             if(is_bool($resultQuery)) { //
                 //article not found:                
                 $view->assign("error", 'Article Not Found');
@@ -30,13 +40,14 @@ class Article
         }        
     }
 
-    public function GetAllArticlesGame(){
+    public function GetAllArticlesGame(): void
+    {
         $view = new View("Article/allArticlesGame", "front");
-        $article = new ArticleModel();
+        $article = new Article();
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_category_article",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -44,7 +55,7 @@ class Article
             ]
         ];
         //"Trucs et astuces"
-        $resultQuery = $article->selectWithFkAndWhere($fkInfosQuery,$whereSql);
+        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery,$whereSql,$article);
 
         if(is_bool($resultQuery)) { //
             //article not found:                
@@ -55,13 +66,14 @@ class Article
         }
     }
 
-    public function GetAllArticlesAboutGame(){
+    public function GetAllArticlesAboutGame(): void
+    {
         $view = new View("Article/allArticlesAboutGame", "front");
-        $article = new ArticleModel();
+        $article = new Article();
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_category_article",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -69,7 +81,7 @@ class Article
             ]
         ];
         //"Trucs et astuces"
-        $resultQuery = $article->selectWithFkAndWhere($fkInfosQuery,$whereSql);
+        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery,$whereSql,$article);
 
         if(is_bool($resultQuery)) { //
             //article not found:                

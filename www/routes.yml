@@ -54,27 +54,26 @@ jeux:
   access: [ ALL ]
 
 page:
-  controller: Article
+  controller: ArticleController
   action: getArticle
   access: [ ALL ]
-
   allgames:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesGame
     access: [ ALL ]
 
   allaboutgames:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesAboutGame
     access: [ ALL ]
 
   allgamesbycategory:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesGamesByCategory
     access: [ ALL ]
 
   allaboutgamesbygame:
-    controller: Article
+    controller: ArticleController
     action: GetAllArticlesAboutGamesByGame
     access: [ ALL ]
 

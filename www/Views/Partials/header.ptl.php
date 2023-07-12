@@ -9,7 +9,6 @@ if (isset($_SESSION["token"])) {
 }
 
 ?>
-<div class="response-message"></div>
 <header class="header">
 
     <h1>La carte chance</h1>

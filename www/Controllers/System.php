@@ -2,22 +2,25 @@
 
 namespace App\Controllers;
 
-use App\Core\Validator;
 use App\Core\View;
 
 use App\Forms\CreateUser;
 use App\Forms\EditUser;
-use App\Models\User;
+use App\Repository\ArticleRepository;
+use App\Repository\ArticleCategoryRepository;
+use App\Repository\GameArticleRepository;
+use App\Repository\GameCategoryRepository;
+use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 use App\Forms\SelectCategoryArticle;
 use App\Forms\CreateArticleGame;
 use App\Forms\CreateArticleAboutGame;
 
-use App\Models\Category_article;
-use App\Models\Category_jeux;
+use App\Models\Article_Category;
+use App\Models\Game_Category;
 use App\Models\Article;
-use App\Models\Jeux;
-use App\Models\JoinTable\Article_jeux;
+use App\Models\Game;
+use App\Models\JoinTable\Game_Article;
 
 use mysql_xdevapi\Exception;
 
@@ -26,11 +29,26 @@ require_once '/var/www/html/Services/AddFileContent.php';
 
 class System
 {
+    private ArticleRepository $articleRepository;
+    private UserRepository $userRepository;
+    private ArticleCategoryRepository $articleCategoryRepository;
+    private GameCategoryRepository $gameCategoryRepository;
+    private GameArticleRepository $gameArticleRepository;
+    private GameRepository $gameRepository;
+    public function __construct()
+    {
+        $this->articleRepository = new ArticleRepository();
+        $this->articleCategoryRepository = new ArticleCategoryRepository();
+        $this->gameCategoryRepository = new GameCategoryRepository();
+        $this->userRepository = new UserRepository();
+        $this->gameArticleRepository = new GameArticleRepository();
+        $this->gameRepository = new GameRepository();
+    }
+
     public function userlist(): void
     {
         //TODO: access right
-        $user = new User();
-        $roles = UserRepository::fetchRoles();
+        $roles = $this->userRepository->fetchRoles();
         $rolesOption = [];
         $rolesOption[""] = "Choose a role";
         foreach ($roles as $role) {
@@ -63,22 +81,19 @@ class System
 
         //récuperer toutes les category d'article qui existe dans la bdd, 
         $optionsCategoriesArticle = [];
-        $category_article = new Category_article();
-        $resultQuery = $category_article->selectAll();
+        $resultQuery = $this->articleCategoryRepository->selectAll(new Article_Category());
         foreach($resultQuery as $category){
             $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
         }
         //récuperer toutes les catégoris des jeux qui existe dans la bdd
         $optionsCategoryGames = [];
-        $category_jeux = new Category_jeux();
-        $resultQueryAllCategoryGames = $category_jeux->selectAll();
+        $resultQueryAllCategoryGames = $this->gameCategoryRepository->selectAll(new Game_Category());
         foreach($resultQueryAllCategoryGames as $categoryGame){
             $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
         }
         //récuperer tout les jeux qui existe dans la bdd
         $optionsGames= [];
-        $Game = new Jeux(); 
-        $resultQueryAllGames = $Game->selectAll();
+        $resultQueryAllGames = $this->gameRepository->selectAll(new Game());
         foreach($resultQueryAllGames as $game){
             $optionsGames[$game->getId()] = $game->getTitle();
         }
@@ -97,7 +112,7 @@ class System
 
         if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
             //get the category of article
-            $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
+            $category_article = $this->articleCategoryRepository->getOneWhere(["id" => $_POST['categoryArticle']], new Article);
             if(is_bool($category_article)){
                 die("Erreur: la catégorie d'article n'existe pas");
             }            
@@ -130,8 +145,7 @@ class System
         $view = new View("Article/articleManagment", "back");
         //récuperer toutes les category d'article qui existe dans la bdd, 
         $optionsCategoriesArticle = [];
-        $category_article = new Category_article();
-        $resultQuery = $category_article->selectAll();
+        $resultQuery = $this->articleCategoryRepository->selectAll(new Article_Category());
         foreach($resultQuery as $category){
             $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
         }
@@ -142,7 +156,7 @@ class System
 
         if($formCategoryArticle->isSubmited() && $formCategoryArticle->isValid()){
             //get the category of article
-            $category_article = $category_article->getOneWhere(["id" => $_POST['categoryArticle']]);
+            $category_article = $this->articleCategoryRepository->getOneWhere(["id" => $_POST['categoryArticle']], new Article_Category());
             if(is_bool($category_article)){
                 die("Erreur: la catégorie d'article n'existe pas");
             }
@@ -173,8 +187,7 @@ class System
         $view = new View("Article/articleManagment", "back");
         //récuperer toutes les catégoris des jeux qui existe dans la bdd
         $optionsCategoryGames = [];
-        $category_jeux = new Category_jeux();
-        $resultQueryAllCategoryGames = $category_jeux->selectAll();
+        $resultQueryAllCategoryGames = $this->gameCategoryRepository->selectAll(new Game_Category());
         foreach($resultQueryAllCategoryGames as $categoryGame){
             $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
         }
@@ -186,8 +199,7 @@ class System
         if($formCreateArticleGame->isSubmited() && $formCreateArticleGame->isValid()){
             //create article game
             //get the category article game id:
-            $categoryArticleGame = new Category_article();
-            $categoryArticleGame = $categoryArticleGame->getOneWhere(["category_name" => "Jeux"]);
+            $categoryArticleGame = $this->articleCategoryRepository->getOneWhere(["category_name" => "Jeux"], new Article_Category());
             if(is_bool($categoryArticleGame)){
                 die("Erreur: la catégorie d'article Jeux n'existe pas");
             }
@@ -197,7 +209,7 @@ class System
             $article = new Article();
 
             $whereSql = ["title" => $_POST['titleGame']];
-            $resultQueryExist = $article->existOrNot($whereSql);
+            $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
             if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){ 
                 //il n'y a aucun elements dans la table article qui contiens le meme titre
                 $article->setTitle($_POST['titleGame']);
@@ -206,29 +218,29 @@ class System
                 $article->setUpdatedDate(date("Y-m-d H:i:s"));
                 $article->setCategoryId($categoryArticleGameId);
 
-                $responseQuery = $article->save();
+                $responseQuery = $this->articleRepository->save($article);
                 $idNewArticle = $responseQuery->idNewElement;
                 if($responseQuery->success){
                     //article added in bdd
                     //add the game in bdd
-                    $game = new Jeux();
+                    $game = new Game();
 
                     $whereSql = ["title" => $_POST['titleGame']];
-                    $resultQueryExist = $game->existOrNot($whereSql);
+                    $resultQueryExist = $this->gameRepository->existOrNot($whereSql, $game);
                     if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){ 
                         //il n'y a aucun elements dans la table jeu qui contiens le meme titre 
                         $game->setTitle($_POST['titleGame']);
                         $game->setCategory_id($_POST['categoryGame']);
-                        $responseInsert = $game->save();
+                        $responseInsert = $this->gameRepository->save($game);
                         $idNewGame = $responseInsert->idNewElement;
 
                         if($responseInsert->success){
                             //game added in bdd
                             //add in jointable article_jeux ref in bdd
-                            $article_jeux = new Article_jeux();
+                            $article_jeux = new Game_Article();
                             $article_jeux->setArticleId($idNewArticle);
                             $article_jeux->setJeuxId($idNewGame);
-                            if($article_jeux->insertIntoJoinTable()){
+                            if($this->gameArticleRepository->insertIntoJoinTable($article)){
                                 //article_jeux ref added in bdd
                                 //add the content of the article in solution + in content table + in join table article_content
                                 $countfiles = count($_FILES['imagesArticle']['name']);
@@ -272,7 +284,7 @@ class System
                                 $arrayConfContent['fileContent'] = $_FILES['imageGame']['tmp_name'];
                                 $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'],PATHINFO_EXTENSION));
                                 $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
-                                $arrayConfContent['joinTableClass'] = "Jeux_content";
+                                $arrayConfContent['joinTableClass'] = "GameContent";
                                 $arrayConfContent['joinTableId'] = $idNewGame;
                                 $arrayConfContent['joinTableMethodToSetId'] = "setJeuId";
                                 
@@ -331,8 +343,7 @@ class System
 
         //récuperer tout les jeux qui existe dans la bdd
         $optionsGames= [];
-        $Game = new Jeux(); 
-        $resultQueryAllGames = $Game->selectAll();
+        $resultQueryAllGames = $this->gameRepository->selectAll(new Game);
         foreach($resultQueryAllGames as $game){
             $optionsGames[$game->getId()] = $game->getTitle();
         }
@@ -346,8 +357,7 @@ class System
             $article = new Article();
 
             //get the category about game id:
-            $categoryArticleAboutGame = new Category_article();
-            $categoryArticleAboutGame = $categoryArticleAboutGame->getOneWhere(["category_name" => "Trucs et astuces"]);
+            $categoryArticleAboutGame = $this->articleCategoryRepository->getOneWhere(["category_name" => "Trucs et astuces"], new Article_Category());
             if(is_bool($categoryArticleAboutGame)){
                 die("Erreur: la catégorie d'article trucs et astuces n'existe pas");
             }
@@ -355,7 +365,7 @@ class System
             $errorMessage = [];
             
             $whereSql = ["title" => $_POST['titleArticle']];
-            $resultQueryExist = $article->existOrNot($whereSql);
+            $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
             if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){ 
                 //il n'y a aucun elements dans la table qui contiens le meme titre 
                 $article->setTitle($_POST['titleArticle']);
@@ -364,15 +374,15 @@ class System
                 $article->setUpdatedDate(date("Y-m-d H:i:s"));
                 $article->setCategoryId($categoryArticleAboutGameId);
 
-                $responseQuery = $article->save();
+                $responseQuery = $this->articleRepository->save($article);
                 $idNewArticle = $responseQuery->idNewElement;
                 if($responseQuery->success){ 
                     //article ajouté en bdd 
                     //enusite ajouter l'id de l'article et l'id du jeux dans la table de jointure entre article et jeux
-                    $article_jeux = new Article_jeux();
+                    $article_jeux = new Game_Article();
                     $article_jeux->setArticleId($idNewArticle);
                     $article_jeux->setJeuxId($_POST['game']);
-                    if($article_jeux->insertIntoJoinTable()){
+                    if($this->gameArticleRepository->insertIntoJoinTable($article_jeux)){
                         //article_jeux ajouté en bdd
                         //ajouter les contenu (images) de l'article dans un dossier spécifique de notre solution
                         $countfiles = count($_FILES['imagesArticle']['name']);

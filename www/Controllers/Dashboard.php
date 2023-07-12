@@ -4,30 +4,48 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Models\Article;
-use App\Models\Category_jeux;
+use App\Models\Game_Category;
 use App\Models\Comment;
-use App\Models\Jeux;
+use App\Models\Game;
 use App\Models\User;
-
+use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
+use App\Repository\GameCategoryRepository;
+use App\Repository\GameRepository;
+use App\Repository\UserRepository;
 
 
 class Dashboard {
-    public function index() {
-        $userModel = new User();
-        $articleModel = new Article();
-        $jeuxModel = new Jeux();
-        $categorieJeuxModel = new Category_jeux();
-        $commentaireModel = new Comment();
+    private UserRepository $userRepository;
+    private ArticleRepository $articleRepository;
+    private GameRepository $gameRepository;
+    private GameCategoryRepository $gameCategoryRepository;
+    private CommentRepository $commentRepository;
+    public function __construct()
+    {
+        $this->userRepository = new UserRepository();
+        $this->commentRepository = new CommentRepository();
+        $this->articleRepository = new ArticleRepository();
+        $this-> gameRepository = new GameRepository();
+        $this->gameCategoryRepository = new GameCategoryRepository();
+    }
 
-        $totalUsers = $userModel->getTotalCount();
-        $newUsersPerDay = $userModel->getNewUsersPerDay();
+    /**
+     * @throws \Exception
+     */
+    public function index(): void
+    {
+        $categorieJeuxModel = new Game_Category();
 
-        $totalArticles = $articleModel->getTotalCount();
+        $totalUsers = $this->userRepository->getTotalCount(new User);
+        $newUsersPerDay = $this->userRepository->getNewUsersPerDay();
 
-        $totalJeux = $jeuxModel->getTotalCount();
+        $totalArticles = $this->articleRepository->getTotalCount(new Article());
+
+        $totalJeux = $this->gameRepository->getTotalCount(new Game());
 
         $whereSql = ["moderated" => false];
-        $unmoderatedComment = $commentaireModel->getAllWhere($whereSql);
+        $unmoderatedComment = $this->commentRepository->getAllWhere($whereSql, new Comment());
 
         $totalGamesByCategories = $categorieJeuxModel->getTotalGamesByCategories();
 

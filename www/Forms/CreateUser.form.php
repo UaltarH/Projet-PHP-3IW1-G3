@@ -16,7 +16,7 @@ class CreateUser extends Validator
                 "enctype"=>"",
                 "submitLabel"=>"Ajouter un utilisateur",
                 "submitName"=>"submitCreateUser",
-                "reset"=>"Annuler"
+                "reset"=>"Réinitialiser"
             ],
             "inputs"=>[
                 "pseudo"=>[
@@ -28,7 +28,7 @@ class CreateUser extends Validator
                     "error"=>"Le pseudo existe dèja",
                     "min"=>2,
                     "max"=>60,
-                    "required"=>true
+
                 ],
                 "first_name"=>[
                     "id"=>"create-user-form-firstname",
@@ -39,7 +39,7 @@ class CreateUser extends Validator
                     "error"=>"Le prénom doit faire entre 2 et 60 caractères",
                     "min"=>2,
                     "max"=>60,
-                    "required"=>true
+
                 ],
                 "last_name"=>[
                     "id"=>"create-user-form-lastname",
@@ -50,7 +50,7 @@ class CreateUser extends Validator
                     "error"=>"Le nom doit faire entre 2 et 120 caractères",
                     "min"=>2,
                     "max"=>120,
-                    "required"=>true
+
                 ],
                 "email"=>[
                     "id"=>"create-user-form-email",
@@ -59,7 +59,7 @@ class CreateUser extends Validator
                     "placeholder"=>"E-mail",
                     "type"=>"email",
                     "error"=>"L'email est incorrect",
-                    "required"=>true
+
                 ],
                 "phone_number"=>[
                     "id"=>"create-user-form-phoneNumber",
@@ -71,7 +71,7 @@ class CreateUser extends Validator
                     "min"=>10,
                     "max"=>10,
                     "error"=>"Numéro de téléphone incorrect",
-                    "required"=>true
+
                 ],
                 //TODO : select join role/user
                 "role"=>[
@@ -82,7 +82,7 @@ class CreateUser extends Validator
                     "type"=>"select",
                     "options"=>$roles,
                     "error"=>"Role inexistant",
-                    "required"=>true
+
                 ],
             ]
         ];
