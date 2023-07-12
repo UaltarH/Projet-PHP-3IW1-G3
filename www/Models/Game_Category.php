@@ -5,22 +5,14 @@ namespace App\Models;
 use App\Core\SQL;
 use PDO;
 
-class Category_jeux extends SQL
+class Game_Category extends AbstractModel
 {
-    private $db_connexion;
     private string $id = "0";
-    protected string $category_game_name;
+    protected string $category_name;
     protected string $description;
 
     public function __construct()
     {
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return "carte_chance_" . strtolower(end($classExploded));
     }
 
     /**
@@ -44,7 +36,7 @@ class Category_jeux extends SQL
      */
     public function getCategoryName(): string
     {
-        return $this->category_game_name;
+        return $this->category_name;
     }
 
     /**
@@ -52,7 +44,7 @@ class Category_jeux extends SQL
      */
     public function setCategoryName(string $category_name): void
     {
-        $this->category_game_name = $category_name;
+        $this->category_name = $category_name;
     }
 
     /**
@@ -73,11 +65,11 @@ class Category_jeux extends SQL
 
     public function getTotalGamesByCategories(): array
     {
-        $queryPrepared = $this->db_connexion->prepare(
-            "SELECT cc.category_game_name, COUNT(cj.id) AS jeux_count
+        $queryPrepared = SQL::getConnection()->prepare(
+            "SELECT cc.category_name, COUNT(cj.id) AS jeux_count
                     FROM carte_chance_category_jeux cc
-                    LEFT JOIN carte_chance_jeux cj ON cc.id = cj.category_id
-                    GROUP BY cc.category_game_name;"
+                    LEFT JOIN carte_chance_game cj ON cc.id = cj.category_id
+                    GROUP BY cc.category_name;"
         );
         $queryPrepared->execute();
         $result = $queryPrepared->fetchAll(PDO::FETCH_ASSOC);

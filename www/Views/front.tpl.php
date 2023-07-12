@@ -7,6 +7,7 @@
     <meta name="description" content="ceci est un super site">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../style.css">
+    <script src="/Assets/js/main.js"></script>
 </head>
 
 <body>

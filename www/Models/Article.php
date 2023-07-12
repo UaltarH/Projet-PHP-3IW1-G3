@@ -4,9 +4,8 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Article extends SQL
+class Article extends AbstractModel
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $content;
     protected string $title;
@@ -15,13 +14,6 @@ class Article extends SQL
     protected string $category_id;
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**

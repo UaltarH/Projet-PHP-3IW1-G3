@@ -6,7 +6,11 @@ use App\Core\View;
 
 use App\Forms\CreateUser;
 use App\Forms\EditUser;
-use App\Models\User;
+use App\Repository\ArticleRepository;
+use App\Repository\ArticleCategoryRepository;
+use App\Repository\GameArticleRepository;
+use App\Repository\GameCategoryRepository;
+use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 
 
@@ -17,11 +21,26 @@ require_once '/var/www/html/Services/AddFileContent.php';
 
 class System
 {
+    private ArticleRepository $articleRepository;
+    private UserRepository $userRepository;
+    private ArticleCategoryRepository $articleCategoryRepository;
+    private GameCategoryRepository $gameCategoryRepository;
+    private GameArticleRepository $gameArticleRepository;
+    private GameRepository $gameRepository;
+    public function __construct()
+    {
+        $this->articleRepository = new ArticleRepository();
+        $this->articleCategoryRepository = new ArticleCategoryRepository();
+        $this->gameCategoryRepository = new GameCategoryRepository();
+        $this->userRepository = new UserRepository();
+        $this->gameArticleRepository = new GameArticleRepository();
+        $this->gameRepository = new GameRepository();
+    }
+
     public function userlist(): void
     {
         //TODO: access right
-        $user = new User();
-        $roles = UserRepository::fetchRoles();
+        $roles = $this->userRepository->fetchRoles();
         $rolesOption = [];
         $rolesOption[""] = "Choose a role";
         foreach ($roles as $role) {

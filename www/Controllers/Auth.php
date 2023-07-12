@@ -10,6 +10,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Forms\ResetPassword;
 
+use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 
 use function App\Core\TokenJwt\generateJWT;
@@ -22,6 +23,12 @@ require_once '/var/www/html/Core/TokenJwt.php';
 
 class Auth
 {
+    private UserRepository $userRepository;
+    private RoleRepository $roleRepository;
+    public function __construct() {
+        $this->userRepository = new UserRepository();
+        $this->roleRepository = new RoleRepository();
+    }
     public function login(): void
     {
         $formConnection = new Connection();
@@ -30,22 +37,22 @@ class Auth
         $formConfig = $formConnection->getConfig();
         if($formConnection->isSubmited() && $formConnection->isValid()){
             $user = new User();
-                        $whereSql = ["pseudo" => $_POST['pseudo']];
-                        $user = $user->getOneWhere($whereSql);
+            $whereSql = ["pseudo" => $_POST['pseudo']];
+            $user = $this->userRepository->getOneWhere($whereSql, $user);
 
                         if(!is_bool($user)){
                             //si le resultat de getOneWhere est un bool ca veut dire qu'il na pas trouver l'utilisateur
                             if (password_verify($_POST['password'], $user->getPassword())) {
                                 // Le mot de passe est correct
-                                if($user->getEmailConfirmation() == false) { //tester si l'email est confirmé
+                                if(!$user->getEmailConfirmation()) { //tester si l'email est confirmé
                                     $formConnection->errors[] = "l'email n'est pas confirmer";
                                 } else {
                         //get the name of the role of the user
                         $role = new Role();
                         $whereSql = ["id" => $user->getRoleId()];
-                        $role = $role->getOneWhere($whereSql);
-                        //l'utilisateur est bien connecter du coup on le redirige vers la home page 
-
+                        $role = $this->roleRepository->getOneWhere($whereSql, $role);
+                        //l'utilisateur est bien connecter du coup on le redirige vers la home page
+                        
                         //creer le token jwt et le set en variable session
                         $payload = array(
                             'id' => $user->getId(), // Identifiant de l'utilisateur
@@ -91,7 +98,7 @@ class Auth
         if($form->isSubmited() && $form->isValid()){
             $user = new User();
 
-            $role = UserRepository::fetchUserRole()["id"];
+            $role = $this->userRepository->fetchUserRole()["id"];
 
             if($form->isPhoneNumberValid($_POST['phone_number']) && $form->isPasswordValid($_POST['password'], $_POST['passwordConfirm']) && $form->isFieldsInfoValid($user, ["email"=>$_POST['email'], "pseudo"=>$_POST['pseudo'], "phone_number"=>$_POST['phone_number']])){
                 $user->setPseudo($_POST['pseudo']);
@@ -112,7 +119,7 @@ class Auth
                 }
                 $user->setConfirmAndResetToken($key);
 
-                $responseQuery = $user->save();
+                $responseQuery = $this->userRepository->save($user);
                 if($responseQuery->success){ //return true | false
                     //envoi du mail pour la confirmation du compte:
                     $to = $user->getEmail();
@@ -143,9 +150,8 @@ class Auth
             $pseudo = htmlspecialchars(urldecode($_GET['pseudo']));
             $key = htmlspecialchars($_GET['key']);
 
-            $user = new User();
             $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
-            $result = $user->getOneWhere($whereSql);
+            $result = $this->userRepository->getOneWhere($whereSql, new User);
             if(is_bool($result)){
                 $messageInfo[] = "utilisateur introuvable belec au hack !";
             }
@@ -178,9 +184,8 @@ class Auth
             $key = htmlspecialchars($_GET['key']);
             $newPassword = htmlspecialchars($_GET['pwd']);
 
-            $user = new User();
             $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
-            $result = $user->getOneWhere($whereSql);
+            $result = $this->userRepository->getOneWhere($whereSql, new User);
             if(is_bool($result)){
                 $messageInfo[] = "utilisateur introuvable belec au hack !";
             }
@@ -201,7 +206,7 @@ class Auth
     public function profile(): void
     {
         $editUserModalForm = new EditProfileFront();
-        $roles = UserRepository::fetchRoles();
+        $roles = $this->userRepository->fetchRoles();
         $rolesOption = [];
         foreach ($roles as $role) {
             $rolesOption[$role["id"]] = $role["role_name"];
@@ -229,9 +234,8 @@ class Auth
     }
     public function editProfile(): void
     {
-        $user = new User();
         $id = getSpecificDataFromToken($_SESSION['token'], "id");
-        $user = $user->getOneWhere(["id" => $id]);
+        $user = $this->userRepository->getOneWhere(["id" => $id], new User);
         foreach ($_POST as $key => $value) {
             if (!empty($value)) {
                 if ($key == "setPseudo") {
@@ -248,9 +252,8 @@ class Auth
         session_destroy();
         session_start();
 
-        $role = new Role();
         $whereSql = ["id" => $user->getRoleId()];
-        $role = $role->getOneWhere($whereSql);
+        $role = $this->roleRepository->getOneWhere($whereSql, new Role);
 
         $payload = array(
             'id' => $user->getId(), // Identifiant de l'utilisateur

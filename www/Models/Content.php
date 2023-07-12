@@ -3,20 +3,12 @@ namespace App\Models;
 
 use App\Core\SQL;
 
-class Content extends SQL
+class Content extends AbstractModel
 {
-    private $db_connexion;
     private string $id = "0";
     protected string $path_content;
 
     public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
-    }
-
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
     }
 
     /**
