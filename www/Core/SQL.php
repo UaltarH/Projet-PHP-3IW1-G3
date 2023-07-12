@@ -101,7 +101,7 @@ class SQL
             }
         }
 
-        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         $queryPrepared->execute($values);
 
