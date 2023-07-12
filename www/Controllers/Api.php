@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\Errors;
 use App\Core\Validator;
 use App\Models\Article;
@@ -13,9 +14,11 @@ class Api
 {
     private UserRepository $userRepository;
     private ArticleRepository $articleRepository;
+    private array $config;
     public function __construct() {
         $this->userRepository = new UserRepository();
         $this->articleRepository = new ArticleRepository();
+        $this->config = Config::getInstance()->getConfig();
     }
 
     /**
@@ -76,8 +79,7 @@ class Api
             echo json_encode("Bad Method");
             exit;
         }
-        //TODO: access right
-        // deny access to this url
+        // TODO : deny access to this url
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -97,7 +99,7 @@ class Api
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => "carte_chance_role",
+                    "table" => $this->config['bdd']['prefix']."role",
                     "foreignKeys" => [
                         "originColumn" => "role_id",
                         "targetColumn" => "id"
@@ -112,8 +114,7 @@ class Api
      */
     public function articlelist(): void
     {
-        //TODO: access right
-        // deny access to this url
+        // TODO : deny access to this url
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -134,7 +135,7 @@ class Api
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => "carte_chance_article_category",
+                    "table" => $this->config['bdd']['prefix']."article_category",
                     "foreignKeys" => [
                         "originColumn" => "category_id",
                         "targetColumn" => "id"

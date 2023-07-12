@@ -2,6 +2,7 @@
 //toutes les méthodes communes aux repository
 namespace App\Repository;
 
+use App\Core\Config;
 use App\Core\ResponseSave;
 use App\Core\SQL;
 
@@ -19,7 +20,7 @@ abstract class AbstractRepository
     public function getTable($model): string
     {
         $classExploded = explode("\\", $model::class);
-        return "carte_chance_" . strtolower(end($classExploded));
+        return Config::getConfig()['bdd']['prefix'] . strtolower(end($classExploded));
     }
     /** Le resultat sera sous d'un tableau associatif, l'unique colonne qu'on aura se nomme "column_exists" avec comme contenu soit
      * "the value for column the nom_colonne_concerné already exists" ou "none_exists".

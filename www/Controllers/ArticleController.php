@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\View;
 
 use App\Models\Article;
@@ -10,8 +11,10 @@ use App\Repository\ArticleRepository;
 
 class ArticleController extends AbstractRepository
 {
+    private array $config;
     private ArticleRepository $articleRepository;
     public function __construct() {
+        $this->config = Config::getInstance()->getConfig();
         $this->articleRepository = new ArticleRepository();
     }
     public function getArticle(): void
@@ -44,7 +47,7 @@ class ArticleController extends AbstractRepository
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_article_category",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -70,7 +73,7 @@ class ArticleController extends AbstractRepository
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_article_category",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"

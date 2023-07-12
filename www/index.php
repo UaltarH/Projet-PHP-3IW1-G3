@@ -4,6 +4,7 @@
 namespace App;
 session_start();
 
+use App\Core\Config;
 use App\Core\Errors;
 use App\Models\Role;
 use App\Repository\RoleRepository;
@@ -32,7 +33,9 @@ spl_autoload_register(function ($class) {
  * Affiche l'environnement du projet
  */
 //echo Config::getInstance()->getEnvironment();
-
+//echo '<pre>';
+//var_dump(Config::getConfig());
+//echo '</pre>';
 //Afficher le controller et l'action correspondant à l'URI
 $uriStr = $_SERVER["REQUEST_URI"];
 $uriExploded = explode("?", $uriStr);
@@ -75,8 +78,6 @@ if (isset($routeArray["controller"]) && $routeArray["action"]) {
     Errors::define(500, 'Pas de controller ou action');
     exit;
 }
-
-
 
 if (!file_exists("Controllers/" . $controller . ".php")) {
     Errors::define(500, "Le fichier Controllers/" . $controller . ".php n'existe pas");

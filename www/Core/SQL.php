@@ -17,7 +17,9 @@ class SQL
     protected function __construct()
     {
         try {
-            self::$connection = new \PDO("pgsql:host=database;dbname=esgi;port=5432", "esgi", "Test1234");
+            $config = Config::getInstance()->getConfig();
+            $bdd = $config['bdd'];
+            self::$connection = new \PDO("pgsql:host=".$bdd['host'].";dbname=".$bdd['dbname'].";port=".$bdd['port'], $bdd['username'], $bdd['password']);
         } catch (\Exception $e) {
             die("Erreur SQL : " . $e->getMessage());
         }
