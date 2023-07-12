@@ -34,7 +34,14 @@ function AddFileContentFunction(array $InformationContent): ResponseGeneral
             mkdir($InformationContent['directory'], 0777, true);
         }
         // Upload file
-        if(move_uploaded_file($InformationContent['fileContent'],$InformationContent['location'])){
+        
+        if($InformationContent['from$_FILES']){
+            $res =  move_uploaded_file($InformationContent['fileContent'],$InformationContent['location']);
+        } else{
+            $res = file_put_contents($InformationContent['location'], $InformationContent['fileContent']);
+        }
+
+        if($res){
             // add content in content table
             $content = new Content();
             $content->setPathContent($InformationContent['location']);

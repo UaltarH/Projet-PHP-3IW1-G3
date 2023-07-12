@@ -75,6 +75,8 @@
             }
         });
     });
+
+    
     function handleCreateSubmit(e, table) {
         e.preventDefault();
         // checks validity of form

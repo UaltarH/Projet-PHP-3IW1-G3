@@ -8,7 +8,7 @@ class Jeux extends SQL
 {
     private $db_connexion;
     private string $id = "0";
-    protected string $title;
+    protected string $title_game;
     protected string $category_id = "0";
 
     public function __construct(){
@@ -42,15 +42,15 @@ class Jeux extends SQL
     */
     public function getTitle(): string
     {
-        return $this->title;
+        return $this->title_game;
     }
 
     /**
      * @param String $title
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title_game): void
     {
-        $this->title = $title;
+        $this->title_game = $title_game;
     }
 
     /**

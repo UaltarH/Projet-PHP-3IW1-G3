@@ -33,8 +33,8 @@ services:
     build: sass
     volumes:
       - ./www:/home
-    # command: sass --watch "/home/Assets/scss/main.scss:/home/_style.scss"
-    command: sass --watch "/home/Assets/scss/main.scss:/home/_style.scss" --no-source-map && npx postcss /home/_style.scss --use autoprefixer --output /home/_style.scss
+    # command: sass --watch "/home/Assets/scss/main.scss:/home/style.css"
+    command: sass --watch "/home/Assets/scss/main.scss:/home/style.css" --no-source-map && npx postcss /home/style.css --use autoprefixer --output /home/style.css
 
   mailcatcher:
     restart: always

@@ -51,7 +51,6 @@ reset-password:
 page:
   controller: Article
   action: getArticle
-
   access: [ALL]
   allgames:
     controller: Article
@@ -78,17 +77,30 @@ sys:
       access: [ADMIN, MODERATOR]
   article:
     articles-management:
-      controller: System
+      controller: Article
       action: articlesManagement
       access: [ADMIN, MODERATOR]
-    # create-article-game:
-    #   controller: System
-    #   action: addArticleGame
-    #   access: [ADMIN, MODERATOR]
-    # create-article-about-game:
-    #   controller: System
-    #   action: addArticleAboutGame
-    #   access: [ADMIN, MODERATOR]
+    datatable:
+      controller: Article
+      action: articleDatatable
+      access: [ADMIN, MODERATOR]
+    create-article-game:
+      controller: Article
+      action: createArticleGame
+      access: [ADMIN, MODERATOR]
+    create-article-about-game:
+      controller: Article
+      action: createArticleAboutGame
+      access: [ADMIN, MODERATOR]
+    delete-article:
+      controller: Article
+      action: deleteArticle
+      access: [ADMIN, MODERATOR]
+    edit-article:
+      controller: Article
+      action: updateArticle
+      access: [ADMIN, MODERATOR]
+
   dashboard:
     controller: Dashboard
     action: index
@@ -118,9 +130,4 @@ api:
       action: userdelete
       method: DELETE
       access: [ADMIN]
-  article:
-    list:
-      controller: Api
-      action: articlelist
-      params: [length, start, search, draw]
-      access: [ADMIN, MODERATOR]
+

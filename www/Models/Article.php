@@ -12,7 +12,7 @@ class Article extends SQL
     protected string $title;
     protected string $created_date;
     protected string $updated_date;
-    protected string $category_id = "0";
+    protected string $category_id;
 
     public function __construct(){
         $this->db_connexion = SQL::getInstance()->getConnection();

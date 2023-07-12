@@ -27,7 +27,7 @@ class Dashboard {
         $totalJeux = $jeuxModel->getTotalCount();
 
         $whereSql = ["moderated" => false];
-        $unmoderatedComment = $commentaireModel->getAllWhere($whereSql);
+        $unmoderatedComment = $commentaireModel->getAllWhere($whereSql, "creation_date");
 
         $totalGamesByCategories = $categorieJeuxModel->getTotalGamesByCategories();
 

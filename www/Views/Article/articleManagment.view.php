@@ -1,6 +1,5 @@
+<div class="response-message"></div>
 <h1>Article management page :</h1>
-<!-- modal modif -->
-<?php include "Views/Partials/editArticleModal.ptl.php" ?>
 
 <!-- datatable -->
 <nav>
@@ -17,526 +16,185 @@
             <th>Created date</th>
             <th>Update date</th>
             <th>Category</th>
+            <th>Category game</th>
+            <th>Game</th>
+            <th>Content</th>
             <th>Action</th>
         </tr>
     </thead>
 </table>
 
 
+
 <!-- btn pour ouvrir la modal d'ajout d'article  -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#multi-step-modal" id="open-modal-btn">Créer un article</button>
+<button type="button" class="btn btn-primary"  id="open-modalCreateGameArticle-btn">Créer un article</button>
 
 <!-- modal d'ajout d'article -->
 <?php $this->partial("modalAddArticle", $optionsForms) ?>
 
+<!-- modal modif -->
+<?php $this->partial("modalEditArticle", $optionsForms) ?>
 
-<!-- grapes.js test -->
-<link rel="stylesheet" href="/library/grapes.js/grapesjs/css/grapes.min.css">
-<script src="/library/grapes.js/grapesjs/grapes.min.js"></script>
-<script src="/library/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
-<script src="/library/grapes.js/packages/blocks-basic/index.js"></script>
-
-
-<button id="save-button">Enregistrer</button>
-
-<button id="open-editor">Ouvrir l'éditeur</button>
-<button id="close-editor">Fermer l'éditeur</button>
-<div id="gjs"></div>
-
-
-<script type="text/javascript">
-    //grapes.js 
-    var templateSpotify = ` <main>
-			<section id="section1">
-				<div class="container">
-					<div>
-						<h1>Obtenez 3 mois pour 0,99 €</h1>
-						<h2>Seulement 9,99 € /par mois ensuite. Annulez à tout moment.</h2>
-						<a href="#" class="cta-button cta-button--blue">Démarrer Spotify Premium</a>
-					</div>
-					<footer>
-						<p>
-							Offre réservée aux utilisateurs n'ayant jamais essayé Spotify Premium. Offre valable jusqu'au 31 déc. 2021.<br>Offre soumise à conditions.
-						</p>
-					</footer>
-				</div>
-			</section>
-			<section id="section2">
-				<div class="container">
-					<h1>Pourquoi passer à Spotify premium ?</h1>
-					<div>
-						<article class="benefit">
-							<figure>
-								
-							</figure>
-							<h1>Téléchargez votre musique.</h1>
-							<h2>Profitez-en même sans connexion internet.</h2>
-						</article>
-						<article class="benefit">
-							<figure>
-								
-							</figure>
-							<h1>Écoutez sans pubs.</h1>
-							<h2>Profitez de vos titres sans interruption.</h2>
-						</article>
-						<article class="benefit">
-							<figure>
-								
-							</figure>
-							<h1>Écoutez les titres de votre choix.</h1>
-							<h2>Même sur votre mobile.</h2>
-						</article>
-						<article class="benefit">
-							<figure>
-								
-							</figure>
-							<h1>Zapping à l'infini.</h1>
-							<h2>Cliquez simplement sur suivant.</h2>
-						</article>
-					</div>
-				</div>
-			</section>
-			<section id="section3">
-				<div class="container">
-					<h1>Écoutez gratuitement ou abonnez-vous à Spotify Premium.</h1>
-					<div class="offers-container">
-						<article class="offer">
-							<h1>Spotify Free</h1>
-							<h2>0,00 € <small>/ mois</small></h2>
-							<ul>
-								<li>Lecture aléatoire</li>
-								<li class="disabled">Sans interruptions</li>
-								<li class="disabled">Zappez les titres sans limite</li>
-								<li class="disabled">Écouter hors connexion</li>
-								<li class="disabled">Écoutez les titres de votre choix</li>
-								<li class="disabled">Son de qualité supérieure</li>
-							</ul>
-							<a href="#" class="cta-button cta-button--white">Démarrer</a>
-						</article>
-						<article class="offer">
-							<h1>Spotify Premium</h1>
-							<h2>3 mois pour 0,99 €</h2>
-							<ul>
-								<li>Lecture aléatoire</li>
-								<li>Sans interruptions</li>
-								<li>Zappez les titres sans limite</li>
-								<li>Écouter hors connexion</li>
-								<li>Écoutez les titres de votre choix</li>
-								<li>Son de qualité supérieure</li>
-							</ul>
-							<a href="#" class="cta-button cta-button--green">Démarrer spotify premium</a>
-						</article>
-					</div>
-					<footer>
-						<p>
-							Seulement 9,99 € /par mois ensuite. Offre réservée aux utilisateurs n'ayant jamais essayé Spotify Premium.<br>Offre valable jusqu'au 31 déc. 2018. Offre soumise à conditions.
-						</p>
-					</footer>
-				</div>
-			</section>
-		</main> <style> 
-            a{
-                color: inherit;
-            }
-
-            button{
-                border: none;
-                background-color: transparent;
-                cursor: pointer;
-            }
-
-            /*Positionnement des blocs*/
-
-            .container{
-                max-width: 1170px;
-                margin: auto;
-            }
-
-            .cta-button{
-                display: inline-block;
-                background-color: grey;
-                color: white;
-                padding: 1em 3em;
-                text-transform: uppercase;
-                font-weight: 700;
-                text-decoration: none;
-                border-radius: 600px;
-                letter-spacing: 0.1em;
-                transition: all 0.3s;
-                border: solid thin grey;
-                text-align: center;
-            }
-
-            .cta-button:hover{
-                background-color: lightgrey;
-                border-color: lightgrey;
-            }
-
-            .cta-button--blue{
-                background-color: var(--blue);
-                border-color: var(--blue);
-            }
-
-            .cta-button--blue:hover{
-                background-color: var(--blue-hover);
-                border-color: var(--blue-hover);
-            }
-
-            .cta-button--white{
-                background-color: white;
-                border-color: var(--green);
-                color: var(--green);
-            }
-
-            .cta-button--white:hover{
-                background-color: var(--green-hover);
-                border-color: var(--green);
-                color: white;
-            }
-
-            .cta-button--green{
-                background-color: var(--green);
-                border-color: var(--green);
-            }
-
-            .cta-button--green:hover{
-                background-color: var(--green-hover);
-                border-color: var(--green-hover);
-            }
-
-            body{
-                margin: 0;
-                font-family: 'Arial', sans-serif;
-            }
-
-            header{
-                background-color: rgba(0,0,0,0.5);
-                padding: 1rem 0;
-                position: fixed;
-                width: 100%;
-                z-index: 10;
-            }
-
-            header .container{
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            img{
-                max-width: 100%;
-                max-height: 100%;
-            }
-
-            #logo-link{
-                width: 140px;
-                line-height: 0;
-                z-index: 10;
-            }
-
-            #menu-button{
-                display: none;
-                z-index: 10;
-                width: 3rem;
-                height: 3rem;
-            }
-
-            #menu-button::before{
-                content: '';
-                background-image: url('assets/images/menu.svg');
-                background-repeat: no-repeat;
-                background-position: center;
-                background-size: contain;
-                display: inline-block;
-                width: 100%;
-                height: 100%;
-            }
-
-            header nav ul{
-                list-style: none;
-                padding: 0;
-                margin: 0;
-                display: flex;
-            }
-
-
-            header nav li a{
-                text-decoration: none;
-                padding: 0.5em;
-                display: block;
-                color: white;
-            }
-
-
-            /*SECTION1*/
-
-            #section1{
-                height: 640px;
-                padding-bottom: 20px;
-                color: white;
-                background-image: url('assets/images/hero-image.jpg');
-                background-size: cover;
-                background-position: center right;
-            }
-
-            #section1 h1{
-                font-size: 96px;
-                margin: 0;
-            }
-
-            #section1 h2{
-                font-size: 30px;
-            }
-
-            #section1 .container{
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            #section1 .cta-button{
-                animation: fadeIn 1s;
-            }
-
-            #section1 footer{
-                text-align: center;
-                flex-grow: 0;
-                flex-shrink: 0;
-            }
-
-            #section1 .container div{
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-            }
-
-
-
-            #section2{
-                background-color: white;
-            }
-
-            #section2 .container{
-                display: flex;
-                flex-direction: column;
-            }
-
-            #section2 .container > h1{
-                text-align: center;
-                font-size: 48px;
-            }
-
-            #section2 .container div{
-                display: flex;
-            }
-
-            .benefit{
-                padding: 30px;
-                width: 25%;
-                text-align: center;
-            }
-
-            .benefit h1{
-                font-size: 20px;
-            }
-
-            .benefit h2{
-                font-size: 14px;
-                font-weight: 400;
-            }
-
-            #section3{
-                background-color: #F8F8F8;
-                padding: 40px 0;
-            }
-
-            #section3 .container{
-                display: flex;
-                flex-direction: column;
-            }
-
-            #section3 .container > h1{
-                text-align: center;
-                font-size: 30px;
-            }
-
-            .offers-container{
-                width: 70%;
-                margin: auto;
-                display: flex;
-                justify-content: space-between;
-                margin-top: 20px;
-                margin-bottom: 30px;
-            }
-
-            .offer{
-                width: 48%;
-                background-color: white;
-                padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 0 8px rgba(0,0,0,0.2);
-                display: flex;
-                flex-direction: column;
-                position: relative;
-                transition: all 0.5s;
-                top: 0;
-                cursor: pointer;
-            }
-
-            .offer:hover{
-                /*transform: translateY(-10px);*/
-                top: -10px;
-                box-shadow: 0 0 24px rgba(0,0,0,0.2);
-            }
-
-            .offer h1{
-                font-size: 24px;
-                font-weight: 400;
-                margin: 0;
-            }
-
-            .offer h2{
-                font-size: 32px;
-                margin: 0;
-            }
-
-            .offer h2 small{
-                font-weight: 400;
-                font-size: 60%;
-            }
-
-            .offer ul{
-                border-top: solid thin lightgrey;
-                border-bottom: solid thin lightgrey;
-                padding-top: 30px;
-                padding-bottom: 30px;
-                padding-left: 30px;
-                list-style-image: url('assets/images/checklist.svg');
-            }
-
-            .offer ul li{
-                margin-bottom: 1em;
-            }
-
-            .offer ul li.disabled{
-                opacity: 0.5;
-            }
-
-            #section3 footer{
-                text-align: center;
-            }
-
-
-
-            body > footer {
-                padding: 1rem 0;
-                background-color: black;
-                color: white;
-                font-size: 14px;
-            }
-
-            body > footer .container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-
-            }
-
-            body > footer ul{
-                list-style: none;
-                margin: 0;
-                padding: 0;
-                display: flex;
-            }
-
-            body > footer li a{
-                padding: 0.5em;
-                display: block;
-                text-decoration: none;
-    } </style>`;
-
-    
-    var editor; // Déclaration de la variable editor en dehors des fonctions de clic
-
-    document.getElementById('open-editor').addEventListener('click', function() {
-        editor = grapesjs.init({
-            container: '#gjs',
-            pageManager: true, 
-            storageManager:  {
-                type: 'indexeddb',
-            },
-            plugins: ['grapesjs-tabs', 'gjs-blocks-basic'],
-            pluginsOpts: {
-                'grapesjs-tabs': {},
-                "gjs-blocks-basic": {
-                    blocks: ['column1', 'column2', 'column3', 'column3-7', 'text', 'link', 'image']
-                }
-            },
-            blockManager: {
-                blocks: [
-                    {
-                        id: 'template1',
-                        label: 'Sportify Template',
-                        content: templateSpotify
-                    },
-                    {
-                        id: 'template2',
-                        label: 'Template 2',
-                        content: '<div>Contenu du template 2</div>'
-                    }
-                    // Ajoutez d'autres templates ici
-                ]
-            }
-        });
-    });
-
-    document.getElementById('close-editor').addEventListener('click', function() {
-        if (editor) {
-            editor.destroy();
-            editor = null; // Réinitialise la variable editor après avoir détruit l'éditeur
-        }
-    });
-
-    var saveButton = document.getElementById('save-button');
-
-    saveButton.addEventListener('click', function() {
-        if (editor) { // Vérifiez si editor est défini avant d'accéder à ses méthodes
-            var html = editor.getHtml();
-            var css = editor.getCss();
-
-            html = html.replace(/<body/g, '<div>');
-            html = html.replace(/<\/body>/g, '</div>');
-            html += '<style>' + css + '</style>';
-            console.log(html);
-        }
-    });
-
-        
-        
-
-
-     
-</script>
 
 
 
 <!-- script js pour la datatable -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
+
+//gestions des boutons de modal
+    // Récupérer la référence à la modal create article
+    var modalCreateArticleElement = document.getElementById('multi-step-modal');
+    var modalCreateArticle = new bootstrap.Modal(modalCreateArticleElement);
+    $("#open-modalCreateGameArticle-btn").on('click', function(){
+        openModalCreateArticle();
+    }); 
+    $("#close-modalCreateGameArticle-btn").on('click', function(){
+        closeModalCreateArticle();
+    }); 
+    function openModalCreateArticle(){
+        modalCreateArticle.show();
+    }
+    function closeModalCreateArticle(){
+        modalCreateArticle.hide();
+    }
+
+    //modal edit article
+    var modalEdiotArticleElement = document.getElementById('editArticle-modal');
+    var modalEditArticle = new bootstrap.Modal(modalEdiotArticleElement);
+    $("#close-modalEditArticle-btn").on('click', function(){
+        closeModalEditArticle();
+    }); 
+
+    function openModalEditArticle(){
+        modalEditArticle.show();
+    }
+    function closeModalEditArticle(){
+        contentArticle = "";
+        document.getElementById("editArticle-form-title").value = "";
+        modalEditArticle.hide();
+    }
+//
+    
+// Formulaire à plusieurs étapes
+    // Récupérer toutes les sections du formulaire
+    const formSteps = document.querySelectorAll('.form-step');
+
+    // Récupérer les boutons de navigation
+    const nextButtons = document.querySelectorAll('.next-step');
+    const prevButtons = document.querySelectorAll('.prev-step');
+
+    // Fonction pour afficher une étape spécifique
+    function showStep(stepIndex) {
+    formSteps.forEach((step, index) => {
+        if (index === stepIndex) {
+        step.style.display = 'block';
+        } else {
+        step.style.display = 'none';
+        }
+    });
+    }
+
+    // Fonction pour passer à l'étape suivante
+    function goToNextStep() {
+    const currentStep = this.closest('.form-step');
+    const nextStep = currentStep.nextElementSibling;
+    if (nextStep) {
+        currentStep.style.display = 'none';
+        nextStep.style.display = 'block';
+    }
+    }
+
+    // Fonction pour revenir à l'étape précédente
+    function goToPrevStep() {
+    const currentStep = this.closest('.form-step');
+    const prevStep = currentStep.previousElementSibling;
+    if (prevStep) {
+        currentStep.style.display = 'none';
+        prevStep.style.display = 'block';
+    }
+    }
+
+    // Attacher les événements aux boutons de navigation
+    nextButtons.forEach(button => {
+        button.addEventListener('click', goToNextStep);
+    });
+
+    prevButtons.forEach(button => {
+        button.addEventListener('click', goToPrevStep);
+    });
+
+    // Afficher la première étape au chargement de la page
+    showStep(0);
+
+    // gestion de l'etape 2 dynamique du fomulaire
+    // Récupérer les éléments liés à l'étape 1
+    const selectField = document.getElementById('field1');
+
+    // Récupérer les éléments liés à l'étape 2
+    const step2Option1 = document.getElementById('step2-option1');
+    const step2Option2 = document.getElementById('step2-option2');
+
+    // Fonction pour afficher les champs correspondants à l'option choisie
+    function showFieldsForOption(optionValue) {
+        if (optionValue === 'Jeux') {
+            step2Option1.style.display = 'block';
+            step2Option2.style.display = 'none';
+            //rendre les input required
+            document.getElementById("createArticleGame-form-titleGame").required = true;
+            document.getElementById("createArticleGame-form-categoryGame").required = true;
+            document.getElementById("createArticleGame-form-imageJeu").required = true;
+            document.getElementById("createArticleAboutGame-form-game").required = false;
+            document.getElementById("createArticleAboutGame-form-titleArticle").required = false;
+
+        } else if (optionValue === 'Trucs et astuces') {
+            step2Option1.style.display = 'none';
+            step2Option2.style.display = 'block';
+            //rendre les input required
+            document.getElementById("createArticleAboutGame-form-game").required = true;
+            document.getElementById("createArticleAboutGame-form-titleArticle").required = true;
+            document.getElementById("createArticleGame-form-titleGame").required = false;
+            document.getElementById("createArticleGame-form-categoryGame").required = false;
+            document.getElementById("createArticleGame-form-imageJeu").required = false;
+
+        } else {
+            step2Option1.style.display = 'none';
+            step2Option2.style.display = 'none';
+        }
+    }
+
+    // Événement de changement de sélection dans l'étape 1
+    selectField.addEventListener('change', function() {
+        const selectedOptionText = this.options[this.selectedIndex].text;
+        showFieldsForOption(selectedOptionText);
+    });
+
+    // Afficher les champs correspondant à l'option sélectionnée initialement
+    showFieldsForOption(selectField.value);
+//
+
+
+//gestion de la datatable 
+    var selectedRow;
     $(document).ready(function() {
+
+        $('input[required]').siblings("");
         let table = $('#articleTable').DataTable({
             'processing': true,
             'serverSide': true,
             'serverMethod': 'get',
             'ajax': {
-                'url':'/api/article/list'
+                'url':'/sys/article/datatable'
             },
             columnDefs: [
                 {
                     target: 0,
+                    visible: false,
+                    searchable: false,
+                },
+                {
+                    target: 7,
                     visible: false,
                     searchable: false,
                 }
@@ -548,96 +206,207 @@
                 { data: 'created_date' },
                 { data: 'updated_date' },
                 { data: 'category_name' },
+                { data: 'category_game_name' },
+                { data: 'title_game' },
+                { data: 'content'},
                 { data: 'action'}
             ],
             'drawCallback': function() {
-                let arr_edit = document.getElementsByClassName('row-edit-button');
-                for(let elt of arr_edit) {
-                    elt.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        let uriParam = e.target.href.split('?')[1];
-                        let params = uriParam.split('&').map(function(i) {
-                            return i.split('=');
-                        }).reduce(function(memo, i) {
-                            memo[i[0]] = i[1] == +i[1] ? parseFloat(i[1],10) : decodeURIComponent(i[1]);
-                            return memo;
-                        }, {});
-                        let data = table.row($(this).parents('tr')).data();
-                        let modalContainer = $('#modal-container');
-                        modalContainer.addClass("active");
+                let allCrudButton = $('.crud-button');
+                allCrudButton.on('click', function(e){
+                    selectedRow = table.row($(e.target).parents('tr')).data();
+                    if($(e.target).hasClass('row-edit-button')) {
+                        //ouvrir la modal pour l'edition de l'article
+                        contentArticle = selectedRow.content;
+                        document.getElementById("editArticle-form-title").value = selectedRow.title;
+                        
+                        openModalEditArticle();
+                    }
+                    else if ($(e.target).hasClass('row-delete-button')) {
+                        //appel une fonction qui va faire un appel ajax pour supprimer l'article
+                        deleteArticle(e, table);
+                    }
+                });
 
-                        let form = $('#edit-article-form');
-                        let action = form.attr('action');
-                        let searchParams = new URLSearchParams(action.split('?')[1]);
-                        let baseURL = action.split('?')[0];
-                        searchParams.delete('id');
-                        let searchParamsStr = searchParams.toString().concat("&id="+data.id);
-                        action = baseURL.concat("?"+searchParamsStr);
-                        form.attr('action', action);
-
-                        $('#closeModal').on('click', function () {
-                            modalContainer.removeClass("active");
-                        });
-                    });
-                }
+                //declanche les appels ajax quand on submit un des formulaires
+                $('input[name="submitEditArticle"]').on('click', function(e) { editArticle(e, table); });
+                $('input[name="submitCreateArticle"]').on('click', function(e) { createArticle(e, table); });
             }
-        });
+        });            
+    });
+//
 
 
-        
-        // gerer le formulaire d'ajout d'article:
+//functions to call with ajax for the crud  
 
-        // Étapes du formulaire
-        const formSteps = document.getElementsByClassName('form-step');
-        // Bouton Suivant
-        const nextBtn = document.getElementsByClassName('next-step')[0];
-        // Bouton Précédent
-        const prevBtn = document.getElementsByClassName('prev-step')[0];
-        // Sélecteur de l'étape 1
-        const step1Select = document.getElementById('field1');
-        // Conteneur de l'option 1 de l'étape 2
-        const step2Option1 = document.getElementById('step2-option1');
-        // Conteneur de l'option 2 de l'étape 2
-        const step2Option2 = document.getElementById('step2-option2');
-
-        // Fonction pour afficher une étape spécifique
-        function showStep(stepIndex) {
-            for (let i = 0; i < formSteps.length; i++) {
-                formSteps[i].style.display = 'none';
-            }
-            formSteps[stepIndex].style.display = 'block';
+    function createArticle(e, table){
+        e.preventDefault();
+        // checks validity of form
+        if (! $('#multi-step-form-create-article')[0].checkValidity()) {
+            alert("Veuillez renseigner tous les champs du formulaire");
+            //$('#multi-step-form-create-article')[0].reportValidity();
+            //TODO : gerer si le formulaire contiens bien tous les elements requis si non mettre un message pour informer l'utilisateur
+            // de plus on a une erreur dans la console : An invalid form control with name='categoriesArticle' is not focusable.
+            // ca veut dire quil ne peut pas ajouter "veuillez renseignez ce champ" car il n'est pas focusable (pas visible vue qu'on est dans un form a plusieurs etapes)
+            return false;
         }
 
-        // Gestionnaire d'événement pour le bouton Suivant
-        nextBtn.addEventListener('click', function() {
-            const currentStep = Array.from(formSteps).findIndex(step => step.style.display === 'block');
-            const nextStep = currentStep + 1;
-            showStep(nextStep);
-        });
+        if(htmlContent == ""){
+            //todo : mettre un vrai message d'erreur
+            alert("Veuillez renseigner le contenu de l'article");
+            return false;
+        }
 
-        // Gestionnaire d'événement pour le bouton Précédent
-        prevBtn.addEventListener('click', function() {
-            const currentStep = Array.from(formSteps).findIndex(step => step.style.display === 'block');
-            const prevStep = currentStep - 1;
-            showStep(prevStep);
-        });
+        let data = new FormData();
+        let createArticleForm = document.getElementById('multi-step-form-create-article');
+        let elements = createArticleForm.elements;
 
-        // Gestionnaire d'événement pour le changement de valeur dans le sélecteur de l'étape 1
-        step1Select.addEventListener('change', function() {
-            if (step1Select.options[step1Select.selectedIndex].text === 'Jeux') {
-                step2Option1.style.display = 'block';
-                step2Option2.style.display = 'none';
-            } else if (step1Select.options[step1Select.selectedIndex].text === 'Trucs et astuces') {
-                step2Option1.style.display = 'none';
-                step2Option2.style.display = 'block';
-            } else {
-                step2Option1.style.display = 'none';
-                step2Option2.style.display = 'none';
+        let selectElement = document.getElementById('field1');
+        let selectedOption = selectElement.selectedOptions[0];
+        let selectedOptionName = selectedOption.text;
+
+        let urlRes;
+        let partName;
+        if(selectedOptionName == "Jeux"){
+            urlRes = "/sys/article/create-article-game";
+            partName = "createArticleGame";
+        } 
+        else{
+            urlRes = "/sys/article/create-article-about-game";
+            partName = "createArticleAboutGame";            
+        }
+
+        for(let elt of elements) {
+            if(!!elt.value && elt.type !== "submit" && elt.type !== "reset") {
+                if(elt.name.includes(partName)){
+                    if (elt.type === "file") {
+                        data.append(elt.name, elt.files[0]);
+                    } else {
+                        data.append(elt.name, elt.value);
+                    }
+                }
+            }
+        }
+        data.append("content", htmlContent);
+
+        $.ajax({
+            type: "POST",
+            url: urlRes,
+            data: data,
+            dataType: "json", // type de retour attendu
+            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
+            context: $('.response-message'),
+            processData: false, // Désactiver le traitement automatique des données
+            contentType: false,
+            success: function (data) {            
+                closeModalCreateArticle();
+                // Afficher la première étape du formaulaire d'ajout d'article
+                showStep(0);
+                // reset content of the editor and update message of the editor
+                htmlContent = "";
+                document.getElementById('addArticleContent-info').textContent = "Votre article ne contient pas de contenu.";
+
+                table.ajax.reload();
+            },
+            error: function (xhr, resp, error) {
+                //TODO : afficher un message d'erreur dans une alert bootstrap
+                console.error(`Error : ${JSON.stringify(error)}`);
+            },
+            complete: function (xhr, status) {
+                showResponseMessage(status, "Add");
+                $('#multi-step-form-create-article').trigger('reset');
+            }
+        });
+    }
+
+    function editArticle(e, table){        
+        e.preventDefault();
+
+        // checks validity of form
+        if (! $('#form-edit-article')[0].checkValidity()) {
+            $('#form-edit-article')[0].reportValidity();
+            return false;
+        }
+
+        let data = {};
+        let editUserForm = document.getElementById('form-edit-article');
+        let elements = editUserForm.elements;
+        data["id"] = selectedRow.id;
+        data["content"] = contentArticle;
+        data["title_game"] = selectedRow.title_game;
+        for(let elt of elements) {
+            if(!!elt.value && elt.type !== "submit" && elt.type !== "reset") {
+               data[elt.name] = elt.value;
+            }
+        }
+
+        if(data["content"] == selectedRow.content && data["editArticle-form-title"] == selectedRow.title){
+            alert("Vous n'avez pas modifié l'article");
+            return false;
+        }else {
+            if(data["content"] == selectedRow.content){
+                delete data["content"];
+            }
+            if(data["editArticle-form-title"] == selectedRow.title){
+                delete data["editArticle-form-title"];
+            }
+        }
+        
+        $.ajax({
+            type: "POST",
+            url: '/sys/article/edit-article',
+            data: data,
+            dataType: "json", // type de retour attendu
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
+            context: $('.response-message'),
+            success: function (data) {
+                closeModalEditArticle();
+                table.ajax.reload();
+            },
+            error: function (xhr, resp, error) {
+                console.error(`Error : ${JSON.stringify(error)}`);
+            },
+            complete: function (xhr, status) {
+                showResponseMessage(status, "Edit");
             }
         });
 
-        // Afficher la première étape lors de l'ouverture de la modal
-        showStep(0);
-        
-    });
+    }
+
+    function deleteArticle(e, table){
+        console.log(selectedRow);
+        let data = {id: selectedRow.id};
+        $.ajax({
+            type: "DELETE",
+            url: '/sys/article/delete-article',
+            data: data,
+            dataType: "json", // type de retour attendu
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
+            context: $('.response-message'),
+            success: function (data) {
+                table.ajax.reload();
+            },
+            error: function (xhr, resp, error) {
+                console.error(`Error : ${JSON.stringify(error)}`);
+            },
+            complete: function (xhr, status) {
+                showResponseMessage(status, "Delete");
+            }
+        });
+    }
+//
+
+    function showResponseMessage(status, action) {
+        $('.response-message').addClass('active');
+        if(status === "success") {
+            $('.response-message').append(`<h2>${action} successful !</h2>`);
+        }
+        else {
+            $('.response-message').append("<h2>Save fail !</h2>");
+        }
+        setTimeout(()=> {
+            $('.response-message').children().remove();
+        }, 2000);
+    }
+
 </script>

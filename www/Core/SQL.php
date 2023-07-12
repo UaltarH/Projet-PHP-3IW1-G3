@@ -90,7 +90,7 @@ class SQL
         return $queryPrepared->fetch();
     }
 
-    public function getAllWhere(array $where)
+    public function getAllWhere(array $where, string $order = "")
     {
         foreach ($where as $column => $value) {
             $sqlWhere[] = $column . " = :" . $column;
@@ -101,7 +101,11 @@ class SQL
             }
         }
 
-        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        if($order != ""){
+            $order = " ORDER BY " . $order. " DESC";
+        }
+            
+        $queryPrepared = self::$connection->prepare("SELECT * FROM " . static::getTable() . " WHERE " . implode(" AND ", $sqlWhere) . $order);
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
         $queryPrepared->execute($values);
 
@@ -231,7 +235,7 @@ class SQL
         if(isset($params["join"])){
             $sqlJoin = [];
             foreach ($params["join"] as $fkInfo) {
-                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . static::getTable() . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . $fkInfo["foreignKeys"]["originColumn"]["table"] . "." . $fkInfo["foreignKeys"]["originColumn"]["id"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
             }
             implode(" ", $sqlJoin);
             $query = "SELECT " . static::getTable() . ".id, " . implode(", ", array_values($columns)) .
@@ -281,6 +285,13 @@ class SQL
     public function delete(): bool
     {
         $query = "DELETE FROM " . static::getTable() . " WHERE id = '" . $this->getId() . "'";
+        $queryPrepared = self::$connection->prepare($query);
+        return $queryPrepared->execute();
+    }
+
+    public function multipleDelete(string $columnWhere, array $values): bool
+    {
+        $query = "DELETE FROM " . static::getTable() . " WHERE " . $columnWhere . " IN ('" . implode("' , '", $values) . "')";
         $queryPrepared = self::$connection->prepare($query);
         return $queryPrepared->execute();
     }

@@ -9,7 +9,7 @@ class Category_jeux extends SQL
 {
     private $db_connexion;
     private string $id = "0";
-    protected string $category_name;
+    protected string $category_game_name;
     protected string $description;
 
     public function __construct()
@@ -44,7 +44,7 @@ class Category_jeux extends SQL
      */
     public function getCategoryName(): string
     {
-        return $this->category_name;
+        return $this->category_game_name;
     }
 
     /**
@@ -52,7 +52,7 @@ class Category_jeux extends SQL
      */
     public function setCategoryName(string $category_name): void
     {
-        $this->category_name = $category_name;
+        $this->category_game_name = $category_name;
     }
 
     /**
@@ -74,10 +74,10 @@ class Category_jeux extends SQL
     public function getTotalGamesByCategories(): array
     {
         $queryPrepared = $this->db_connexion->prepare(
-            "SELECT cc.category_name, COUNT(cj.id) AS jeux_count
+            "SELECT cc.category_game_name, COUNT(cj.id) AS jeux_count
                     FROM carte_chance_category_jeux cc
                     LEFT JOIN carte_chance_jeux cj ON cc.id = cj.category_id
-                    GROUP BY cc.category_name;"
+                    GROUP BY cc.category_game_name;"
         );
         $queryPrepared->execute();
         $result = $queryPrepared->fetchAll(PDO::FETCH_ASSOC);
