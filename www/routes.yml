@@ -56,26 +56,20 @@ jeux:
 page:
   controller: ArticleController
   action: getArticle
-  access: [ ALL ]
+  access: [ALL]
   allgames:
-    controller: ArticleController
+    controller: Article
     action: GetAllArticlesGame
     access: [ ALL ]
 
   allaboutgames:
-    controller: ArticleController
+    controller: Article
     action: GetAllArticlesAboutGame
     access: [ ALL ]
 
-  allgamesbycategory:
-    controller: ArticleController
-    action: GetAllArticlesGamesByCategory
-    access: [ ALL ]
 
-  allaboutgamesbygame:
-    controller: ArticleController
-    action: GetAllArticlesAboutGamesByGame
-    access: [ ALL ]
+
+
 
 sys:
   user:
@@ -86,19 +80,29 @@ sys:
 
   article:
     articles-management:
-      controller: System
+      controller: Article
       action: articlesManagement
-      access: [ ADMIN, MODERATOR ]
-
-    # create-article-game:
-    #   controller: System
-    #   action: addArticleGame
-    #   access: [ADMIN, MODERATOR]
-
-    # create-article-about-game:
-    #   controller: System
-    #   action: addArticleAboutGame
-    #   access: [ADMIN, MODERATOR]
+      access: [ADMIN, MODERATOR]
+    datatable:
+      controller: Article
+      action: articleDatatable
+      access: [ADMIN, MODERATOR]
+    create-article-game:
+      controller: Article
+      action: createArticleGame
+      access: [ADMIN, MODERATOR]
+    create-article-about-game:
+      controller: Article
+      action: createArticleAboutGame
+      access: [ADMIN, MODERATOR]
+    delete-article:
+      controller: Article
+      action: deleteArticle
+      access: [ADMIN, MODERATOR]
+    edit-article:
+      controller: Article
+      action: updateArticle
+      access: [ADMIN, MODERATOR]
 
   dashboard:
     controller: Dashboard
@@ -131,11 +135,5 @@ api:
       controller: Api
       action: userdelete
       method: DELETE
-      access: [ ADMIN ]
+      access: [ADMIN]
 
-  article:
-    list:
-      controller: Api
-      action: articlelist
-      params: [ length, start, search, draw ]
-      access: [ ADMIN, MODERATOR ]

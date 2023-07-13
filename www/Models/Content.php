@@ -1,8 +1,6 @@
 <?php
 namespace App\Models;
 
-use App\Core\SQL;
-
 class Content extends AbstractModel
 {
     private string $id = "0";

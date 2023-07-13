@@ -174,27 +174,6 @@ class Auth
         $view->assign("messageInfo", $messageInfo);
     }
 
-    public function profil(): void {
-        $view = new View("Main/profil", "front");
-        $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
-        $view->assign("informationsUser", $informationsUser);
-
-        //create form for reset password
-        $formResetPassword = new ResetPassword();
-        $view->assign("form", $formResetPassword->getConfig());
-        if($formResetPassword->isSubmited() && $formResetPassword->isValid()){
-            if($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])){
-                //send mail for reset password
-                $to = $informationsUser['email'];
-                $contentMail = "<b>Hello ".$informationsUser['pseudo'].", <a href='http://localhost/reset-password?pseudo=".urlencode($informationsUser['pseudo'])."&key=".$informationsUser['confirmAndResetToken']."&pwd=".$_POST['password']."'> Réinitialiser votre mot de passe </a></b>";
-                $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
-                $resultSendMail = SendMailFunction($to, $contentMail, $subject);
-                $view->assign("messageInfoSendMail", $resultSendMail);
-            }
-        }
-        $view->assign("formErrors", $formResetPassword->errors);
-    }
-
     public function resetPassword():void
     {
         $view = new View("Auth/resetPassword", "front");
@@ -268,7 +247,7 @@ class Auth
                 }
             }
         }
-        $user->save();
+        $this->userRepository->save($user);
 
         session_destroy();
         session_start();

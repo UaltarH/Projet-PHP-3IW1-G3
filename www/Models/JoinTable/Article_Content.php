@@ -2,9 +2,9 @@
 
 namespace App\Models\JoinTable;
 
-use App\Core\SQL;
+use App\Models\AbstractModel;
 
-class Article_Content
+class Article_Content extends AbstractModel
 {
     protected string $article_id;
     protected string $content_id;

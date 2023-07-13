@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
 
 class Article extends AbstractModel
 {
@@ -11,7 +10,7 @@ class Article extends AbstractModel
     protected string $title;
     protected string $created_date;
     protected string $updated_date;
-    protected string $category_id = "0";
+    protected string $category_id;
 
     public function __construct(){
     }

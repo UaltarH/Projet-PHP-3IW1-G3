@@ -10,6 +10,9 @@ use App\Models\User;
 use App\Repository\ArticleRepository;
 use App\Repository\UserRepository;
 
+use function App\Services\HttpMethod\getHttpMethodVarContent;
+require_once '/var/www/html/Services/HttpMethod.php';
+
 class Api
 {
     private UserRepository $userRepository;
@@ -101,49 +104,16 @@ class Api
                 [
                     "table" => $this->config['bdd']['prefix']."role",
                     "foreignKeys" => [
-                        "originColumn" => "role_id",
+                        "originColumn" => ["id" => "role_id",
+                                           "table" => "carte_chance_user"
+                                          ],
                         "targetColumn" => "id"
                     ]
                 ]
             ]
         ], new User()));
     }
-
-    /**
-     * @throws \Exception
-     */
-    public function articlelist(): void
-    {
-        // TODO : deny access to this url
-        $length = intval(trim($_GET['length']));
-        $start = intval(trim($_GET['start']));
-        $search = '';
-        // if there's a sorting
-        $columnIndex = intval($_GET['order'][0]['column']); // Column index
-        $columnName = trim($_GET['columns'][$columnIndex]['data']); // Column name
-        $columnSortOrder = trim($_GET['order'][0]['dir']); // asc or desc
-        if (isset($_GET['search']) && !empty($_GET['search']['value'])) {
-            $search = trim($_GET['search']['value']);
-        }
-        $article = new Article();
-        echo json_encode($this->articleRepository->list([
-            "columns" => ["title", "created_date", "updated_date", "category_name"],
-            "start" => $start,
-            "length" => $length,
-            "search" => $search,
-            "columnToSort" => $columnName,
-            "sortOrder" => $columnSortOrder,
-            "join" => [
-                [
-                    "table" => $this->config['bdd']['prefix']."article_category",
-                    "foreignKeys" => [
-                        "originColumn" => "category_id",
-                        "targetColumn" => "id"
-                    ]
-                ]
-            ]
-        ], $article));
-    }
+   
     public function useredit(): void
     {
         header('Content-Type: application/json');
@@ -226,6 +196,7 @@ class Api
             exit();
         }
     }
+
     public function userdelete(): void
     {
         header('Content-Type: application/json');
@@ -234,7 +205,7 @@ class Api
             echo json_encode("Bad Method");
             exit;
         }
-        $delete = self::getHttpMethodVarContent();
+        $delete = getHttpMethodVarContent();
         if(empty($delete['id'])) {
             Errors::define(400, 'Bad Request');
             echo json_encode("Bad Request");
@@ -252,17 +223,6 @@ class Api
         exit();
     }
 
-    /**
-     * Parse les arguments passés par les méthodes PUT et DELETE uniquement, puis les passes dans un tableau
-     * eg : $post_vars['id']
-     * @return array
-     */
-    public static function getHttpMethodVarContent(): array
-    {
-        $post_vars = [];
-        if ($_SERVER["CONTENT_TYPE"] === 'application/x-www-form-urlencoded; charset=UTF-8') {
-            parse_str(file_get_contents("php://input"), $post_vars);
-        }
-        return $post_vars;
-    }
+
+
 }

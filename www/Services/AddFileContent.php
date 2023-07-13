@@ -2,7 +2,7 @@
 namespace App\Services\AddFileContent;
 use App\Models\Content;
 use App\Core\ResponseGeneral;
-
+use App\Repository\ContentRepository;
 //this function will have a array parameter with informations : 
     // directory
     // location
@@ -34,11 +34,19 @@ function AddFileContentFunction(array $InformationContent): ResponseGeneral
             mkdir($InformationContent['directory'], 0777, true);
         }
         // Upload file
-        if(move_uploaded_file($InformationContent['fileContent'],$InformationContent['location'])){
+        
+        if($InformationContent['from$_FILES']){
+            $res =  move_uploaded_file($InformationContent['fileContent'],$InformationContent['location']);
+        } else{
+            $res = file_put_contents($InformationContent['location'], $InformationContent['fileContent']);
+        }
+
+        if($res){
             // add content in content table
             $content = new Content();
             $content->setPathContent($InformationContent['location']);
-            $resultQuery = $content->save();
+            $contentRepository = new ContentRepository();
+            $resultQuery = $contentRepository->save($content);
             if($resultQuery->success){
                 //content added 
                 $class = "App\\Models\\JoinTable\\".$InformationContent['joinTableClass'];
@@ -46,7 +54,9 @@ function AddFileContentFunction(array $InformationContent): ResponseGeneral
                 $joinTable_content = new $class();
                 $joinTable_content->$method($InformationContent['joinTableId']);
                 $joinTable_content->setContentId($resultQuery->idNewElement);
-                if($joinTable_content->insertIntoJoinTable()){
+                $repository = "App\\Repository\\".$InformationContent['joinTableRepository'];
+                $repository = new $repository();
+                if($repository->insertIntoJoinTable($joinTable_content)){
                     //ref added in joinTable
                     $response->success = true;
                     $response->message = "tout est ok";  

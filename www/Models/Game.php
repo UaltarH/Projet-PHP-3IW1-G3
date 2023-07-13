@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
-
 class Game extends AbstractModel
 {
     private string $id = "0";
-    protected string $title;
-    protected string $category_id = "0";
+    protected string $title_game;
+    protected string $category_id;
 
     public function __construct(){
     }
@@ -34,15 +32,15 @@ class Game extends AbstractModel
     */
     public function getTitle(): string
     {
-        return $this->title;
+        return $this->title_game;
     }
 
     /**
      * @param String $title
      */
-    public function setTitle(string $title): void
+    public function setTitle(string $title_game): void
     {
-        $this->title = $title;
+        $this->title_game = $title_game;
     }
 
     /**

@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS carte_chance_article_category CASCADE;
 DROP TABLE IF EXISTS carte_chance_article CASCADE;
 -- DROP TABLE IF EXISTS carte_chance_page CASCADE;
 DROP TABLE IF EXISTS carte_chance_content CASCADE;
-DROP TABLE IF EXISTS carte_chance_category_jeux CASCADE;
+DROP TABLE IF EXISTS carte_chance_game_category CASCADE;
 DROP TABLE IF EXISTS carte_chance_game CASCADE;
 
 -- Ajout de la librairie UUID
@@ -48,7 +48,7 @@ CREATE TABLE carte_chance_user
     date_inscription   DATE        NOT NULL,
     role_id            UUID      NOT NULL,
     PRIMARY KEY (id),
-    FOREIGN KEY (role_id) REFERENCES carte_chance_role (id)
+    FOREIGN KEY (role_id) REFERENCES carte_chance_role (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_comment
@@ -60,7 +60,7 @@ CREATE TABLE carte_chance_comment
     accepted      BOOLEAN DEFAULT FALSE NOT NULL,
     user_id       UUID,
     PRIMARY KEY (id),
-    FOREIGN KEY (user_id) REFERENCES carte_chance_user (id)
+    FOREIGN KEY (user_id) REFERENCES carte_chance_user (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_article_category
@@ -80,7 +80,7 @@ CREATE TABLE carte_chance_article
     updated_date DATE        NOT NULL,
     category_id  UUID,
     PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES carte_chance_article_category (id)
+    FOREIGN KEY (category_id) REFERENCES carte_chance_article_category (id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE carte_chance_page (
@@ -99,10 +99,10 @@ CREATE TABLE carte_chance_content
     PRIMARY KEY (id)
 );
 
-CREATE TABLE carte_chance_category_jeux
+CREATE TABLE carte_chance_game_category
 (
     id            UUID DEFAULT uuid_generate_v4(),
-    category_name VARCHAR(64)  NOT NULL UNIQUE,
+    category_game_name VARCHAR(64)  NOT NULL UNIQUE,
     description   VARCHAR(128) NOT NULL,
     PRIMARY KEY (id)
 );
@@ -110,10 +110,10 @@ CREATE TABLE carte_chance_category_jeux
 CREATE TABLE carte_chance_game
 (
     id          UUID DEFAULT uuid_generate_v4(),
-    title       VARCHAR(64) NOT NULL UNIQUE,
+    title_game       VARCHAR(64) NOT NULL UNIQUE,
     category_id UUID,
     PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES carte_chance_category_jeux (id)
+    FOREIGN KEY (category_id) REFERENCES carte_chance_game_category (id) ON DELETE CASCADE
 );
 
 -- Création des tables de jointure
@@ -122,8 +122,8 @@ CREATE TABLE carte_chance_role_permission
     permission_id UUID,
     role_id       UUID,
     PRIMARY KEY (permission_id, role_id),
-    FOREIGN KEY (permission_id) REFERENCES carte_chance_permission (id),
-    FOREIGN KEY (role_id) REFERENCES carte_chance_role (id)
+    FOREIGN KEY (permission_id) REFERENCES carte_chance_permission (id) ON DELETE CASCADE, 
+    FOREIGN KEY (role_id) REFERENCES carte_chance_role (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_comment_article
@@ -131,8 +131,8 @@ CREATE TABLE carte_chance_comment_article
     article_id UUID,
     comment_id UUID,
     PRIMARY KEY (article_id, comment_id),
-    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
-    FOREIGN KEY (comment_id) REFERENCES carte_chance_comment (id)
+    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id) ON DELETE CASCADE,
+    FOREIGN KEY (comment_id) REFERENCES carte_chance_comment (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_game_article
@@ -140,8 +140,8 @@ CREATE TABLE carte_chance_game_article
     article_id UUID,
     jeux_id    UUID,
     PRIMARY KEY (article_id, jeux_id),
-    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
-    FOREIGN KEY (jeux_id) REFERENCES carte_chance_game (id)
+    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id) ON DELETE CASCADE,
+    FOREIGN KEY (jeux_id) REFERENCES carte_chance_game (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_article_content
@@ -149,8 +149,8 @@ CREATE TABLE carte_chance_article_content
     article_id UUID,
     content_id UUID,
     PRIMARY KEY (article_id, content_id),
-    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id),
-    FOREIGN KEY (content_id) REFERENCES carte_chance_content (id)
+    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id) ON DELETE CASCADE,
+    FOREIGN KEY (content_id) REFERENCES carte_chance_content (id) ON DELETE CASCADE
 );
 
 CREATE TABLE carte_chance_game_content
@@ -158,8 +158,8 @@ CREATE TABLE carte_chance_game_content
     jeux_id    UUID,
     content_id UUID,
     PRIMARY KEY (jeux_id, content_id),
-    FOREIGN KEY (jeux_id) REFERENCES carte_chance_game (id),
-    FOREIGN KEY (content_id) REFERENCES carte_chance_content (id)
+    FOREIGN KEY (jeux_id) REFERENCES carte_chance_game (id) ON DELETE CASCADE,
+    FOREIGN KEY (content_id) REFERENCES carte_chance_content (id) ON DELETE CASCADE
 );
 
 ------------------------------------------------------------------------------
@@ -197,11 +197,11 @@ VALUES ((SELECT id FROM carte_chance_permission WHERE permission_name = 'Create'
 INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token,
                                phone_number, date_inscription, role_id)
 VALUES (uuid_generate_v4(), 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001,
-        '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
+        '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
        (uuid_generate_v4(), 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL,
-        60000000, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin')),
-       (uuid_generate_v4(), 'admin', 'admin', 'admin', 'admin@admion.com', '$2y$10$vJO4N69zIr.t16lOq9VZFeDV4VP0xq/rQp8oALnKyXW14hqwLSUYK', TRUE, NULL,
-        61111111, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
+        60000000, '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'admin')),
+       (uuid_generate_v4(), 'admin', 'admin', 'admin', 'admin@admion.com', '$2y$10$vJO4N69zIr.t16lOq9VZFeDV4VP0xq/rQp8oALnKyXW14hqwLSUYK', TRUE, 234234234234234234,
+        61111111, '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
 
 
 -- carte_chance_article_category
@@ -210,10 +210,10 @@ VALUES (uuid_generate_v4(), 'Jeux', 'Cette catégorie regroupe tous les articles
        (uuid_generate_v4(), 'Trucs et astuces',
         'Cette catégorie regroupe tous les articles qui font référence à un jeu en particulier');
 
--- carte_chance_category_jeux
-INSERT INTO carte_chance_category_jeux (id, category_name, description)
+-- carte_chance_game_category
+INSERT INTO carte_chance_game_category (id, category_game_name, description)
 VALUES (uuid_generate_v4(), 'Jeux de cartes', 'Cette catégorie regroupe tous les jeux de cartes'),
-       (uuid_generate_v4(), 'Game de dés', 'Cette catégorie regroupe tous les jeux de dés'),
+       (uuid_generate_v4(), 'Jeux de dés', 'Cette catégorie regroupe tous les jeux de dés'),
        (uuid_generate_v4(), 'Jeux de plateau', 'Cette catégorie regroupe tous les jeux de plateau');
 
 
@@ -225,10 +225,10 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
-WHERE category_name = 'Jeux de cartes';
+FROM carte_chance_game_category
+WHERE category_game_name = 'Jeux de cartes';
 
-INSERT INTO carte_chance_game (id, title, category_id)
+INSERT INTO carte_chance_game (id, title_game, category_id)
 VALUES (DEFAULT, 'Poker', uuid_categorie),
        (DEFAULT, 'Belote', uuid_categorie),
        (DEFAULT, 'Uno', uuid_categorie);
@@ -241,10 +241,10 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
-WHERE category_name = 'Jeux de dés';
+FROM carte_chance_game_category
+WHERE category_game_name = 'Jeux de dés';
 
-INSERT INTO carte_chance_game (id, title, category_id)
+INSERT INTO carte_chance_game (id, title_game, category_id)
 VALUES (DEFAULT, 'Yams', uuid_categorie),
        (DEFAULT, '421', uuid_categorie);
 END $$;
@@ -256,10 +256,10 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
-WHERE category_name = 'Jeux de plateau';
+FROM carte_chance_game_category
+WHERE category_game_name = 'Jeux de plateau';
 
-INSERT INTO carte_chance_game (id, title, category_id)
+INSERT INTO carte_chance_game (id, title_game, category_id)
 VALUES (DEFAULT, 'Monopoly', uuid_categorie),
        (DEFAULT, 'Jungle Speed', uuid_categorie);
 END $$;

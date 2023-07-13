@@ -35,19 +35,15 @@ class Dashboard {
      */
     public function index(): void
     {
-        $categorieJeuxModel = new Game_Category();
-
         $totalUsers = $this->userRepository->getTotalCount(new User);
         $newUsersPerDay = $this->userRepository->getNewUsersPerDay();
-
         $totalArticles = $this->articleRepository->getTotalCount(new Article());
-
         $totalJeux = $this->gameRepository->getTotalCount(new Game());
 
         $whereSql = ["moderated" => false];
         $unmoderatedComment = $this->commentRepository->getAllWhere($whereSql, new Comment());
 
-        $totalGamesByCategories = $categorieJeuxModel->getTotalGamesByCategories();
+        $totalGamesByCategories = $this->gameCategoryRepository->getTotalGamesByCategories();
 
         $view = new View("System/dashboard", "back");
         $view->assign('totalUsers', $totalUsers);
