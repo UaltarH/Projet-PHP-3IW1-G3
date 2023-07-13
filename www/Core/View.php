@@ -9,7 +9,8 @@ class View
     private String $template;
     private $data = [];
 
-    public function __construct(String $view, String $template = "back") {
+    public function __construct(String $view, String $template = "back")
+    {
         $this->setView($view);
         $this->setTemplate($template);
     }
@@ -49,7 +50,8 @@ class View
         include "Views/Partials/" . $name . ".ptl.php";
     }
 
-    public function __destruct(){
+    public function __destruct()
+    {
         extract($this->data);
         include $this->template;
     }
