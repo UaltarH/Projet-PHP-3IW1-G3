@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models\JoinTable;
-
 use App\Models\AbstractModel;
 
 class Comment_article extends AbstractModel
