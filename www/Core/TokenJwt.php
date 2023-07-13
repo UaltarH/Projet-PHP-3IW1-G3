@@ -35,7 +35,6 @@ function validateJWT($token) {
     
     if ($signature !== $expectedSignature) {
         // La signature n'est pas valide
-        echo" La signature n'est pas valide";
         return false;
     }
 
@@ -43,7 +42,6 @@ function validateJWT($token) {
     $payloadData = json_decode($payload, true);
     if (isset($payloadData['exp']) && $payloadData['exp'] < time()) {
         // Le token est expiré
-        echo" Le token est expiré";
         return false;
     }
 

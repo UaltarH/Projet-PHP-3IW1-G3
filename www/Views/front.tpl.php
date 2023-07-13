@@ -12,7 +12,7 @@
 
 <body>
     <main>
-
+        <div class="response-message"></div>
         <?php $this->partial("header", []) ?>
 
         <h1>Template Front user: </h1>
