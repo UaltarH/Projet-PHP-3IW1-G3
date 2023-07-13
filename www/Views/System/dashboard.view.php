@@ -81,7 +81,7 @@
                                     var data = <?php echo $donneesJSON; ?>;
 
                                     var labels = data.map(function (row) {
-                                        return row.category_name;
+                                        return row.category_game_name;
                                     });
 
                                     var values = data.map(function (row) {

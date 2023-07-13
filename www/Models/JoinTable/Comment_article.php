@@ -1,25 +1,17 @@
 <?php
 
 namespace App\Models\JoinTable;
+use App\Models\AbstractModel;
 
-use App\Core\SQL;
-
-class Comment_article extends SQL
+class Comment_article extends AbstractModel
 {
     private $db_connexion;
     protected string $article_id;
     protected string $comment_id;
 
-    public function __construct(){
-        $this->db_connexion = SQL::getInstance()->getConnection();
+    public function __construct(){        
     }
 
-    public static function getTable(): string
-    {
-        $classExploded = explode("\\", get_called_class());
-        return  "carte_chance_".strtolower(end($classExploded));
-    }
-    
     /**
      * @return string
      */

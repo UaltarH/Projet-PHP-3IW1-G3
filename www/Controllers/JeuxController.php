@@ -10,17 +10,24 @@ use App\Models\Comment;
 use App\Models\Jeux;
 use App\Models\JoinTable\Article_jeux;
 use App\Models\JoinTable\Comment_article;
+use App\Models\Article AS ArticleModel;
+use App\Models\Game_Category;
+use App\Models\Game;
+use App\Repository\GameCategoryRepository;
+use App\Repository\GameRepository;
 
 class JeuxController
 {
-    public function allgames()
-    {
+    private GameRepository $gameRepository;
+    private GameCategoryRepository $gameCategoryRepository;
+    public function __construct() {
+        $this->gameRepository = new GameRepository();
+        $this->gameCategoryRepository = new GameCategoryRepository();
+    }
+    public function allgames(){
         $view = new View("Jeux/allGames", "front");
-        $jeuxModel = new Jeux();
-        $categorieJeuxModel = new Category_jeux();
-
-        $jeux = $jeuxModel->selectAll();
-        $categories = $categorieJeuxModel->selectAll();
+        $jeux = $this->gameRepository->selectAll(new Game);
+        $categories = $this->gameCategoryRepository->selectAll(new Game_Category());
 
         $result = [];
         foreach ($jeux as $index => $value) {

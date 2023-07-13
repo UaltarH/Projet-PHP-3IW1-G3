@@ -32,11 +32,14 @@ if (isset($_SESSION["token"])) {
     <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/Assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
+
+
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
-        <a href="dashboard" class="logo d-flex align-items-center">
+        <a href="/sys/dashboard" class="logo d-flex align-items-center">
             <img src="assets/img/logo.png" alt="">
             <span class="d-none d-lg-block">La Carte Chance Backoffice</span>
         </a>
@@ -85,25 +88,19 @@ if (isset($_SESSION["token"])) {
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link " href="dashboard">
+            <a class="nav-link " href="/sys/dashboard">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="/sys/user/list">
                 <i class="bi bi-person"></i>
                 <span>Utilisateurs</span>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
-                <i class="bi bi-controller"></i>
-                <span>Jeux</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="/sys/article/articles-management">
                 <i class="bi bi-bag"></i>
                 <span>Articles</span>
             </a>
@@ -124,6 +121,7 @@ if (isset($_SESSION["token"])) {
 </aside>
 
 <main id="main" class="main">
+    <div class="response-message"></div>
     <?php include $this->view; ?>
 </main>
 

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Controllers;
-
-use App\Core\View;
+namespace App\Core;
 
 class Errors
 {

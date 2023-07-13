@@ -16,7 +16,7 @@ class EditUser extends Validator
                 "enctype"=>"",
                 "submitLabel"=>"Modifier un utilisateur",
                 "submitName"=>"submitEditUser",
-                "reset"=>"Annuler"
+                "reset"=>"Réinitialiser"
             ],
             "inputs"=>[
                 "pseudo"=>[

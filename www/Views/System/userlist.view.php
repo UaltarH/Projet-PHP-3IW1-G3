@@ -1,6 +1,7 @@
 <h1>User List</h1>
 
 <?php include "Views/Partials/editUserModal.ptl.php" ?>
+
 <nav>
     <ul>
         <li><a href="/sys/user/list?action=faker">Generate</a></li>
@@ -29,6 +30,7 @@
 
     let selectedRow;
     let responseMessage = $('.response-message');
+    let timeout;
     $(document).ready(function() {
         $('input[required]').siblings("")
         let table = $('#userTable').DataTable({
@@ -74,6 +76,8 @@
             }
         });
     });
+
+    
     function handleCreateSubmit(e, table) {
         e.preventDefault();
         // checks validity of form
@@ -148,7 +152,7 @@
                 table.ajax.reload();
             },
             error: function (xhr, resp, error) {
-                console.error(`Error : ${JSON.stringify(error)}`);
+                console.error(`Error : ${JSON.stringify(xhr)}`);
             },
             complete: function (xhr, status) {
                 showResponseMessage(status, "Edit");
@@ -176,15 +180,21 @@
         });
     }
     function showResponseMessage(status, action) {
+        if(!!timeout)
+            clearTimeout(timeout);
+        responseMessage.children().remove();
         responseMessage.addClass('active');
         if(status === "success") {
+            responseMessage.addClass('success');
             responseMessage.append(`<h2>${action} successful !</h2>`);
         }
         else {
-            responseMessage.append("<h2>Save fail !</h2>");
+            responseMessage.addClass('error');
+            responseMessage.append("<p>Save fail !</p>");
         }
-        setTimeout(()=> {
+        timeout = setTimeout(()=> {
             responseMessage.children().remove();
-        }, 2000);
+            responseMessage.removeClass("active error success");
+        }, 5000);
     }
 </script>
