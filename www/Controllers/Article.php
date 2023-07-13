@@ -739,17 +739,64 @@ class Article extends AbstractRepository
     {
         $view = new View("Article/allArticles", "front");
         $jeuxModel = $this->gameRepository;
-        $categorieJeuxModel = $this->gameCategoryRepository;
+        $articleGameModel = $this->gameArticleRepository;
         $commentModel = $this->commentRepository;
-        $articleJeuModel = $this->gameArticleRepository;
+        $articleArticleModel = $this->gameArticleRepository;
         $commentArticleModel = $this->commentArticleRepository;
         $articleModel = $this->articleRepository;
 
+        $whereSql = ["category_name" => "Jeux"];
+        $jeu = $this->getArticlesWithCommentsAndGame($articleArticleModel, $whereSql, $articleModel, $articleGameModel, $jeuxModel, $commentArticleModel, $commentModel, $view);
+        $view->assign("title", "Articles");
+        $view->assign("game", $jeu);
+    }
+
+    public function allTrucsEtAstuces()
+    {
+        $view = new View("Article/allArticles", "front");
+        $jeuxModel = $this->gameRepository;
+        $articleGameModel = $this->gameArticleRepository;
+        $commentModel = $this->commentRepository;
+        $articleArticleModel = $this->gameArticleRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $articleModel = $this->articleRepository;
+
+        $whereSql = ["category_name" => "Trucs et astuces"];
+        $this->getArticlesWithCommentsAndGame($articleArticleModel, $whereSql, $articleModel, $articleGameModel, $jeuxModel, $commentArticleModel, $commentModel, $view);
+        $view->assign("title", "Trucs et Astuces");
+    }
+
+    /**
+     * @param GameArticleRepository $articleArticleModel
+     * @param array $whereSql
+     * @param ArticleRepository $articleModel
+     * @param GameArticleRepository $articleGameModel
+     * @param GameRepository $jeuxModel
+     * @param CommentArticleRepository $commentArticleModel
+     * @param CommentRepository $commentModel
+     * @param View $view
+     * @return mixed
+     */
+    public function getArticlesWithCommentsAndGame(GameArticleRepository $articleArticleModel, array $whereSql, ArticleRepository $articleModel, GameArticleRepository $articleGameModel, GameRepository $jeuxModel, CommentArticleRepository $commentArticleModel, CommentRepository $commentModel, View $view): void
+    {
+        $categoryArticle = $articleArticleModel->getOneWhere($whereSql, new Article_Category());
+
         $articlesList = [];
         $commentsByArticles = [];
-        $articles = $articleModel->selectAll(new ArticleModel());
+        $jeuxList = [];
+        $whereSql = ["category_id" => $categoryArticle->getId()];
+        $articles = $articleModel->getAllWhere($whereSql, new ArticleModel());
         foreach ($articles as $article) {
             $articlesList[] = $article;
+
+            $whereSql = ["article_id" => $article->getId()];
+            $articleGame = $articleGameModel->getOneWhere($whereSql, new Game_Article());
+
+            if ($articleGame) {
+                $whereSql = ["id" => $articleGame->getJeuxId()];
+                $jeu = $jeuxModel->getOneWhere($whereSql, new Game());
+                $jeuxList[] = ["articleId" => $article->getId(), "game" => $jeu];
+            }
 
             $whereSql = ["article_id" => $article->getId()];
             $commentArticles = $commentArticleModel->getAllWhere($whereSql, new Comment_article());
@@ -762,6 +809,6 @@ class Article extends AbstractRepository
         }
         $view->assign("articles", $articlesList);
         $view->assign("commentsByArticles", $commentsByArticles);
+        $view->assign("games", $jeuxList);
     }
-
 }

@@ -26,13 +26,13 @@ if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) {
                         <a class="nav-link " href="/">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class='nav-link' href="/page/allgames">Jeux</a>
+                        <a class='nav-link' href="/jeux">Jeux</a>
                     </li>
                     <li class="nav-item">
                         <a class='nav-link' href="/articles">Articles</a>
                     </li>
                     <li class="nav-item">
-                        <a class='nav-link' href="/page/allaboutgames">Trucs et astuces</a>
+                        <a class='nav-link' href="/trucs-et-astuces">Trucs et astuces</a>
                     </li>
 
                     <?php if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) : ?>
