@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
 
 class Comment  extends AbstractModel
 {

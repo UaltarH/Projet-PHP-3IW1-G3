@@ -247,7 +247,7 @@ class Auth
                 }
             }
         }
-        $user->save();
+        $this->userRepository->save($user);
 
         session_destroy();
         session_start();

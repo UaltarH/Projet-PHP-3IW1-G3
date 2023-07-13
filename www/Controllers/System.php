@@ -21,20 +21,11 @@ require_once '/var/www/html/Services/AddFileContent.php';
 
 class System
 {
-    private ArticleRepository $articleRepository;
     private UserRepository $userRepository;
-    private ArticleCategoryRepository $articleCategoryRepository;
-    private GameCategoryRepository $gameCategoryRepository;
-    private GameArticleRepository $gameArticleRepository;
-    private GameRepository $gameRepository;
+
     public function __construct()
     {
-        $this->articleRepository = new ArticleRepository();
-        $this->articleCategoryRepository = new ArticleCategoryRepository();
-        $this->gameCategoryRepository = new GameCategoryRepository();
         $this->userRepository = new UserRepository();
-        $this->gameArticleRepository = new GameArticleRepository();
-        $this->gameRepository = new GameRepository();
     }
 
     public function userlist(): void

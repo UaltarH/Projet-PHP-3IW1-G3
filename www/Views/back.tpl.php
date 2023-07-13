@@ -100,12 +100,6 @@ if (isset($_SESSION["token"])) {
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
-                <i class="bi bi-controller"></i>
-                <span>Jeux</span>
-            </a>
-        </li>
-        <li class="nav-item">
             <a class="nav-link collapsed" href="/sys/article/articles-management">
                 <i class="bi bi-bag"></i>
                 <span>Articles</span>

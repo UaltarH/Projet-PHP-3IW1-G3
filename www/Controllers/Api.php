@@ -104,14 +104,16 @@ class Api
                 [
                     "table" => $this->config['bdd']['prefix']."role",
                     "foreignKeys" => [
-                        "originColumn" => "role_id",
+                        "originColumn" => ["id" => "role_id",
+                                           "table" => "carte_chance_user"
+                                          ],
                         "targetColumn" => "id"
                     ]
                 ]
             ]
         ], new User()));
     }
-
+   
     public function useredit(): void
     {
         header('Content-Type: application/json');

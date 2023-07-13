@@ -1,4 +1,3 @@
-<div class="response-message"></div>
 <h1>Article management page :</h1>
 
 <!-- datatable -->
@@ -33,7 +32,7 @@
 <?php $this->partial("modalAddArticle", $optionsForms) ?>
 
 <!-- modal modif -->
-<?php $this->partial("modalEditArticle", $optionsForms) ?>
+<?php $this->partial("modalEditArticle") ?>
 
 
 
@@ -346,9 +345,6 @@
         }else {
             if(data["content"] == selectedRow.content){
                 delete data["content"];
-            }
-            if(data["editArticle-form-title"] == selectedRow.title){
-                delete data["editArticle-form-title"];
             }
         }
         

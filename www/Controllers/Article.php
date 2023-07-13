@@ -13,7 +13,7 @@ use App\Models\Game;
 use App\Models\Comment;
 use App\Models\Content;
 
-use App\Models\JoinTable\Article_jeux;
+
 use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Article_content;
 use App\Models\JoinTable\Game_Article;
@@ -24,9 +24,10 @@ use App\Repository\ArticleCategoryRepository;
 use App\Repository\GameArticleRepository;
 use App\Repository\GameCategoryRepository;
 use App\Repository\GameRepository;
-use App\Repository\UserRepository;
 use App\Repository\CommentArticleRepository;
 use App\Repository\ArticleContentRepository;
+use App\Repository\CommentRepository;
+use App\Repository\ContentRepository;
 
 use function App\Services\AddFileContent\AddFileContentFunction;
 use function App\Services\HttpMethod\getHttpMethodVarContent;
@@ -43,20 +44,22 @@ class Article extends AbstractRepository
     private GameCategoryRepository $gameCategoryRepository;
     private GameArticleRepository $gameArticleRepository;
     private GameRepository $gameRepository;
-    private UserRepository $userRepository;
     private CommentArticleRepository $commentArticleRepository;
     private ArticleContentRepository $articleContentRepository;
+    private CommentRepository $commentRepository;
+    private ContentRepository $contentRepository;
 
     public function __construct() {
         $this->config = Config::getInstance()->getConfig();
         $this->articleRepository = new ArticleRepository();
         $this->articleCategoryRepository = new ArticleCategoryRepository();
         $this->gameCategoryRepository = new GameCategoryRepository();
-        $this->userRepository = new UserRepository();
         $this->gameArticleRepository = new GameArticleRepository();
         $this->gameRepository = new GameRepository();
         $this->commentArticleRepository = new CommentArticleRepository();
         $this->articleContentRepository = new ArticleContentRepository();
+        $this->commentRepository = new CommentRepository();
+        $this->contentRepository = new ContentRepository();
     }
 
 
@@ -65,7 +68,7 @@ class Article extends AbstractRepository
         //tester si il y a un id dans l'url( avec GET )(le numéro represente l'id de l'article en bdd)
         if(isset($_GET['number'])){
             //si oui tester si il existe en base un article qui possede cette id :
-            $article = new ArticleModel();
+            $article = new Article();
             $whereSql = ["id" => $_GET['number']];
             $resultQuery = $this->articleRepository->getOneWhere($whereSql, $article);
             if(is_bool($resultQuery)) { //
@@ -79,16 +82,16 @@ class Article extends AbstractRepository
         } else {
             //si non retourner une erreur 404 ou une redirection vers la page d'accueil
             $view->assign("error", 'Article Not Found');
-        }        
+        }      
     }
 
     public function GetAllArticlesGame(){
         $view = new View("Article/allArticlesGame", "front");
-        $article = new ArticleModel();
+        $article = new Article();
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_category_article",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -109,11 +112,11 @@ class Article extends AbstractRepository
 
     public function GetAllArticlesAboutGame(){
         $view = new View("Article/allArticlesAboutGame", "front");
-        $article = new ArticleModel();
+        $article = new Article();
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
-                "table" => "carte_chance_category_article",
+                "table" => $this->config['bdd']['prefix']."article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -139,7 +142,7 @@ class Article extends AbstractRepository
         //récuperer toutes les category d'article qui existe dans la bdd, 
         $optionsCategoriesArticle = [];
         $category_article = new Article_Category();
-        $resultQuery = $this->articleCategoryRepository->selectAll($category_article);
+        $resultQuery = $this->articleCategoryRepository->selectAll($category_article);       
         foreach($resultQuery as $category){
             $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
         }
@@ -153,7 +156,7 @@ class Article extends AbstractRepository
             $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
         }
         $optionsForms["categoriesGame"] = $optionsCategoryGames;
-        
+
         //récuperer tout les jeux qui existe dans la bdd
         $optionsGames= [];
         $Game = new Game(); 
@@ -161,8 +164,8 @@ class Article extends AbstractRepository
         foreach($resultQueryAllGames as $game){
             $optionsGames[$game->getId()] = $game->getTitle();
         }
-
         $optionsForms["games"] = $optionsGames;
+
         $view->assign("optionsForms", $optionsForms);      
     }
 
@@ -190,7 +193,7 @@ class Article extends AbstractRepository
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => "carte_chance_article_jeux",
+                    "table" => "carte_chance_game_article",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "id",
                                            "table" => "carte_chance_article"
@@ -199,16 +202,16 @@ class Article extends AbstractRepository
                     ]
                 ],
                 [
-                    "table" => "carte_chance_jeux",
+                    "table" => "carte_chance_game",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "jeux_id",
-                                           "table" => "carte_chance_article_jeux"
+                                           "table" => "carte_chance_game_article"
                                           ],
                         "targetColumn" => "id"
                     ]
                 ],
                 [
-                    "table" => "carte_chance_category_article",
+                    "table" => "carte_chance_article_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
                                            "table" => "carte_chance_article"
@@ -217,10 +220,10 @@ class Article extends AbstractRepository
                     ]
                 ],
                 [
-                    "table" => "carte_chance_category_jeux",
+                    "table" => "carte_chance_game_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
-                                           "table" => "carte_chance_jeux"
+                                           "table" => "carte_chance_game"
                                           ],
                         "targetColumn" => "id"
                     ]
@@ -312,7 +315,8 @@ class Article extends AbstractRepository
                                         $arrayConfContent['fileContent'] = $fileData;
                                         $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
                                         $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
-                                        $arrayConfContent['joinTableClass'] = "Article_content";
+                                        $arrayConfContent['joinTableClass'] = "Article_Content";
+                                        $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                                         $arrayConfContent['joinTableId'] = $idNewArticle;
                                         $arrayConfContent['joinTableMethodToSetId'] = "setArticleId";
                                         $arrayConfContent['from$_FILES'] = false;
@@ -348,7 +352,8 @@ class Article extends AbstractRepository
                                     $arrayConfContent['fileContent'] = $_FILES['createArticleGame-form-imageJeu']['tmp_name'];
                                     $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'],PATHINFO_EXTENSION));
                                     $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
-                                    $arrayConfContent['joinTableClass'] = "Jeux_content";
+                                    $arrayConfContent['joinTableClass'] = "Game_Content";
+                                    $arrayConfContent['joinTableRepository'] = "GameContentRepository";
                                     $arrayConfContent['joinTableId'] = $idNewGame;
                                     $arrayConfContent['joinTableMethodToSetId'] = "setJeuId";
                                     $arrayConfContent['from$_FILES'] = true;
@@ -488,7 +493,8 @@ class Article extends AbstractRepository
                                 $arrayConfContent['fileContent'] = $fileData;
                                 $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
                                 $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
-                                $arrayConfContent['joinTableClass'] = "Article_content";
+                                $arrayConfContent['joinTableClass'] = "Article_Content";
+                                $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                                 $arrayConfContent['joinTableId'] = $idNewArticle;
                                 $arrayConfContent['joinTableMethodToSetId'] = "setArticleId";
                                 $arrayConfContent['from$_FILES'] = false;
@@ -579,16 +585,17 @@ class Article extends AbstractRepository
 
                         $filename = uniqid() . '.' . $extension;
                         
-                        $gameName = str_replace(" ", "_", $_POST['title_game']);
+                        $articleName = str_replace(" ", "_", $_POST['editArticle-form-title']);
                 
                         $arrayConfContent = [];
-                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$gameName."/";
+                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$articleName."/";
                         $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
                         $arrayConfContent['fileName'] = $filename;
                         $arrayConfContent['fileContent'] = $fileData;
                         $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
                         $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
                         $arrayConfContent['joinTableClass'] = "Article_content";
+                        $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                         $arrayConfContent['joinTableId'] = $_POST["id"];
                         $arrayConfContent['joinTableMethodToSetId'] = "setArticleId";
                         $arrayConfContent['from$_FILES'] = false;
@@ -597,7 +604,7 @@ class Article extends AbstractRepository
                         if($responseAddContent->success){
                             //image article ajouté
                             //remplacer la balise img dans originContent
-                            $replaceSrc = "/uploads/articles/".$gameName."/".$filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
+                            $replaceSrc = "/uploads/articles/".$articleName."/".$filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
                             $newContent = str_replace($src, $replaceSrc , $originContent);
                         }
                         else{
@@ -695,8 +702,7 @@ class Article extends AbstractRepository
             //article supprimé en bdd  
             //supprimé les commentaires liée a l'article
             if(!empty($ids_comments)){
-                $comment = new Comment();
-                $resDeleteComments = $comment->multipleDelete("id", $ids_comments);
+                $resDeleteComments = $this->commentRepository->multipleDelete("id", $ids_comments, new Comment());
             }
             else{
                 $resDeleteComments = true;
@@ -705,7 +711,7 @@ class Article extends AbstractRepository
             //supprimé les contents liée a l'article
             if(!empty($ids_contents)){
                 $content = new Content();
-                $resDeleteContents  = $content->multipleDelete("id", $ids_contents);
+                $resDeleteContents  = $this->contentRepository->multipleDelete("id", $ids_contents, $content);
             }
             else{
                 $resDeleteContents = true;

@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
-
 class Article_Category extends AbstractModel
 {
     private string $id = "0";

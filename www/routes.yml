@@ -57,26 +57,19 @@ page:
   controller: ArticleController
   action: getArticle
   access: [ALL]
-  access: [ ALL ]
   allgames:
-    controller: ArticleController
+    controller: Article
     action: GetAllArticlesGame
     access: [ ALL ]
 
   allaboutgames:
-    controller: ArticleController
+    controller: Article
     action: GetAllArticlesAboutGame
     access: [ ALL ]
 
-  allgamesbycategory:
-    controller: ArticleController
-    action: GetAllArticlesGamesByCategory
-    access: [ ALL ]
 
-  allaboutgamesbygame:
-    controller: ArticleController
-    action: GetAllArticlesAboutGamesByGame
-    access: [ ALL ]
+
+
 
 sys:
   user:

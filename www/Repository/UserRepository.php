@@ -57,6 +57,7 @@ class UserRepository extends AbstractRepository
         }
         return $newUsersPerDay;
     }
+    
 
     /**
      * Crée 100 utilisateurs, ne marche qu'une fois

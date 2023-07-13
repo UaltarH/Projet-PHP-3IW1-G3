@@ -65,7 +65,7 @@ abstract class AbstractRepository
     public function selectAll($model): array
     {
         $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT * FROM " . self::getTable($model));
-        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, get_called_class());
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, $model::class);
         $queryPrepared->execute();
         return $queryPrepared->fetchAll();
     }
@@ -88,7 +88,7 @@ abstract class AbstractRepository
             }
         }
 
-        $queryPrepared = SQL::getConnection()->prepare("SELECT * FROM " . $this->getTable($model) . " WHERE " . implode(" AND ", $sqlWhere) . " ORDER BY creation_date DESC");
+        $queryPrepared = SQL::getConnection()->prepare("SELECT * FROM " . self::getTable($model) . " WHERE " . implode(" AND ", $sqlWhere));
         $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, $model::class);
         $queryPrepared->execute($values);
 
@@ -151,9 +151,7 @@ abstract class AbstractRepository
      */
     public function insertIntoJoinTable($model):bool
     {
-        $columns = get_object_vars($this);
-        $columnsToExclude = get_class_vars(get_class());
-        $columns = array_diff_key($columns, $columnsToExclude);
+        $columns = $model->getColumns();
 
         $queryPrepared = SQL::getInstance()->getConnection()->prepare("INSERT INTO " . self::getTable($model) .
             " (" . implode(",", array_keys($columns)) . ") 
@@ -229,7 +227,7 @@ abstract class AbstractRepository
         if(isset($params["join"])){
             $sqlJoin = [];
             foreach ($params["join"] as $fkInfo) {
-                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . $this->getTable($model) . "." . $fkInfo["foreignKeys"]["originColumn"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
+                $sqlJoin[] = "JOIN " . $fkInfo["table"] . " ON " . $fkInfo["foreignKeys"]["originColumn"]["table"] . "." . $fkInfo["foreignKeys"]["originColumn"]["id"] . "=" . $fkInfo["table"] . "." . $fkInfo["foreignKeys"]["targetColumn"];
             }
             implode(" ", $sqlJoin);
             $query = "SELECT " . $this->getTable($model) . ".id, " . implode(", ", array_values($columns)) .
@@ -298,6 +296,13 @@ abstract class AbstractRepository
         $queryPrepared = SQL::getInstance()->getConnection()->prepare("SELECT COUNT(*) FROM " . self::getTable($model));
         $queryPrepared->execute();
         return $queryPrepared->fetch()['count'];
+    }
+
+    public function multipleDelete(string $columnWhere, array $values, $model): bool
+    {
+        $query = "DELETE FROM " . self::getTable($model) . " WHERE " . $columnWhere . " IN ('" . implode("' , '", $values) . "')";
+        $queryPrepared = SQL::getInstance()->getConnection()->prepare($query);
+        return $queryPrepared->execute();
     }
 
 }

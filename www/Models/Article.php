@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
 
 class Article extends AbstractModel
 {

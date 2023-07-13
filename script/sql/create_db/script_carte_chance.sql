@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS carte_chance_article_category CASCADE;
 DROP TABLE IF EXISTS carte_chance_article CASCADE;
 -- DROP TABLE IF EXISTS carte_chance_page CASCADE;
 DROP TABLE IF EXISTS carte_chance_content CASCADE;
-DROP TABLE IF EXISTS carte_chance_category_jeux CASCADE;
+DROP TABLE IF EXISTS carte_chance_game_category CASCADE;
 DROP TABLE IF EXISTS carte_chance_game CASCADE;
 
 -- Ajout de la librairie UUID
@@ -99,7 +99,7 @@ CREATE TABLE carte_chance_content
     PRIMARY KEY (id)
 );
 
-CREATE TABLE carte_chance_category_jeux
+CREATE TABLE carte_chance_game_category
 (
     id            UUID DEFAULT uuid_generate_v4(),
     category_game_name VARCHAR(64)  NOT NULL UNIQUE,
@@ -113,7 +113,7 @@ CREATE TABLE carte_chance_game
     title_game       VARCHAR(64) NOT NULL UNIQUE,
     category_id UUID,
     PRIMARY KEY (id),
-    FOREIGN KEY (category_id) REFERENCES carte_chance_category_jeux (id) ON DELETE CASCADE
+    FOREIGN KEY (category_id) REFERENCES carte_chance_game_category (id) ON DELETE CASCADE
 );
 
 -- Création des tables de jointure
@@ -197,11 +197,11 @@ VALUES ((SELECT id FROM carte_chance_permission WHERE permission_name = 'Create'
 INSERT INTO carte_chance_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token,
                                phone_number, date_inscription, role_id)
 VALUES (uuid_generate_v4(), 'user_pseudo', 'Mathieu', 'Pannetrat', 'mathieu@gmail.com', 'Azerty123', TRUE, NULL, 600000001,
-        '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
+        '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'user')),
        (uuid_generate_v4(), 'admin_pseudo', 'MathieuAdmin', 'PannetratAdmin', 'mathieuAdmin@gmail.com', 'Azerty123', TRUE, NULL,
-        60000000, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin')),
+        60000000, '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'admin')),
        (uuid_generate_v4(), 'admin', 'admin', 'admin', 'admin@admion.com', '$2y$10$vJO4N69zIr.t16lOq9VZFeDV4VP0xq/rQp8oALnKyXW14hqwLSUYK', TRUE, 234234234234234234,
-        61111111, '2023-06-03', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
+        61111111, '2023-07-13', (SELECT id FROM carte_chance_role WHERE role_name = 'admin'));
 
 
 -- carte_chance_article_category
@@ -210,10 +210,10 @@ VALUES (uuid_generate_v4(), 'Jeux', 'Cette catégorie regroupe tous les articles
        (uuid_generate_v4(), 'Trucs et astuces',
         'Cette catégorie regroupe tous les articles qui font référence à un jeu en particulier');
 
--- carte_chance_category_jeux
-INSERT INTO carte_chance_category_jeux (id, category_game_name, description)
+-- carte_chance_game_category
+INSERT INTO carte_chance_game_category (id, category_game_name, description)
 VALUES (uuid_generate_v4(), 'Jeux de cartes', 'Cette catégorie regroupe tous les jeux de cartes'),
-       (uuid_generate_v4(), 'Game de dés', 'Cette catégorie regroupe tous les jeux de dés'),
+       (uuid_generate_v4(), 'Jeux de dés', 'Cette catégorie regroupe tous les jeux de dés'),
        (uuid_generate_v4(), 'Jeux de plateau', 'Cette catégorie regroupe tous les jeux de plateau');
 
 
@@ -225,7 +225,7 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
+FROM carte_chance_game_category
 WHERE category_game_name = 'Jeux de cartes';
 
 INSERT INTO carte_chance_game (id, title_game, category_id)
@@ -241,7 +241,7 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
+FROM carte_chance_game_category
 WHERE category_game_name = 'Jeux de dés';
 
 INSERT INTO carte_chance_game (id, title_game, category_id)
@@ -256,7 +256,7 @@ uuid_categorie uuid;
 BEGIN
 SELECT id
 INTO uuid_categorie
-FROM carte_chance_category_jeux
+FROM carte_chance_game_category
 WHERE category_game_name = 'Jeux de plateau';
 
 INSERT INTO carte_chance_game (id, title_game, category_id)

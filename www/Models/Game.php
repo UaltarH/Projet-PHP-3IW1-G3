@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Core\SQL;
-
 class Game extends AbstractModel
 {
     private string $id = "0";
     protected string $title_game;
-    protected string $category_id = "0";
+    protected string $category_id;
 
     public function __construct(){
     }
