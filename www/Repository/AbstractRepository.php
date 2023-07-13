@@ -94,6 +94,26 @@ abstract class AbstractRepository
 
         return $queryPrepared->fetchAll();
     }
+
+    public function getAllWhereInsensitiveLike(array $where, $model): false|array
+    {
+        $sqlWhere = [];
+        $values = [];
+        foreach ($where as $column => $value) {
+            $sqlWhere[] = $column . " ILIKE :" . $column;
+            if (is_bool($value)) {
+                $values[$column] = $value ? 1 : 0;
+            } else {
+                $values[$column] = '%' . $value . '%';
+            }
+        }
+
+        $queryPrepared = SQL::getConnection()->prepare("SELECT * FROM " . self::getTable($model) . " WHERE " . implode(" AND ", $sqlWhere));
+        $queryPrepared->setFetchMode(\PDO::FETCH_CLASS, $model::class);
+        $queryPrepared->execute($values);
+
+        return $queryPrepared->fetchAll();
+    }
     /**
      *
      * Exemple de $fkInfos:

@@ -3,17 +3,33 @@
 namespace App\Controllers;
 
 use App\Core\View;
-use App\Models\Category_article;
-use App\Models\Category_jeux;
-use App\Models\Jeux;
-use App\Models\Article;
-
+use App\Models\AbstractModel;
+use App\Models\Article_Category;
+use App\Models\Game;
+use App\Models\Game_Category;
+use App\Repository\ArticleCategoryRepository;
+use App\Repository\ArticleRepository;
+use App\Repository\GameCategoryRepository;
+use App\Repository\GameRepository;
 use function App\Core\TokenJwt\getSpecificDataFromToken;
 use function App\Core\TokenJwt\validateJWT;
 require_once '/var/www/html/Core/TokenJwt.php';
 
-class Main
+class Main extends AbstractModel
 {
+    private ArticleRepository $articleRepository;
+    private ArticleCategoryRepository $articleCategoryRepository;
+    private GameCategoryRepository $gameCategoryRepository;
+    private GameRepository $gameRepository;
+
+    public function __construct()
+    {
+        $this->articleRepository = new ArticleRepository();
+        $this->articleCategoryRepository = new ArticleCategoryRepository();
+        $this->gameCategoryRepository = new GameCategoryRepository();
+        $this->gameRepository = new GameRepository();
+    }
+
     public function home(): void     
     {
         //utilisateur connecter:        
@@ -37,16 +53,17 @@ class Main
     public function search(): void
     {
         $query = $_GET["search"];
-        $articleModel = new Article();
-        $jeuxModel = new Jeux();
-        $categorieJeuxModel = new Category_jeux();
-        $categorieArticleModel = new Category_article();
+        $articleModel = $this->articleRepository;
+        $jeuxModel = $this->gameRepository;
+        $categorieJeuxModel = $this->gameCategoryRepository;
+        $categorieArticleModel = $this->articleCategoryRepository;
+        $void = $articleModel->selectAll(new \App\Models\Article());
 
         $attributes = ["title", "content"];
         $articleWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $results = $articleModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $articleModel->getAllWhereInsensitiveLike($whereSql, new \App\Models\Article());
 
             foreach ($results as $result) {
                 if (!in_array($result, $articleWhere)) {
@@ -55,11 +72,11 @@ class Main
             }
         }
 
-        $attributes = ["title"];
+        $attributes = ["title_game"];
         $jeuxWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $results = $jeuxModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $jeuxModel->getAllWhereInsensitiveLike($whereSql, new Game());
 
             foreach ($results as $result) {
                 if (!in_array($result, $jeuxWhere)) {
@@ -68,11 +85,11 @@ class Main
             }
         }
 
-        $attributes = ["category_name", "description"];
+        $attributes = ["category_game_name", "description"];
         $categorieJeuxWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $results = $categorieJeuxModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $categorieJeuxModel->getAllWhereInsensitiveLike($whereSql, new Game_Category());
 
             foreach ($results as $result) {
                 if (!in_array($result, $categorieJeuxWhere)) {
@@ -85,7 +102,7 @@ class Main
         $categorieArticlesWhere = [];
         foreach ($attributes as $value){
             $whereSql = [$value => $query];
-            $results = $categorieArticleModel->getAllWhereInsensitiveLike($whereSql);
+            $results = $categorieArticleModel->getAllWhereInsensitiveLike($whereSql, new Article_Category());
 
             foreach ($results as $result) {
                 if (!in_array($result, $categorieArticlesWhere)) {

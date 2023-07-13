@@ -4,24 +4,28 @@ namespace App\Controllers;
 
 use App\Core\View;
 use App\Forms\ModerateComment;
-use App\Models\Article;
-use App\Models\Category_jeux;
 use App\Models\Comment;
-use App\Models\Jeux;
-use App\Models\User;
+use App\Repository\AbstractRepository;
+use App\Repository\CommentRepository;
 
 
+class CommentController extends AbstractRepository
+{
+    private CommentRepository $commentRepository;
 
-class CommentController {
+    public function __construct()
+    {
+        $this->commentRepository = new CommentRepository();
+    }
     public function index() {
         $id = $_GET["id"];
-        $commentaireModel = new Comment();
+        $commentaireModel = $this->commentRepository;
 
         $whereSql = ["moderated" => false];
-        $unmoderatedComment = $commentaireModel->getAllWhere($whereSql);
+        $unmoderatedComment = $commentaireModel->getAllWhere($whereSql, new Comment());
         $whereSql = ["moderated" => true];
-        $moderatedComment = $commentaireModel->getAllWhere($whereSql);
-        $allComment = $commentaireModel->selectAll();
+        $moderatedComment = $commentaireModel->getAllWhere($whereSql, new Comment());
+        $allComment = $commentaireModel->selectAll(new Comment());
 
         $view = new View("System/commentlist", "back");
         $view->assign('unmoderatedComment', $unmoderatedComment);
@@ -31,11 +35,11 @@ class CommentController {
 
     public function edit() {
         $id = $_GET["id"];
-        $commentaireModel = new Comment();
+        $commentaireModel = $this->commentRepository;
         $moderateCommentForm = new ModerateComment();
 
         $whereSql = ["id" => $id];
-        $commentInfos = $commentaireModel->getOneWhere($whereSql);
+        $commentInfos = $commentaireModel->getOneWhere($whereSql, new Comment());
 
 
         $view = new View("System/commentedit", "back");
@@ -47,13 +51,13 @@ class CommentController {
         var_dump($_POST);
         $id = $_POST["id"];
         $accepted = $_POST['accepted'] ?? false;
-        $commentaireModel = new Comment();
+        $commentaireModel = $this->commentRepository;
 
         $whereSql = ["id" => $id];
-        $comment = $commentaireModel->getOneWhere($whereSql);
+        $comment = $commentaireModel->getOneWhere($whereSql, new Comment());
         $comment->setModerated(true);
         $comment->setAccepted($accepted);
-        $comment->save();
+        $this->commentRepository->save($comment);
 
         header("Location: /sys/comment/list");
     }
