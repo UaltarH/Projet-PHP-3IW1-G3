@@ -53,6 +53,11 @@ jeux:
   action: allGames
   access: [ ALL ]
 
+articles:
+  controller: Article
+  action: allArticles
+  access: [ ALL ]
+
 page:
   controller: ArticleController
   action: getArticle

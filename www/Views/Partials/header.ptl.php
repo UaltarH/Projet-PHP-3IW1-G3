@@ -29,6 +29,9 @@ if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) {
                         <a class='nav-link' href="/page/allgames">Jeux</a>
                     </li>
                     <li class="nav-item">
+                        <a class='nav-link' href="/articles">Articles</a>
+                    </li>
+                    <li class="nav-item">
                         <a class='nav-link' href="/page/allaboutgames">Trucs et astuces</a>
                     </li>
 
