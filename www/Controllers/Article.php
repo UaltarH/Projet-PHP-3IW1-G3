@@ -6,7 +6,7 @@ use App\Core\View;
 use App\Core\Config;
 use App\Core\Errors;
 
-use App\Models\Article AS ArticleModel;
+use App\Models\Article as ArticleModel;
 use App\Models\Article_Category;
 use App\Models\Game_Category;
 use App\Models\Game;
@@ -31,9 +31,9 @@ use App\Repository\ContentRepository;
 
 use function App\Services\AddFileContent\AddFileContentFunction;
 use function App\Services\HttpMethod\getHttpMethodVarContent;
+
 require_once '/var/www/html/Services/HttpMethod.php';
 require_once '/var/www/html/Services/AddFileContent.php';
-
 
 
 class Article extends AbstractRepository
@@ -49,7 +49,8 @@ class Article extends AbstractRepository
     private CommentRepository $commentRepository;
     private ContentRepository $contentRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = Config::getInstance()->getConfig();
         $this->articleRepository = new ArticleRepository();
         $this->articleCategoryRepository = new ArticleCategoryRepository();
@@ -63,18 +64,19 @@ class Article extends AbstractRepository
     }
 
 
-    public function getArticle(){
+    public function getArticle()
+    {
         $view = new View("Article/article", "front");
         //tester si il y a un id dans l'url( avec GET )(le numéro represente l'id de l'article en bdd)
-        if(isset($_GET['number'])){
+        if (isset($_GET['number'])) {
             //si oui tester si il existe en base un article qui possede cette id :
             $article = new Article();
             $whereSql = ["id" => $_GET['number']];
             $resultQuery = $this->articleRepository->getOneWhere($whereSql, $article);
-            if(is_bool($resultQuery)) { //
+            if (is_bool($resultQuery)) { //
                 //article not found:                
                 $view->assign("error", 'Article Not Found');
-            } else{
+            } else {
                 //article found:
                 $view->assign("titre", $resultQuery->getTitle());
                 $view->assign("content", $resultQuery->getContent());
@@ -82,16 +84,17 @@ class Article extends AbstractRepository
         } else {
             //si non retourner une erreur 404 ou une redirection vers la page d'accueil
             $view->assign("error", 'Article Not Found');
-        }      
+        }
     }
 
-    public function GetAllArticlesGame(){
+    public function GetAllArticlesGame()
+    {
         $view = new View("Article/allArticlesGame", "front");
         $article = new Article();
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
-                "table" => $this->config['bdd']['prefix']."article_category",
+                "table" => $this->config['bdd']['prefix'] . "article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -99,24 +102,25 @@ class Article extends AbstractRepository
             ]
         ];
         //"Trucs et astuces"
-        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery,$whereSql,$article);
+        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery, $whereSql, $article);
 
-        if(is_bool($resultQuery)) { //
+        if (is_bool($resultQuery)) { //
             //article not found:                
             $view->assign("error", 'Article Not Found');
-        } else{
+        } else {
             //article found:
             $view->assign("articles", $resultQuery);
         }
     }
 
-    public function GetAllArticlesAboutGame(){
+    public function GetAllArticlesAboutGame()
+    {
         $view = new View("Article/allArticlesAboutGame", "front");
         $article = new Article();
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
-                "table" => $this->config['bdd']['prefix']."article_category",
+                "table" => $this->config['bdd']['prefix'] . "article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -124,12 +128,12 @@ class Article extends AbstractRepository
             ]
         ];
         //"Trucs et astuces"
-        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery,$whereSql,$article);
+        $resultQuery = $this->articleRepository->selectWithFkAndWhere($fkInfosQuery, $whereSql, $article);
 
-        if(is_bool($resultQuery)) { //
+        if (is_bool($resultQuery)) { //
             //article not found:                
             $view->assign("error", 'Article Not Found');
-        } else{
+        } else {
             //article found:
             $view->assign("articles", $resultQuery);
         }
@@ -142,8 +146,8 @@ class Article extends AbstractRepository
         //récuperer toutes les category d'article qui existe dans la bdd, 
         $optionsCategoriesArticle = [];
         $category_article = new Article_Category();
-        $resultQuery = $this->articleCategoryRepository->selectAll($category_article);       
-        foreach($resultQuery as $category){
+        $resultQuery = $this->articleCategoryRepository->selectAll($category_article);
+        foreach ($resultQuery as $category) {
             $optionsCategoriesArticle[$category->getId()] = $category->getCategoryName();
         }
         $optionsForms["categoriesArticle"] = $optionsCategoriesArticle;
@@ -152,21 +156,21 @@ class Article extends AbstractRepository
         $optionsCategoryGames = [];
         $category_jeux = new Game_Category();
         $resultQueryAllCategoryGames = $this->gameCategoryRepository->selectAll($category_jeux);
-        foreach($resultQueryAllCategoryGames as $categoryGame){
+        foreach ($resultQueryAllCategoryGames as $categoryGame) {
             $optionsCategoryGames[$categoryGame->getId()] = $categoryGame->getCategoryName();
         }
         $optionsForms["categoriesGame"] = $optionsCategoryGames;
 
         //récuperer tout les jeux qui existe dans la bdd
-        $optionsGames= [];
-        $Game = new Game(); 
+        $optionsGames = [];
+        $Game = new Game();
         $resultQueryAllGames = $this->gameRepository->selectAll($Game);
-        foreach($resultQueryAllGames as $game){
+        foreach ($resultQueryAllGames as $game) {
             $optionsGames[$game->getId()] = $game->getTitle();
         }
         $optionsForms["games"] = $optionsGames;
 
-        $view->assign("optionsForms", $optionsForms);      
+        $view->assign("optionsForms", $optionsForms);
     }
 
     public function articleDatatable(): void
@@ -185,7 +189,7 @@ class Article extends AbstractRepository
         }
 
         echo json_encode($this->articleRepository->list([
-            "columns" => ["title", "created_date", "updated_date", "content", "category_name", "category_game_name", "title_game" ],
+            "columns" => ["title", "created_date", "updated_date", "content", "category_name", "category_game_name", "title_game"],
             "start" => $start,
             "length" => $length,
             "search" => $search,
@@ -196,8 +200,8 @@ class Article extends AbstractRepository
                     "table" => "carte_chance_game_article",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "id",
-                                           "table" => "carte_chance_article"
-                                          ],
+                            "table" => "carte_chance_article"
+                        ],
                         "targetColumn" => "article_id"
                     ]
                 ],
@@ -205,8 +209,8 @@ class Article extends AbstractRepository
                     "table" => "carte_chance_game",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "jeux_id",
-                                           "table" => "carte_chance_game_article"
-                                          ],
+                            "table" => "carte_chance_game_article"
+                        ],
                         "targetColumn" => "id"
                     ]
                 ],
@@ -214,8 +218,8 @@ class Article extends AbstractRepository
                     "table" => "carte_chance_article_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
-                                           "table" => "carte_chance_article"
-                                          ],
+                            "table" => "carte_chance_article"
+                        ],
                         "targetColumn" => "id"
                     ]
                 ],
@@ -223,8 +227,8 @@ class Article extends AbstractRepository
                     "table" => "carte_chance_game_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
-                                           "table" => "carte_chance_game"
-                                          ],
+                            "table" => "carte_chance_game"
+                        ],
                         "targetColumn" => "id"
                     ]
                 ]
@@ -232,23 +236,24 @@ class Article extends AbstractRepository
         ], new ArticleModel()));
     }
 
-    public function createArticleGame(){
+    public function createArticleGame()
+    {
         header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
         }
 
 
-        if(!empty($_POST["createArticleGame-form-titleGame"]) && 
-           !empty($_POST["createArticleGame-form-categoryGame"]) && 
-           !empty($_FILES["createArticleGame-form-imageJeu"]) && 
-           !empty($_POST["content"])){
-            
+        if (!empty($_POST["createArticleGame-form-titleGame"]) &&
+            !empty($_POST["createArticleGame-form-categoryGame"]) &&
+            !empty($_FILES["createArticleGame-form-imageJeu"]) &&
+            !empty($_POST["content"])) {
+
             $categoryArticleGame = new Article_Category();
             $categoryArticleGame = $this->articleCategoryRepository->getOneWhere(["category_name" => "Jeux"], $categoryArticleGame);
-            if(is_bool($categoryArticleGame)){
+            if (is_bool($categoryArticleGame)) {
                 die("Erreur: la catégorie d'article Jeux n'existe pas");
             }
 
@@ -257,7 +262,7 @@ class Article extends AbstractRepository
 
             $whereSql = ["title" => $_POST['createArticleGame-form-titleGame']];
             $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
-            if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){
+            if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
                 $article->setTitle($_POST['createArticleGame-form-titleGame']);
                 $article->setContent("pre content");
                 $article->setCreatedDate(date("Y-m-d H:i:s"));
@@ -267,54 +272,54 @@ class Article extends AbstractRepository
                 $responseQuery = $this->articleRepository->save($article);
                 $idNewArticle = $responseQuery->idNewElement;
 
-                if($responseQuery->success){
+                if ($responseQuery->success) {
                     //article added in bdd
                     //add the game in bdd
                     $game = new Game();
 
                     $whereSql = ["title_game" => $_POST['createArticleGame-form-titleGame']];
                     $resultQueryExist = $this->gameRepository->existOrNot($whereSql, $game);
-                    if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){ 
+                    if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
                         //il n'y a aucun elements dans la table jeu qui contiens le meme titre 
                         $game->setTitle($_POST['createArticleGame-form-titleGame']);
                         $game->setCategory_id($_POST['createArticleGame-form-categoryGame']);
                         $responseInsert = $this->gameRepository->save($game);
                         $idNewGame = $responseInsert->idNewElement;
 
-                        if($responseInsert->success){
+                        if ($responseInsert->success) {
                             //game added in bdd
                             //add in jointable article_jeux ref in bdd
                             $article_jeux = new Game_Article();
                             $article_jeux->setArticleId($idNewArticle);
                             $article_jeux->setJeuxId($idNewGame);
-                            if($this->gameArticleRepository->insertIntoJoinTable($article_jeux)){
+                            if ($this->gameArticleRepository->insertIntoJoinTable($article_jeux)) {
                                 //article_jeux ref added in bdd
-                               
+
                                 //ici on ajoute dans la table content les paths des images 
                                 //avant il faut parser le content pour trouver les balises img(base 64 ou url) et les remplacer par les paths des images
                                 $originContent = $_POST['content'];
                                 $pattern = '/<img[^>]+src="([^">]+)"/';
                                 preg_match_all($pattern, $originContent, $matches);
-                                
+
                                 $srcImages = $matches[1];
                                 $newContent = "";
                                 foreach ($srcImages as $src) {
                                     if (strpos($src, 'data:image') === 0) { //verifie si c'est une image en base 64
                                         $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $src));
-                                        
+
                                         $extension = self::getBase64ImageExtension($src); // Obtenir l'extension à partir du base64
-        
+
                                         $filename = uniqid() . '.' . $extension;
-                                        
+
                                         $gameName = str_replace(" ", "_", $_POST['createArticleGame-form-titleGame']);
-                                
+
                                         $arrayConfContent = [];
-                                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$gameName."/";
-                                        $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
+                                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $gameName . "/";
+                                        $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                         $arrayConfContent['fileName'] = $filename;
                                         $arrayConfContent['fileContent'] = $fileData;
                                         $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
-                                        $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
+                                        $arrayConfContent['validExtensions'] = array("jpg", "jpeg", "png", "svg");
                                         $arrayConfContent['joinTableClass'] = "Article_Content";
                                         $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                                         $arrayConfContent['joinTableId'] = $idNewArticle;
@@ -322,13 +327,12 @@ class Article extends AbstractRepository
                                         $arrayConfContent['from$_FILES'] = false;
 
                                         $responseAddContent = AddFileContentFunction($arrayConfContent);
-                                        if($responseAddContent->success){
+                                        if ($responseAddContent->success) {
                                             //image article ajouté
                                             //remplacer la balise img dans originContent
-                                            $replaceSrc = "/uploads/articles/".$gameName."/".$filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                                            $newContent = str_replace($src, $replaceSrc , $originContent);
-                                        }
-                                        else{
+                                            $replaceSrc = "/uploads/articles/" . $gameName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
+                                            $newContent = str_replace($src, $replaceSrc, $originContent);
+                                        } else {
                                             //image article non ajouté en bdd     
                                             echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
                                         }
@@ -338,32 +342,31 @@ class Article extends AbstractRepository
                                 $articleMaj = new ArticleModel();
                                 $articleMaj->setId($idNewArticle);
                                 $articleMaj->setContent($newContent);
-                                if($this->articleRepository->save($articleMaj)->success){
+                                if ($this->articleRepository->save($articleMaj)->success) {
                                     //content de l'article mis a jour
 
                                     //enfin ajouter la photo du jeu dans notre solution puis en base de donnée:                                 
                                     $filename = str_replace(" ", "_", $_FILES['createArticleGame-form-imageJeu']['name']);
                                     $gameName = str_replace(" ", "_", $_POST['createArticleGame-form-titleGame']);
-                                    
+
                                     $arrayConfContent = [];
-                                    $arrayConfContent['directory'] = "/var/www/html/uploads/jeux/".$gameName."/";
-                                    $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
+                                    $arrayConfContent['directory'] = "/var/www/html/uploads/jeux/" . $gameName . "/";
+                                    $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                     $arrayConfContent['fileName'] = $filename;
                                     $arrayConfContent['fileContent'] = $_FILES['createArticleGame-form-imageJeu']['tmp_name'];
-                                    $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'],PATHINFO_EXTENSION));
-                                    $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
+                                    $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
+                                    $arrayConfContent['validExtensions'] = array("jpg", "jpeg", "png", "svg");
                                     $arrayConfContent['joinTableClass'] = "Game_Content";
                                     $arrayConfContent['joinTableRepository'] = "GameContentRepository";
                                     $arrayConfContent['joinTableId'] = $idNewGame;
                                     $arrayConfContent['joinTableMethodToSetId'] = "setJeuId";
                                     $arrayConfContent['from$_FILES'] = true;
-                                    
+
                                     $responseAddContent = AddFileContentFunction($arrayConfContent);
-                                    if($responseAddContent->success){
+                                    if ($responseAddContent->success) {
                                         //image du jeu ajouter en bdd
                                         echo json_encode(['success' => true]);
-                                    }
-                                    else{
+                                    } else {
                                         //image non ajouté en bdd
                                         //"image game ".$filename." non ajouté en bdd";
                                         http_response_code(400);
@@ -371,70 +374,65 @@ class Article extends AbstractRepository
                                         echo json_encode(['success' => false]);
                                     }
 
-                                } else{
+                                } else {
                                     //erreur lors de la mise a jour du content de l'article
                                     http_response_code(400);
                                     Errors::define(500, 'Internal Server Error');
                                     echo json_encode(['success' => false]);
                                 }
-                            }
-                            else{
+                            } else {
                                 //error : add in jointable article_jeux ref in bdd
                                 //"erreur sql : article_jeux ref non ajouté en bdd";
                                 http_response_code(400);
                                 Errors::define(500, 'Internal Server Error');
                                 echo json_encode(['success' => false]);
                             }
-                        }
-                        else{
+                        } else {
                             //error add game in bdd
                             //"erreur sql : jeu non ajouté en bdd";
                             http_response_code(400);
                             Errors::define(500, 'Internal Server Error');
                             echo json_encode(['success' => false]);
-                        }    
-                    }
-                    else{
+                        }
+                    } else {
                         //le titre du jeu existe deja dans la bdd
                         http_response_code(400);
                         Errors::define(400, 'Invalid Info');
                         echo json_encode(['success' => false]);
                     }
-                }
-                else{
+                } else {
                     //erreur sql : article non ajouté en bdd
                     http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
                     echo json_encode(['success' => false]);
                 }
-            }
-            else{
+            } else {
                 //article not added in bdd : title already used
                 http_response_code(400);
                 Errors::define(400, 'Invalid Info');
                 echo json_encode(['success' => false]);
             }
-        }
-        else{
+        } else {
             //manque des informations dans les posts 
             http_response_code(400);
             Errors::define(400, 'Invalid Info');
             echo json_encode(['success' => false]);
         }
-        
+
     }
 
-    public function createArticleAboutGame(){
+    public function createArticleAboutGame()
+    {
         header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
         }
 
-        if(!empty($_POST["createArticleAboutGame-form-game"]) && 
-           !empty($_POST["createArticleAboutGame-form-titleArticle"]) && 
-           !empty($_POST["content"])){
+        if (!empty($_POST["createArticleAboutGame-form-game"]) &&
+            !empty($_POST["createArticleAboutGame-form-titleArticle"]) &&
+            !empty($_POST["content"])) {
 
             //ajouter l'article en base de donnée:
             $article = new ArticleModel();
@@ -442,14 +440,14 @@ class Article extends AbstractRepository
             //get the category about game id:
             $categoryArticleAboutGame = new Article_Category();
             $categoryArticleAboutGame = $this->articleCategoryRepository->getOneWhere(["category_name" => "Trucs et astuces"], $categoryArticleAboutGame);
-            if(is_bool($categoryArticleAboutGame)){
+            if (is_bool($categoryArticleAboutGame)) {
                 die("Erreur: la catégorie d'article trucs et astuces n'existe pas");
             }
             $categoryArticleAboutGameId = $categoryArticleAboutGame->getId();
 
             $whereSql = ["title" => $_POST['createArticleAboutGame-form-titleArticle']];
             $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
-            if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){ 
+            if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
                 //il n'y a aucun elements dans la table qui contiens le meme titre 
                 $article->setTitle($_POST['createArticleAboutGame-form-titleArticle']);
                 $article->setContent(" ");
@@ -459,40 +457,40 @@ class Article extends AbstractRepository
 
                 $responseQuery = $this->articleCategoryRepository->save($article);
                 $idNewArticle = $responseQuery->idNewElement;
-                if($responseQuery->success){ 
+                if ($responseQuery->success) {
                     //article ajouté en bdd 
                     //enusite ajouter l'id de l'article et l'id du jeux dans la table de jointure entre article et jeux
                     $article_jeux = new Game_Article();
                     $article_jeux->setArticleId($idNewArticle);
                     $article_jeux->setJeuxId($_POST['createArticleAboutGame-form-game']);
-                    if($this->gameArticleRepository->insertIntoJoinTable($article_jeux)){
+                    if ($this->gameArticleRepository->insertIntoJoinTable($article_jeux)) {
                         //article_jeux ajouté en bdd
-                        
+
                         //ici on ajoute dans la table content les paths des images de notre article
                         //avant il faut parser le content pour trouver les balises img(base 64 ou url) et les remplacer par les paths des images
                         $originContent = $_POST['content'];
                         $pattern = '/<img[^>]+src="([^">]+)"/';
                         preg_match_all($pattern, $originContent, $matches);
-                        
+
                         $srcImages = $matches[1];
                         $newContent = "";
                         foreach ($srcImages as $src) {
                             if (strpos($src, 'data:image') === 0) { //verifie si c'est une image en base 64
                                 $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $src));
-                                
+
                                 $extension = self::getBase64ImageExtension($src); // Obtenir l'extension à partir du base64
 
                                 $filename = uniqid() . '.' . $extension;
-                                
+
                                 $articleName = str_replace(" ", "_", $_POST['createArticleAboutGame-form-titleArticle']);
-                        
+
                                 $arrayConfContent = [];
-                                $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$articleName."/";
-                                $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
+                                $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $articleName . "/";
+                                $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                 $arrayConfContent['fileName'] = $filename;
                                 $arrayConfContent['fileContent'] = $fileData;
                                 $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
-                                $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
+                                $arrayConfContent['validExtensions'] = array("jpg", "jpeg", "png", "svg");
                                 $arrayConfContent['joinTableClass'] = "Article_Content";
                                 $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                                 $arrayConfContent['joinTableId'] = $idNewArticle;
@@ -500,13 +498,12 @@ class Article extends AbstractRepository
                                 $arrayConfContent['from$_FILES'] = false;
 
                                 $responseAddContent = AddFileContentFunction($arrayConfContent);
-                                if($responseAddContent->success){
+                                if ($responseAddContent->success) {
                                     //image article ajouté
                                     //remplacer la balise img dans originContent
-                                    $replaceSrc = "/uploads/articles/".$articleName."/".$filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                                    $newContent = str_replace($src, $replaceSrc , $originContent);
-                                }
-                                else{
+                                    $replaceSrc = "/uploads/articles/" . $articleName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
+                                    $newContent = str_replace($src, $replaceSrc, $originContent);
+                                } else {
                                     //image article non ajouté en bdd     
                                     echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
                                 }
@@ -516,39 +513,37 @@ class Article extends AbstractRepository
                         $articleMaj = new ArticleModel();
                         $articleMaj->setId($idNewArticle);
                         $articleMaj->setContent($newContent);
-                        if($this->articleRepository->save($articleMaj)){
+                        if ($this->articleRepository->save($articleMaj)) {
                             //content de l'article mis a jour
                             echo json_encode(['success' => true]);
-                        } else{
+                        } else {
                             //erreur lors de la mise a jour du content de l'article
                             http_response_code(400);
                             Errors::define(500, 'Internal Server Error');
                             echo json_encode(['success' => false]);
                         }
-                    }
-                    else{
+                    } else {
                         //joinTable ref not added
                         //erreur sql : article_jeux ref non ajouté en bdd
                         http_response_code(400);
                         Errors::define(500, 'Internal Server Error');
                         echo json_encode(['success' => false]);
                     }
-                }
-                else{
+                } else {
                     //article not added in bdd 
                     //erreur sql : article non ajouté en bdd
                     http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
                     echo json_encode(['success' => false]);
                 }
-            } else{
+            } else {
                 // title is already used
                 //Le titre de l'article existe déjà
                 http_response_code(400);
                 Errors::define(500, 'Internal Server Error');
                 echo json_encode(['success' => false]);
             }
-        } else{
+        } else {
             //manque des informations dans les posts 
             http_response_code(400);
             Errors::define(400, 'Invalid Info');
@@ -557,43 +552,44 @@ class Article extends AbstractRepository
 
     }
 
-    public function updateArticle(){
+    public function updateArticle()
+    {
         header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
 
-        if(!empty($_POST["content"]) || !empty($_POST["editArticle-form-title"])){
+        if (!empty($_POST["content"]) || !empty($_POST["editArticle-form-title"])) {
             $article = new ArticleModel();
             $article->setId($_POST["id"]);
-            if(!empty($_POST["content"])){
+            if (!empty($_POST["content"])) {
                 //avant de set le content on doit parser le content pour trouver les balises img et les remplacer par les paths des images si il yen a de nouvelles:
 
                 $originContent = $_POST['content'];
                 $pattern = '/<img[^>]+src="([^">]+)"/';
                 preg_match_all($pattern, $originContent, $matches);
-                
+
                 $srcImages = $matches[1];
-                
+
                 foreach ($srcImages as $src) {
                     if (strpos($src, 'data:image') === 0) { //verifie si c'est une image en base 64
                         $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $src));
-                        
+
                         $extension = self::getBase64ImageExtension($src); // Obtenir l'extension à partir du base64
 
                         $filename = uniqid() . '.' . $extension;
-                        
+
                         $articleName = str_replace(" ", "_", $_POST['editArticle-form-title']);
-                
+
                         $arrayConfContent = [];
-                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$articleName."/";
-                        $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
+                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $articleName . "/";
+                        $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                         $arrayConfContent['fileName'] = $filename;
                         $arrayConfContent['fileContent'] = $fileData;
                         $arrayConfContent['fileExtension'] = strtolower(pathinfo($arrayConfContent['location'], PATHINFO_EXTENSION));
-                        $arrayConfContent['validExtensions'] = array("jpg","jpeg","png","svg");
+                        $arrayConfContent['validExtensions'] = array("jpg", "jpeg", "png", "svg");
                         $arrayConfContent['joinTableClass'] = "Article_content";
                         $arrayConfContent['joinTableRepository'] = "ArticleContentRepository";
                         $arrayConfContent['joinTableId'] = $_POST["id"];
@@ -601,13 +597,12 @@ class Article extends AbstractRepository
                         $arrayConfContent['from$_FILES'] = false;
 
                         $responseAddContent = AddFileContentFunction($arrayConfContent);
-                        if($responseAddContent->success){
+                        if ($responseAddContent->success) {
                             //image article ajouté
                             //remplacer la balise img dans originContent
-                            $replaceSrc = "/uploads/articles/".$articleName."/".$filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                            $newContent = str_replace($src, $replaceSrc , $originContent);
-                        }
-                        else{
+                            $replaceSrc = "/uploads/articles/" . $articleName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
+                            $newContent = str_replace($src, $replaceSrc, $originContent);
+                        } else {
                             //image article non ajouté en bdd     
                             echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
                         }
@@ -617,32 +612,32 @@ class Article extends AbstractRepository
 
                 $article->setContent($newContent);
             }
-            if(!empty($_POST["editArticle-form-title"])){
+            if (!empty($_POST["editArticle-form-title"])) {
                 $whereSql = ["title" => $_POST['editArticle-form-title']];
                 $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
-                if(is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists"){
+                if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
                     $article->setTitle($_POST["editArticle-form-title"]);
-                } else{
+                } else {
                     // title is already used
                     //Le titre de l'article existe déjà
                     http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
                     echo json_encode(['success' => false]);
                 }
-            } 
+            }
             $article->setUpdatedDate(date("Y-m-d H:i:s"));
-            
-            if($this->articleRepository->save($article)->success){
+
+            if ($this->articleRepository->save($article)->success) {
                 echo json_encode(['success' => true]);
-            } else{
+            } else {
                 //erreur sql : article non ajouté en bdd
                 http_response_code(400);
                 Errors::define(500, 'Internal Server Error');
                 echo json_encode(['success' => false]);
             }
-            
 
-        } else{
+
+        } else {
             //manque des informations dans les posts 
             http_response_code(400);
             Errors::define(400, 'Invalid Info');
@@ -650,15 +645,16 @@ class Article extends AbstractRepository
         }
     }
 
-    public function deleteArticle(){
+    public function deleteArticle()
+    {
         header('Content-Type: application/json');
-        if(empty($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] != "DELETE") {
+        if (empty($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] != "DELETE") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
         $delete = getHttpMethodVarContent();
-        if(empty($delete['id']) && empty($delete['categoryArticle'])) {
+        if (empty($delete['id']) && empty($delete['categoryArticle'])) {
             Errors::define(400, 'Bad Request');
             echo json_encode("Bad Request");
             exit;
@@ -671,7 +667,7 @@ class Article extends AbstractRepository
         $comment_article = new Comment_article();
         $comment_articles = $this->commentArticleRepository->getAllWhere(["article_id" => $delete['id']], $comment_article);
         $ids_comments = [];
-        foreach($comment_articles as $comment_article){
+        foreach ($comment_articles as $comment_article) {
             array_push($ids_comments, $comment_article->getCommentId());
         }
 
@@ -679,10 +675,10 @@ class Article extends AbstractRepository
         $article_content = new Article_content();
         $article_contents = $this->articleContentRepository->getAllWhere(["article_id" => $delete['id']], $article_content);
         $ids_contents = [];
-        foreach($article_contents as $article_content){
+        foreach ($article_contents as $article_content) {
             array_push($ids_contents, $article_content->getContentId());
         }
-        
+
         //si l'article est de type jeu il faut supprimé le jeu et le contenu du jeu(son image) ainsi que les articles de type about game qui sont lié a cette article
         // if($delete['categoryArticle'] == "jeu"){
         //     $article_jeux = new Article_jeux();
@@ -698,51 +694,75 @@ class Article extends AbstractRepository
         //     $content_id = $jeux_content->getContentId(); //to delete
         // }
 
-        if($this->articleRepository->delete($article)) {
+        if ($this->articleRepository->delete($article)) {
             //article supprimé en bdd  
             //supprimé les commentaires liée a l'article
-            if(!empty($ids_comments)){
+            if (!empty($ids_comments)) {
                 $resDeleteComments = $this->commentRepository->multipleDelete("id", $ids_comments, new Comment());
-            }
-            else{
+            } else {
                 $resDeleteComments = true;
             }
-            
+
             //supprimé les contents liée a l'article
-            if(!empty($ids_contents)){
+            if (!empty($ids_contents)) {
                 $content = new Content();
-                $resDeleteContents  = $this->contentRepository->multipleDelete("id", $ids_contents, $content);
-            }
-            else{
+                $resDeleteContents = $this->contentRepository->multipleDelete("id", $ids_contents, $content);
+            } else {
                 $resDeleteContents = true;
             }
 
 
-            if($resDeleteComments && $resDeleteContents){
+            if ($resDeleteComments && $resDeleteContents) {
                 //commentaires et contents supprimé en bdd
                 echo json_encode(['success' => true]);
-            }
-            else{
+            } else {
                 //erreur sql : commentaires ou contents non supprimé en bdd
                 http_response_code(400);
                 Errors::define(500, 'Internal Server Error');
                 echo json_encode(['success' => false]);
             }
-        }
-        else {
+        } else {
             Errors::define(500, 'Internal Server Error');
             echo json_encode("Internal Server Error");
         }
         exit();
     }
 
-
-
-    public static function getBase64ImageExtension($base64Image) {
+    public static function getBase64ImageExtension($base64Image)
+    {
         $imageInfo = explode(';', $base64Image);
         $imageType = explode('/', $imageInfo[0]);
         $extension = end($imageType);
         return $extension;
     }
-    
+
+    public function allArticles()
+    {
+        $view = new View("Article/allArticles", "front");
+        $jeuxModel = $this->gameRepository;
+        $categorieJeuxModel = $this->gameCategoryRepository;
+        $commentModel = $this->commentRepository;
+        $articleJeuModel = $this->gameArticleRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $articleModel = $this->articleRepository;
+
+        $articlesList = [];
+        $commentsByArticles = [];
+        $articles = $articleModel->selectAll(new ArticleModel());
+        foreach ($articles as $article) {
+            $articlesList[] = $article;
+
+            $whereSql = ["article_id" => $article->getId()];
+            $commentArticles = $commentArticleModel->getAllWhere($whereSql, new Comment_article());
+
+            foreach ($commentArticles as $commentArticle) {
+                $whereSql = ["id" => $commentArticle->getCommentId()];
+                $comment = $commentModel->getAllWhere($whereSql, new Comment());
+                $commentsByArticles[] = ["articleId" => $article->getId(), "comment" => $comment];
+            }
+        }
+        $view->assign("articles", $articlesList);
+        $view->assign("commentsByArticles", $commentsByArticles);
+    }
+
 }
