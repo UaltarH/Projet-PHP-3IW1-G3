@@ -11928,6 +11928,12 @@ textarea.form-control-lg {
   color: white;
 }
 
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #modal-container {
   display: none;
   position: fixed;

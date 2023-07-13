@@ -28,6 +28,11 @@ s-inscrire:
   action: register
   access: [ ALL ]
 
+search:
+  controller: Main
+  action: search
+  access: [ALL]
+
 email-confirmation:
   controller: Auth
   action: emailConfirmation
@@ -51,6 +56,15 @@ reset-password:
 jeux:
   controller: JeuxController
   action: allGames
+  access: [ ALL ]
+  jeu:
+    controller: JeuxController
+    action: oneGame
+    access: [ ALL ]
+
+articles:
+  controller: Article
+  action: allArticles
   access: [ ALL ]
 
 page:
