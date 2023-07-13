@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\SQL;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Errors;
@@ -12,8 +13,6 @@ use App\Models\Game_Category;
 use App\Models\Game;
 use App\Models\Comment;
 use App\Models\Content;
-
-
 use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Article_content;
 use App\Models\JoinTable\Game_Article;
@@ -70,7 +69,7 @@ class Article extends AbstractRepository
         //tester si il y a un id dans l'url( avec GET )(le numéro represente l'id de l'article en bdd)
         if (isset($_GET['number'])) {
             //si oui tester si il existe en base un article qui possede cette id :
-            $article = new Article();
+            $article = new ArticleModel();
             $whereSql = ["id" => $_GET['number']];
             $resultQuery = $this->articleRepository->getOneWhere($whereSql, $article);
             if (is_bool($resultQuery)) { //
@@ -90,7 +89,7 @@ class Article extends AbstractRepository
     public function GetAllArticlesGame()
     {
         $view = new View("Article/allArticlesGame", "front");
-        $article = new Article();
+        $article = new ArticleModel();
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
@@ -116,7 +115,7 @@ class Article extends AbstractRepository
     public function GetAllArticlesAboutGame()
     {
         $view = new View("Article/allArticlesAboutGame", "front");
-        $article = new Article();
+        $article = new ArticleModel();
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
