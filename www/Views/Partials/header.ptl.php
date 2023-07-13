@@ -1,15 +1,14 @@
 <?php
 
 use function App\Core\TokenJwt\getAllInformationsFromToken;
-
+use function App\Core\TokenJwt\validateJWT;
 require_once '/var/www/html/Core/TokenJwt.php';
 
-if (isset($_SESSION["token"])) {
+if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) {
     $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
 }
 
 ?>
-<div class="response-message"></div>
 <header class="header">
 
     <h1>La carte chance</h1>
@@ -33,7 +32,7 @@ if (isset($_SESSION["token"])) {
                         <a class='nav-link' href="/page/allaboutgames">Trucs et astuces</a>
                     </li>
 
-                    <?php if (isset($_SESSION["token"])) : ?>
+                    <?php if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) : ?>
                         <!-- test si le token est set, donc cest un utilisateur -->
                         <li class="nav-item">
                             <a class='nav-link' href="/profil">Profil</a>

@@ -3,11 +3,14 @@
 
 namespace App;
 session_start();
-use App\Models\Role;
-use App\Controllers\Errors;
 
-use function App\Core\TokenJwt\validateJWT;
+use App\Core\Config;
+use App\Core\Errors;
+use App\Models\Role;
+use App\Repository\RoleRepository;
 use function App\Core\TokenJwt\getSpecificDataFromToken;
+use function App\Core\TokenJwt\validateJWT;
+
 require_once '/var/www/html/Core/TokenJwt.php';
 
 spl_autoload_register(function ($class) {
@@ -26,7 +29,13 @@ spl_autoload_register(function ($class) {
         include $classForm;
     }
 });
-
+/**
+ * Affiche l'environnement du projet
+ */
+//echo Config::getInstance()->getEnvironment();
+//echo '<pre>';
+//var_dump(Config::getConfig());
+//echo '</pre>';
 //Afficher le controller et l'action correspondant à l'URI
 $uriStr = $_SERVER["REQUEST_URI"];
 $uriExploded = explode("?", $uriStr);
@@ -40,7 +49,6 @@ if (!file_exists("routes.yml")) {
     Errors::define(500, "Le fichier routes.yml n'existe pas");
     exit;
 }
-
 $routes = yaml_parse_file("routes.yml");
 $controller = null;
 $action = null;
@@ -50,7 +58,7 @@ if (count($uri) > 1) {
         if (isset($routeArray[$value])) {
             $routeArray = $routeArray[$value];
         } else {
-            Errors::define(404, "Route not exist");
+            Errors::define(400, "Route not exist");
             exit;
         }
     }
@@ -58,7 +66,7 @@ if (count($uri) > 1) {
     if (isset($routeArray[$uri[0]])) {
         $routeArray = $routeArray[$uri[0]];
     } else {
-        Errors::define(404, "Route not exist");
+        Errors::define(400, "Route not exist");
         exit;
     }
 }
@@ -71,13 +79,10 @@ if (isset($routeArray["controller"]) && $routeArray["action"]) {
     exit;
 }
 
-
-
 if (!file_exists("Controllers/" . $controller . ".php")) {
     Errors::define(500, "Le fichier Controllers/" . $controller . ".php n'existe pas");
     exit;
 
-    // die("Error 500 Internal Server Error : Le fichier Controllers/" . $controller . ".php n'existe pas");
 }
 include "Controllers/" . $controller . ".php";
 
@@ -86,16 +91,12 @@ $controller = "\\App\\Controllers\\" . $controller;
 if (!class_exists($controller)) {
     Errors::define(500, "La classe " . $controller . " n'existe pas");
     exit;
-
-    // die("Error 500 Internal Server Error : La classe " . $controller . " n'existe pas");
 }
 $objController = new $controller();
 
 if (!method_exists($objController, $action)) {
     Errors::define(500, "L'action " . $action . " n'existe pas");
     exit;
-
-    // die("Error 500 Internal Server Error : L'action " . $action . " n'existe pas");
 }
 
 // TEST si il y a une clé token dans la session et si le token est valide et que si le role de l'utilisateur est autorisé à accéder à la page
@@ -113,9 +114,10 @@ if(isset($routeArray["access"])) {
     
                 $role = new Role(); 
                 $whereSql = ["id" => $roleId];
-                $role = $role->getOneWhere($whereSql);
+                $role = (new RoleRepository())->getOneWhere($whereSql, $role);
                 if(is_bool($role)){
-                    die("Error 500 Internal Server Error : Le role n'existe pas");
+                    Errors::define(400, 'Le role de l\'utilisateur n\'existe pas');
+                    exit;
                 } else{
                     switch($role->getRoleName()){
                         case "admin":
@@ -123,7 +125,8 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                exit;
                             }
                             break;
                         case "user":
@@ -131,7 +134,8 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                exit;
                             }
                             break;
                         case "moderator":
@@ -139,20 +143,25 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                die("Error Unauthorized : Vous n'avez pas les droits pour accéder à cette page");
+                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                exit;
                             }
                         default:
-                            die("Error 500 Internal Server Error : Le role de l'utilisateur n'existe pas");
+                            Errors::define(400, 'Le role de l\'utilisateur n\'existe pas');
+                            exit;
                     }
                 }
             } else {
-                die("Error Unauthorized : Token invalide ou expiré");
+                Errors::define(400, 'Token invalide ou expiré');
+                exit;
             }
        }
        else{
-        die("pas de token c'est ciaooooo !");
+           Errors::define(400, 'Pas de Token');
+           exit;
        }
     }
 } else {
-    die("Error 500 Internal Server Error : the route doesn't have access key");
+    Errors::define(400, 'the route doesn\'t have access key');
+    exit;
 }

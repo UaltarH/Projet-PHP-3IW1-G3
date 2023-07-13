@@ -2,13 +2,31 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
+use App\Core\Errors;
 use App\Core\Validator;
-use App\Core\View;
-use App\Models\User;
 use App\Models\Article;
+use App\Models\User;
+use App\Repository\ArticleRepository;
+use App\Repository\UserRepository;
+
+use function App\Services\HttpMethod\getHttpMethodVarContent;
+require_once '/var/www/html/Services/HttpMethod.php';
 
 class Api
 {
+    private UserRepository $userRepository;
+    private ArticleRepository $articleRepository;
+    private array $config;
+    public function __construct() {
+        $this->userRepository = new UserRepository();
+        $this->articleRepository = new ArticleRepository();
+        $this->config = Config::getInstance()->getConfig();
+    }
+
+    /**
+     * @return void
+     */
     public function usercreate(): void
     {
         header('Content-Type: application/json');
@@ -31,27 +49,32 @@ class Api
                 $user->setEmailConfirmation(false);
                 $user->setDateInscription(date("Y-m-d H:i:s"));
 
-                if($user->save()->success) {
+                if($this->userRepository->save($user)->success) {
                     echo json_encode(['success' => true]);
+                    exit();
                 }
                 else {
-                    http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
-                    echo json_encode(['success' => false]);
+                    echo json_encode(['success' => false, 'message'=> 'Internal Server Error']);
+                    exit();
                 }
             } else {
-                http_response_code(400);
                 Errors::define(400, 'Invalid Info');
-                echo json_encode(['success' => false]);
+                echo json_encode(['success' => false, 'message' => 'Invalid Info']);
+                exit();
             }
         }
         else {
-            http_response_code(400);
-            Errors::define(400, 'Invalid Info');
-            echo json_encode(['success' => false]);
+            Errors::define(400, 'Missing Info');
+            echo json_encode(['success' => false, 'message' => 'Missing Info']);
+            exit();
         }
 
     }
+
+    /**
+     * @throws \Exception
+     */
     public function userlist(): void
     {
         if($_SERVER['REQUEST_METHOD'] != "GET") {
@@ -59,8 +82,7 @@ class Api
             echo json_encode("Bad Method");
             exit;
         }
-        //TODO: access right
-        // deny access to this url
+        // TODO : deny access to this url
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -71,8 +93,7 @@ class Api
         if (isset($_GET['search']) && !empty($_GET['search']['value'])) {
             $search = trim($_GET['search']['value']);
         }
-        $user = new User();
-        echo json_encode($user->list([
+        echo json_encode($this->userRepository->list([
             "columns" => ["pseudo", "first_name", "last_name", "email", "date_inscription", "role_name"],
             "start" => $start,
             "length" => $length,
@@ -81,49 +102,18 @@ class Api
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => "carte_chance_role",
+                    "table" => $this->config['bdd']['prefix']."role",
                     "foreignKeys" => [
-                        "originColumn" => "role_id",
+                        "originColumn" => ["id" => "role_id",
+                                           "table" => "carte_chance_user"
+                                          ],
                         "targetColumn" => "id"
                     ]
                 ]
             ]
-        ]));
+        ], new User()));
     }
-
-    public function articlelist(): void
-    {
-        //TODO: access right
-        // deny access to this url
-        $length = intval(trim($_GET['length']));
-        $start = intval(trim($_GET['start']));
-        $search = '';
-        // if there's a sorting
-        $columnIndex = intval($_GET['order'][0]['column']); // Column index
-        $columnName = trim($_GET['columns'][$columnIndex]['data']); // Column name
-        $columnSortOrder = trim($_GET['order'][0]['dir']); // asc or desc
-        if (isset($_GET['search']) && !empty($_GET['search']['value'])) {
-            $search = trim($_GET['search']['value']);
-        }
-        $article = new Article();
-        echo json_encode($article->list([
-            "columns" => ["title", "created_date", "updated_date", "category_name"],
-            "start" => $start,
-            "length" => $length,
-            "search" => $search,
-            "columnToSort" => $columnName,
-            "sortOrder" => $columnSortOrder,
-            "join" => [
-                [
-                    "table" => "carte_chance_category_article",
-                    "foreignKeys" => [
-                        "originColumn" => "category_id",
-                        "targetColumn" => "id"
-                    ]
-                ]
-            ]
-        ]));
-    }
+   
     public function useredit(): void
     {
         header('Content-Type: application/json');
@@ -191,20 +181,22 @@ class Api
         }
         if($validator->isFieldsInfoValid($user, $fieldsToCheck) && !$emptyFields) {
             $user->setId($_POST["id"]);
-            if($user->save()->success) {
+            if($this->userRepository->save($user)->success) {
                 echo json_encode(['success' => true]);
             }
             else {
                 Errors::define(500, 'Internal Server Error');
-                echo json_encode(['success' => false]);
+                echo json_encode(['success' => false, 'message'=>'Internal Server Error']);
             }
             exit();
         }
         else {
             Errors::define(500, 'Invalid Info');
-            echo json_encode(['success' => false]);
+            echo json_encode(['success' => false, 'message'=>'Invalid Info']);
+            exit();
         }
     }
+
     public function userdelete(): void
     {
         header('Content-Type: application/json');
@@ -213,7 +205,7 @@ class Api
             echo json_encode("Bad Method");
             exit;
         }
-        $delete = self::getHttpMethodVarContent();
+        $delete = getHttpMethodVarContent();
         if(empty($delete['id'])) {
             Errors::define(400, 'Bad Request');
             echo json_encode("Bad Request");
@@ -221,7 +213,7 @@ class Api
         }
         $user = new User();
         $user->setId($delete['id']);
-        if($user->delete()) {
+        if($this->userRepository->delete($user)) {
             echo json_encode(['success' => true]);
         }
         else {
@@ -231,17 +223,6 @@ class Api
         exit();
     }
 
-    /**
-     * Parse les arguments passés par les méthodes PUT et DELETE uniquement, puis les passes dans un tableau
-     * eg : $post_vars['id']
-     * @return array
-     */
-    public static function getHttpMethodVarContent(): array
-    {
-        $post_vars = [];
-        if ($_SERVER["CONTENT_TYPE"] === 'application/x-www-form-urlencoded; charset=UTF-8') {
-            parse_str(file_get_contents("php://input"), $post_vars);
-        }
-        return $post_vars;
-    }
+
+
 }

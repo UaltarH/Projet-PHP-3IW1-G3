@@ -1,32 +1,32 @@
 default:
   controller: Main
   action: home
-  access: [ALL]
+  access: [ ALL ]
 
 about-us:
   controller: Main
   action: aboutUs
-  access: [ALL]
+  access: [ ALL ]
 
 contact:
   controller: Main
   action: contact
-  access: [ALL]
+  access: [ ALL ]
 
 login:
   controller: Auth
   action: login
-  access: [ALL]
+  access: [ ALL ]
 
 logout:
   controller: Auth
   action: logout
-  access: [ALL]
+  access: [ ALL ]
 
 s-inscrire:
   controller: Auth
   action: register
-  access: [ALL]
+  access: [ ALL ]
 
 search:
   controller: Main
@@ -36,12 +36,12 @@ search:
 email-confirmation:
   controller: Auth
   action: emailConfirmation
-  access: [ALL]
+  access: [ ALL ]
 
 profil:
   controller: Auth
   action: profile
-  access: [USER, MODERATOR, ADMIN]
+  access: [ USER, MODERATOR, ADMIN ]
 
 edit-profile:
   controller: Auth
@@ -51,53 +51,68 @@ edit-profile:
 reset-password:
   controller: Auth
   action: resetPassword
-  access: [USER, MODERATOR, ADMIN]
+  access: [ USER, MODERATOR, ADMIN ]
+
+jeux:
+  controller: JeuxController
+  action: allGames
+  access: [ ALL ]
 
 page:
-  controller: Article
+  controller: ArticleController
   action: getArticle
-
   access: [ALL]
   allgames:
     controller: Article
     action: GetAllArticlesGame
-    access: [ALL]
+    access: [ ALL ]
+
   allaboutgames:
     controller: Article
     action: GetAllArticlesAboutGame
-    access: [ALL]
-  allgamesbycategory:
-    controller: Article
-    action: GetAllArticlesGamesByCategory
-    access: [ALL]
-  allaboutgamesbygame:
-    controller: Article
-    action: GetAllArticlesAboutGamesByGame
-    access: [ALL]
+    access: [ ALL ]
+
+
+
+
 
 sys:
   user:
     list:
       controller: System
       action: userlist
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
+
   article:
     articles-management:
-      controller: System
+      controller: Article
       action: articlesManagement
       access: [ADMIN, MODERATOR]
-    # create-article-game:
-    #   controller: System
-    #   action: addArticleGame
-    #   access: [ADMIN, MODERATOR]
-    # create-article-about-game:
-    #   controller: System
-    #   action: addArticleAboutGame
-    #   access: [ADMIN, MODERATOR]
+    datatable:
+      controller: Article
+      action: articleDatatable
+      access: [ADMIN, MODERATOR]
+    create-article-game:
+      controller: Article
+      action: createArticleGame
+      access: [ADMIN, MODERATOR]
+    create-article-about-game:
+      controller: Article
+      action: createArticleAboutGame
+      access: [ADMIN, MODERATOR]
+    delete-article:
+      controller: Article
+      action: deleteArticle
+      access: [ADMIN, MODERATOR]
+    edit-article:
+      controller: Article
+      action: updateArticle
+      access: [ADMIN, MODERATOR]
+
   dashboard:
     controller: Dashboard
     action: index
-    access: [ADMIN, MODERATOR]
+    access: [ ADMIN, MODERATOR ]
 
 ## todo : test method for Api calls
 api:
@@ -106,26 +121,24 @@ api:
       controller: Api
       action: usercreate
       method: POST
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
+
     list:
       controller: Api
       action: userlist
       method: GET
-      params: [length, start, search, draw]
-      access: [ADMIN, MODERATOR]
+      params: [ length, start, search, draw ]
+      access: [ ADMIN, MODERATOR ]
+
     edit:
       controller: Api
       action: useredit
       method: POST
-      access: [ADMIN]
+      access: [ ADMIN ]
+
     delete:
       controller: Api
       action: userdelete
       method: DELETE
       access: [ADMIN]
-  article:
-    list:
-      controller: Api
-      action: articlelist
-      params: [length, start, search, draw]
-      access: [ADMIN, MODERATOR]
+
