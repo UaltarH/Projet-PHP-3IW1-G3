@@ -106,7 +106,7 @@ if (isset($_SESSION["token"])) {
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="/sys/comment/list">
                 <i class="bi bi-chat-dots"></i>
                 <span>Commentaires</span>
             </a>

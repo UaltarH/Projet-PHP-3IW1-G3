@@ -191,7 +191,7 @@
                         <?php foreach ($unmoderatedComment as $comment): ?>
                             <div class="activity-item d-flex">
                                 <div class="activite-label"><?= $comment->getCreationDate() ?></div>
-                                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
                                 <div class="activity-content">
                                     <?= $comment->getContent() ?>
                                 </div>

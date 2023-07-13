@@ -121,7 +121,21 @@ sys:
   dashboard:
     controller: Dashboard
     action: index
-    access: [ ADMIN, MODERATOR ]
+    access: [ADMIN, MODERATOR]
+  comment:
+    list:
+      controller: CommentController
+      action: index
+      access: [ADMIN, MODERATOR]
+    edit:
+      controller: CommentController
+      action: edit
+      params: [id]
+      access: [ADMIN, MODERATOR]
+    moderate:
+      controller: CommentController
+      action: moderate
+      access: [ADMIN, MODERATOR]
 
 ## todo : test method for Api calls
 api:
