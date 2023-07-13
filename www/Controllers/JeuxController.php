@@ -5,24 +5,34 @@ namespace App\Controllers;
 use App\Core\View;
 
 use App\Models\Article;
-use App\Models\Category_jeux;
 use App\Models\Comment;
-use App\Models\Jeux;
-use App\Models\JoinTable\Article_jeux;
 use App\Models\JoinTable\Comment_article;
-use App\Models\Article AS ArticleModel;
 use App\Models\Game_Category;
 use App\Models\Game;
+use App\Models\JoinTable\Game_Article;
+use App\Repository\AbstractRepository;
+use App\Repository\ArticleRepository;
+use App\Repository\CommentArticleRepository;
+use App\Repository\CommentRepository;
+use App\Repository\GameArticleRepository;
 use App\Repository\GameCategoryRepository;
 use App\Repository\GameRepository;
 
-class JeuxController
+class JeuxController extends AbstractRepository
 {
-    private GameRepository $gameRepository;
+    private ArticleRepository $articleRepository;
     private GameCategoryRepository $gameCategoryRepository;
+    private GameArticleRepository $gameArticleRepository;
+    private GameRepository $gameRepository;
+    private CommentArticleRepository $commentArticleRepository;
+    private CommentRepository $commentRepository;
     public function __construct() {
-        $this->gameRepository = new GameRepository();
+        $this->articleRepository = new ArticleRepository();
         $this->gameCategoryRepository = new GameCategoryRepository();
+        $this->gameArticleRepository = new GameArticleRepository();
+        $this->gameRepository = new GameRepository();
+        $this->commentArticleRepository = new CommentArticleRepository();
+        $this->commentRepository = new CommentRepository();
     }
     public function allgames(){
         $view = new View("Jeux/allGames", "front");
@@ -44,39 +54,39 @@ class JeuxController
     public function oneGame()
     {
         $view = new View("Jeux/oneGame", "front");
-        $jeuxModel = new Jeux();
-        $categorieJeuxModel = new Category_jeux();
-        $commentModel = new Comment();
-        $articleJeuModel = new Article_jeux();
-        $commentArticleModel = new Comment_article();
-        $articleModel = new Article();
+        $jeuxModel = $this->gameRepository;
+        $categorieJeuxModel = $this->gameCategoryRepository;
+        $commentModel = $this->commentRepository;
+        $articleJeuModel = $this->gameArticleRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $articleModel = $this->articleRepository;
 
-        $whereSql = ["title" => $_GET["id"]];
-        $jeu = $jeuxModel->getOneWhere($whereSql);
+        $whereSql = ["title_game" => $_GET["id"]];
+        $jeu = $jeuxModel->getOneWhere($whereSql, new Game());
 
         $whereSql = ["id" => $jeu->getCategory_id()];
-        $categorie = $categorieJeuxModel->getOneWhere($whereSql);
+        $categorie = $categorieJeuxModel->getOneWhere($whereSql, new Game_Category());
 
         $view->assign("jeu", $jeu);
         $view->assign("categorie", $categorie);
 
         $whereSql = ["jeux_id" => $jeu->getId()];
-        $articlesJeu = $articleJeuModel->getAllWhere($whereSql);
+        $articlesJeu = $articleJeuModel->getAllWhere($whereSql, new Game_Article());
 
         if ($articlesJeu) {
             $articles = [];
             $commentsByArticles = [];
             foreach ($articlesJeu as $articleJeu){
                 $whereSql = ["id" => $articleJeu->getArticleId()];
-                $article = $articleModel->getOneWhere($whereSql);
+                $article = $articleModel->getOneWhere($whereSql, new Article());
                 $articles[] = $article;
 
                 $whereSql = ["article_id" => $articleJeu->getArticleId()];
-                $commentArticle = $commentArticleModel->getOneWhere($whereSql);
+                $commentArticle = $commentArticleModel->getOneWhere($whereSql, new Comment_article());
 
                 if ($commentArticle) {
                     $whereSql = ["id" => $commentArticle->getCommentId()];
-                    $comments = $commentModel->getAllWhere($whereSql);
+                    $comments = $commentModel->getAllWhere($whereSql, new Comment());
                     $commentsByArticles[] = ["articleId" => $article->getId(), "comments" => $comments];
                 }
             }

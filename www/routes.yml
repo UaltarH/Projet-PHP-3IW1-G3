@@ -67,6 +67,11 @@ articles:
   action: allArticles
   access: [ ALL ]
 
+trucs-et-astuces:
+  controller: Article
+  action: allTrucsEtAstuces
+  access: [ ALL ]
+
 page:
   controller: ArticleController
   action: getArticle
