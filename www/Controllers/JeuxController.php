@@ -43,40 +43,40 @@ class JeuxController
 
     public function oneGame()
     {
-        $view = new View("Jeux/oneGame", "front");
-        $jeuxModel = new Jeux();
-        $categorieJeuxModel = new Category_jeux();
-        $commentModel = new Comment();
-        $articleJeuModel = new Article_jeux();
-        $commentArticleModel = new Comment_article();
-        $articleModel = new Article();
+        $view = new View("Article/allArticles", "front");
+        $jeuxModel = $this->gameRepository;
+        $categorieJeuxModel = $this->gameCategoryRepository;
+        $commentModel = $this->commentRepository;
+        $articleJeuModel = $this->gameArticleRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $articleModel = $this->articleRepository;
 
-        $whereSql = ["title" => $_GET["id"]];
-        $jeu = $jeuxModel->getOneWhere($whereSql);
+        $whereSql = ["title_game" => "Poker"];
+        $jeu = $jeuxModel->getOneWhere($whereSql, new Game());
 
         $whereSql = ["id" => $jeu->getCategory_id()];
-        $categorie = $categorieJeuxModel->getOneWhere($whereSql);
+        $categorie = $categorieJeuxModel->getOneWhere($whereSql, new Game_Category());
 
         $view->assign("jeu", $jeu);
         $view->assign("categorie", $categorie);
 
         $whereSql = ["jeux_id" => $jeu->getId()];
-        $articlesJeu = $articleJeuModel->getAllWhere($whereSql);
+        $articlesJeu = $articleJeuModel->getAllWhere($whereSql, new Game_Article());
 
         if ($articlesJeu) {
             $articles = [];
             $commentsByArticles = [];
             foreach ($articlesJeu as $articleJeu){
                 $whereSql = ["id" => $articleJeu->getArticleId()];
-                $article = $articleModel->getOneWhere($whereSql);
+                $article = $articleModel->getOneWhere($whereSql, new \App\Models\Article());
                 $articles[] = $article;
 
                 $whereSql = ["article_id" => $articleJeu->getArticleId()];
-                $commentArticle = $commentArticleModel->getOneWhere($whereSql);
+                $commentArticle = $commentArticleModel->getOneWhere($whereSql, new Comment_article());
 
                 if ($commentArticle) {
                     $whereSql = ["id" => $commentArticle->getCommentId()];
-                    $comments = $commentModel->getAllWhere($whereSql);
+                    $comments = $commentModel->getAllWhere($whereSql, new Comment());
                     $commentsByArticles[] = ["articleId" => $article->getId(), "comments" => $comments];
                 }
             }
