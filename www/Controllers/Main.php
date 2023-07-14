@@ -55,8 +55,6 @@ class Main extends AbstractModel
         $query = $_GET["search"];
         $articleModel = $this->articleRepository;
         $jeuxModel = $this->gameRepository;
-        $categorieJeuxModel = $this->gameCategoryRepository;
-        $categorieArticleModel = $this->articleCategoryRepository;
         $void = $articleModel->selectAll(new \App\Models\Article());
 
         $attributes = ["title", "content"];
@@ -85,37 +83,9 @@ class Main extends AbstractModel
             }
         }
 
-        $attributes = ["category_game_name", "description"];
-        $categorieJeuxWhere = [];
-        foreach ($attributes as $value){
-            $whereSql = [$value => $query];
-            $results = $categorieJeuxModel->getAllWhereInsensitiveLike($whereSql, new Game_Category());
-
-            foreach ($results as $result) {
-                if (!in_array($result, $categorieJeuxWhere)) {
-                    $categorieJeuxWhere[] = $result;
-                }
-            }
-        }
-
-        $attributes = ["category_name", "description"];
-        $categorieArticlesWhere = [];
-        foreach ($attributes as $value){
-            $whereSql = [$value => $query];
-            $results = $categorieArticleModel->getAllWhereInsensitiveLike($whereSql, new Article_Category());
-
-            foreach ($results as $result) {
-                if (!in_array($result, $categorieArticlesWhere)) {
-                    $categorieArticlesWhere[] = $result;
-                }
-            }
-        }
-
         $view = new View("Main/search", "front");
         $view->assign("articleWhere", $articleWhere);
         $view->assign("jeuxWhere", $jeuxWhere);
-        $view->assign("categorieArticlesWhere", $categorieArticlesWhere);
-        $view->assign("categorieJeuxWhere", $categorieJeuxWhere);
     }
 
 }
