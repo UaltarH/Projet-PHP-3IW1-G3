@@ -1,8 +1,3 @@
-<h1>Page reset password</h1> <br>
-<?php if(!empty($messageInfo)): ?>
-<?php print_r($messageInfo);?>
-<?php endif;?>
-
-<button onclick="window.location.href='/login'">
-    Connection
-</button>
+<h1>Réinitialiser mon mot de passe</h1> <br>
+<?php $this->partial("form", $form, $formErrors ?? "") ?>
+<?= $messageInfoSendMail ?? "" ?>

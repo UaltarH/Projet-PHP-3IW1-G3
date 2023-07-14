@@ -46,6 +46,10 @@
                             >
                         </div>
                     </form>
+                    <div class="game mt-5">
+                        <a href="/reset-password">Réinitialiser mon mot de passe</a>
+                        <h4 style="color: red"><?= $_GET["message"] ?? "" ?></h4>
+                    </div>
                 </div>
             </div>
         </div>

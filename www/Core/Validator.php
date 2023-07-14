@@ -21,9 +21,11 @@ class Validator
     }
     public function isValid(): bool
     {
+        $this->data = ($this->method == "POST")?$_POST:$_GET;
         //La bonne methode ? -> tester si la request method (POST / GET / PUT ect...) est la meme que celle qui est attendu par la classe enfant
         if($_SERVER["REQUEST_METHOD"] != $this->method){
-            die("Tentative de Hack methode differente");
+//            die("Tentative de Hack methode differente");
+            return false;
         }
 
         //exclude les inputs qui on un type file
@@ -33,18 +35,21 @@ class Validator
         
         //Le nb de inputs -> pour tester si le nombre d'input envoyer et le meme que celui qui est attendu par la classe enfant
         if(count($filteredConf)+1 != count($this->data)){ //+1 car "submit" est envoyé aussi
-            die("Tentative de Hack nombre d'input different");
+//            die("Tentative de Hack nombre d'input different");
+            return false;
         }
 
         //tester les inputs envoyer
         foreach ($filteredConf as $name=>$configInput){
             //tester si le nom de l'input est attendu 
             if(!isset($this->data[$name])){
-                die("Tentative de Hack, input non attendu");
+//                die("Tentative de Hack, input non attendu");
+                return false;
             }
             //tester dans le cas ou l'input ne doit pas etre vide(required) 
             if(isset($configInput["required"]) && $this->isEmpty($this->data[$name])){
-                die("Tentative de Hack, input vide");
+//                die("Tentative de Hack, input vide");
+                return false;
             }
             //tester si l'input a un minimum de taille
             if(isset($configInput["min"]) && !$this->isMinLength($this->data[$name], $configInput["min"]) && !$this->isEmpty($this->data[$name])){

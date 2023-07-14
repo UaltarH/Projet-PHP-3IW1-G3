@@ -51,7 +51,7 @@ edit-profile:
 reset-password:
   controller: Auth
   action: resetPassword
-  access: [ USER, MODERATOR, ADMIN ]
+  access: [ ALL ]
 
 jeux:
   controller: JeuxController
