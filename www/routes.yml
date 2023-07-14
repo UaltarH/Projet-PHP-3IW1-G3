@@ -66,6 +66,10 @@ articles:
   controller: Article
   action: allArticles
   access: [ ALL ]
+  article:
+    controller: Article
+    action: oneArticle
+    access: [ ALL ]
 
 trucs-et-astuces:
   controller: Article

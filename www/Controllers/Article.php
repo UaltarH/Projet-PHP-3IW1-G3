@@ -811,4 +811,49 @@ class Article extends AbstractRepository
         $view->assign("commentsByArticles", $commentsByArticles);
         $view->assign("games", $jeuxList);
     }
+
+    public function oneArticle()
+    {
+        if (empty($_GET["id"])){
+            header("Location: /articles");
+            return;
+        }
+        $articleTitle = $_GET["id"];
+        $view = new View("Article/oneArticle", "front");
+        $jeuxModel = $this->gameRepository;
+        $articleGameModel = $this->gameArticleRepository;
+        $commentModel = $this->commentRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $articleModel = $this->articleRepository;
+        $articleCategoryModel = $this->articleCategoryRepository;
+
+        $whereSql = ["title" => "$articleTitle"];
+        $article = $articleModel->getOneWhere($whereSql, new \App\Models\Article());
+
+        $whereSql = ["article_id" => $article->getId()];
+        $commentArticles = $commentArticleModel->getAllWhere($whereSql, new Comment_article());
+
+        $comments = [];
+        foreach ($commentArticles as $commentArticle) {
+            $whereSql = ["id" => $commentArticle->getCommentId()];
+            $comment = $commentModel->getOneWhere($whereSql, new Comment());
+            $comments[] = $comment;
+        }
+
+        $whereSql = ["article_id" => $article->getId()];
+        $articleGame = $articleGameModel->getOneWhere($whereSql, new Game_Article());
+        if ($articleGame){
+            $whereSql = ["id" => $articleGame->getJeuxId()];
+            $game = $jeuxModel->getOneWhere($whereSql, new Game());
+            $view->assign("game", $game);
+        }
+
+        $whereSql = ["id" => $article->getCategoryId()];
+        $category = $articleCategoryModel->getOneWhere($whereSql, new Article_Category());
+
+
+        $view->assign("article", $article);
+        $view->assign("comments", $comments);
+        $view->assign("category", $category);
+    }
 }
