@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\View;
 use App\Forms\EditProfileFront;
 use App\Forms\Register;
@@ -125,7 +126,7 @@ class Auth
                 if ($responseQuery->success) { //return true | false
                     //envoi du mail pour la confirmation du compte:
                     $to = $user->getEmail();
-                    $contentMail = "<b>Hello " . $user->getPseudo() . ", <a href='http://localhost/email-confirmation?pseudo=" . urlencode($user->getPseudo()) . "&key=" . $user->getConfirmAndResetToken() . "'> Confirmez votre compte </a></b>";
+                    $contentMail = "<b>Hello " . $user->getPseudo() . ", <a href='".Config::getConfig()['website']['baseurl']."email-confirmation?pseudo=" . urlencode($user->getPseudo()) . "&key=" . $user->getConfirmAndResetToken() . "'> Confirmez votre compte </a></b>";
                     $subject = "Confirmation de compte pour notre site Carte chance.";
                     $resultSendMail = SendMailFunction($to, $contentMail, $subject);
 
@@ -162,7 +163,7 @@ class Auth
                     $messageInfo[] = "votre compte a deja été confirmé";
                 } else {
                     $result->setEmailConfirmation(true);
-                    $responseQuery = $result->save();
+                    $responseQuery = $this->userRepository->save($result);
                     if ($responseQuery->success) {
                         $messageInfo[] = "votre compte a bien été confirmez, vous pouvez des maintenant vous connecter";
                     }
@@ -214,7 +215,7 @@ class Auth
                 if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
                     //send mail for reset password
                     $to = $informationsUser['email'];
-                    $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='http://localhost/reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
+                    $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='".Config::getConfig()['website']['baseurl']."reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
                     $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
                     $resultSendMail = SendMailFunction($to, $contentMail, $subject);
                     $view->assign("messageInfoSendMail", "Un mail vous a été envoyé pour comfirmer votre changement de mot de passe");
@@ -245,7 +246,7 @@ class Auth
             if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
                 //send mail for reset password
                 $to = $informationsUser['email'];
-                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='http://localhost/reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
+                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='".Config::getConfig()['website']['baseurl']."reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
                 $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
                 $resultSendMail = SendMailFunction($to, $contentMail, $subject);
                 $view->assign("messageInfoSendMail", $resultSendMail);

@@ -104,7 +104,7 @@ class Validator
 
         //verifier si le resultat de la requete contiens l'une des clés de $whereSql
         foreach (array_keys($fields) as $key) {
-            if (strpos($resultQuery["column_exists"], $key) !== false) {
+            if (str_contains($resultQuery["column_exists"], $key)) {
                 $found = true;
                 $column = $key;
                 break;
@@ -112,7 +112,7 @@ class Validator
         }
         if ($found) {
 
-            $this->errors[]= "$column dèja utilisé";
+            $this->errors[]= "$column déjà utilisé";
             return false;
         }
         return true;

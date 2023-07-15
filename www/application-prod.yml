@@ -6,3 +6,7 @@ bdd:
   password: Test1234
   prefix: carte_chance_
 errorLog: minimal
+website:
+  name: La Carte Chance
+  description: Retrouvez tous vos jeux de société préférés sur notre site !
+  baseurl: http://vps35.heliohost.us/

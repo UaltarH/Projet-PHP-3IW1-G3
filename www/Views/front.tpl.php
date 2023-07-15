@@ -3,10 +3,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Super site</title>
-    <meta name="description" content="ceci est un super site">
+    <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
+    <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
     <script src="/Assets/js/main.js"></script>
 </head>
 
@@ -14,8 +14,6 @@
     <main>
         <div class="response-message"></div>
         <?php $this->partial("header", []) ?>
-
-        <h1>Template Front user: </h1>
 
         <!-- inclure la vue -->
         <div class="container">

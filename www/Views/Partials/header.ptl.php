@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Config;
 use function App\Core\TokenJwt\getAllInformationsFromToken;
 use function App\Core\TokenJwt\validateJWT;
 require_once '/var/www/html/Core/TokenJwt.php';
@@ -11,7 +12,10 @@ if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) {
 ?>
 <header class="header">
 
-    <h1>La carte chance</h1>
+    <h1>
+        <img src="/Assets/img/logo.png" alt="" style="height: 2em">
+        <?= Config::getConfig()['website']['name']?>
+    </h1>
 
     <nav class="navbar navbar-expand-lg bg-secondary p-2 my-3 ">
         <div class="container-fluid">

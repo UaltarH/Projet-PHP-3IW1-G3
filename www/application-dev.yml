@@ -5,4 +5,8 @@ bdd:
   username: esgi
   password: Test1234
   prefix: carte_chance_
-errorLog: minimal
+errorLog: explicit
+website:
+  name: La Carte Chance
+  description: Retrouvez tous vos jeux de société préférés sur notre site !
+  baseurl: http://localhost/
