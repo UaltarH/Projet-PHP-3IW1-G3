@@ -9,3 +9,4 @@ errorLog: explicit
 website:
   name: La Carte Chance
   description: Retrouvez tous vos jeux de société préférés sur notre site !
+  baseurl: http://localhost/
