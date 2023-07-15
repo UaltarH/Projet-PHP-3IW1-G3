@@ -43,7 +43,7 @@ class JeuxController extends AbstractRepository
         foreach ($jeux as $index => $value) {
             foreach ($categories as $categorie) {
                 if ($value->getCategory_id() == $categorie->getId()) {
-                    $result[] = ["title" => $value->getTitle(), "categorie" => $categorie->getCategoryName()];
+                    $result[] = ["title" => $value->getTitle(), "id" => $value->getId(), "categorie" => $categorie->getCategoryName()];
                 }
             }
         }
@@ -61,7 +61,7 @@ class JeuxController extends AbstractRepository
         $commentArticleModel = $this->commentArticleRepository;
         $articleModel = $this->articleRepository;
 
-        $whereSql = ["title_game" => $_GET["id"]];
+        $whereSql = ["id" => $_GET["id"]];
         $jeu = $jeuxModel->getOneWhere($whereSql, new Game());
 
         $whereSql = ["id" => $jeu->getCategory_id()];
