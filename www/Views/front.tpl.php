@@ -6,7 +6,7 @@
     <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
     <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/style.css">
     <script src="/Assets/js/main.js"></script>
 </head>
 
