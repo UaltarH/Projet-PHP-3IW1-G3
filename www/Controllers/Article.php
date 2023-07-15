@@ -746,9 +746,8 @@ class Article extends AbstractRepository
         $articleModel = $this->articleRepository;
 
         $whereSql = ["category_name" => "Jeux"];
-        $jeu = $this->getArticlesWithCommentsAndGame($articleArticleModel, $whereSql, $articleModel, $articleGameModel, $jeuxModel, $commentArticleModel, $commentModel, $view);
+        $this->getArticlesWithCommentsAndGame($articleArticleModel, $whereSql, $articleModel, $articleGameModel, $jeuxModel, $commentArticleModel, $commentModel, $view);
         $view->assign("title", "Articles");
-        $view->assign("game", $jeu);
     }
 
     public function allTrucsEtAstuces()
@@ -818,7 +817,7 @@ class Article extends AbstractRepository
             header("Location: /articles");
             return;
         }
-        $articleTitle = $_GET["id"];
+        $articleId = $_GET["id"];
         $view = new View("Article/oneArticle", "front");
         $jeuxModel = $this->gameRepository;
         $articleGameModel = $this->gameArticleRepository;
@@ -827,7 +826,7 @@ class Article extends AbstractRepository
         $articleModel = $this->articleRepository;
         $articleCategoryModel = $this->articleCategoryRepository;
 
-        $whereSql = ["title" => "$articleTitle"];
+        $whereSql = ["id" => $articleId];
         $article = $articleModel->getOneWhere($whereSql, new \App\Models\Article());
 
         $whereSql = ["article_id" => $article->getId()];
