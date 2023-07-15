@@ -6,6 +6,6 @@
             <li> <a href="/mentions-legales">Mentions légales</a> </li>
             <li> <a href="/politique-de-cookies">Politique de cookies</a> </li>
         </ul>
-        <p>© 2023 La carte chance</p>
+        <p>© 2023 <?=\App\Core\Config::getConfig()['website']['name']?></p>
     </nav>
 </footer>

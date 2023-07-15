@@ -1,8 +1,5 @@
-<h2>S'inscrire</h2>
-
-<?php $this->partial("form", $form, $formErrors) ?>
-
-<p>Information sur l'inscription:</p>
 <?php if(!empty($messageInfoSendMail)): ?>
-<?php print_r($messageInfoSendMail);?>
+    <?php echo "<div class='alert alert-info'>" . $messageInfoSendMail[0] . "</div></br>";?>
 <?php endif;?>
+<h2>S'inscrire</h2>
+<?php $this->partial("form", $form, $formErrors) ?>

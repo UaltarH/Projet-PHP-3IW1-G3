@@ -1,7 +1,7 @@
 <?php
 if(isset($pseudo, $roleId)): ?>
-    <h2>Welcome <?= $pseudo; ?> vous etes connecté  et votre roleId est <?= $roleId; ?> </h2>
+    <h2>Bienvenue <span style="color: var(--secondary)"><?= $pseudo; ?></span> vous êtes connecté !</h2>
+
 <?php endif; ?>
-home : 
 
 

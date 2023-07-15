@@ -162,7 +162,7 @@ class Auth
                     $messageInfo[] = "votre compte a deja été confirmé";
                 } else {
                     $result->setEmailConfirmation(true);
-                    $responseQuery = $result->save();
+                    $responseQuery = $this->userRepository->save($result);
                     if ($responseQuery->success) {
                         $messageInfo[] = "votre compte a bien été confirmez, vous pouvez des maintenant vous connecter";
                     }
@@ -245,7 +245,7 @@ class Auth
             if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
                 //send mail for reset password
                 $to = $informationsUser['email'];
-                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='http://localhost/reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
+                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='http://vps35.heliohost.us/reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
                 $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
                 $resultSendMail = SendMailFunction($to, $contentMail, $subject);
                 $view->assign("messageInfoSendMail", $resultSendMail);

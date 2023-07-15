@@ -6,6 +6,9 @@ class Errors
 {
     public static function define(Int $error, String $message): void
     {
+        if(Config::getInstance()->getConfig()['errorLog'] === "minimal") {
+            $message = "";
+        }
         if ($error == 404) {
             self::error404($message);
         } else if ($error == 400) {

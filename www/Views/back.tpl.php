@@ -14,11 +14,10 @@ if (isset($_SESSION["token"])) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Super site</title>
-    <meta name="description" content="ceci est un super site">
+    <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
+    <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
-    <link rel="stylesheet" type="text/css" href="../style.css"/>
 
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -30,7 +29,6 @@ if (isset($_SESSION["token"])) {
           rel="stylesheet">
     <link href="/Assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="/Assets/css/style.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
@@ -40,8 +38,8 @@ if (isset($_SESSION["token"])) {
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="/sys/dashboard" class="logo d-flex align-items-center">
-            <img src="assets/img/logo.png" alt="">
-            <span class="d-none d-lg-block">La Carte Chance Backoffice</span>
+            <img src="/Assets/img/logo.png" alt="">
+            <span class="d-none d-lg-block"><?=\App\Core\Config::getConfig()['website']['name']?> Backoffice</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
