@@ -83,6 +83,17 @@ CREATE TABLE carte_chance_article
     FOREIGN KEY (category_id) REFERENCES carte_chance_article_category (id) ON DELETE CASCADE
 );
 
+CREATE TABLE carte_chance_article_memento
+(
+    id           UUID DEFAULT uuid_generate_v4(),
+    title        VARCHAR(64) NOT NULL UNIQUE,
+    content      TEXT        NOT NULL,
+    created_date DATE        NOT NULL,
+    article_id  UUID,
+    PRIMARY KEY (id),
+    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id) ON DELETE CASCADE
+);
+
 -- CREATE TABLE carte_chance_page (
 --     id UUID DEFAULT uuid_generate_v4(),
 --     title VARCHAR(8) NOT NULL,

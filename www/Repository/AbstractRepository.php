@@ -1,5 +1,6 @@
 <?php
 //toutes les méthodes communes aux repository
+//cette classe represente le CareTaker dans le design pattern Memento
 namespace App\Repository;
 
 use App\Core\Config;
