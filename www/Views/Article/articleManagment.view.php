@@ -346,6 +346,9 @@
             if(data["content"] == selectedRow.content){
                 delete data["content"];
             }
+            if(data["editArticle-form-title"] == selectedRow.title){
+                delete data["editArticle-form-title"];
+            }
         }
         
         $.ajax({

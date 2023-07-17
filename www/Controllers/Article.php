@@ -566,9 +566,9 @@ class Article extends AbstractRepository
             if (!empty($_POST["content"])) {
                 //avant de set le content on doit parser le content pour trouver les balises img et les remplacer par les paths des images si il yen a de nouvelles:
 
-                $originContent = $_POST['content'];
+                $content = $_POST['content'];
                 $pattern = '/<img[^>]+src="([^">]+)"/';
-                preg_match_all($pattern, $originContent, $matches);
+                preg_match_all($pattern, $content, $matches);
 
                 $srcImages = $matches[1];
 
@@ -600,7 +600,7 @@ class Article extends AbstractRepository
                             //image article ajouté
                             //remplacer la balise img dans originContent
                             $replaceSrc = "/uploads/articles/" . $articleName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                            $newContent = str_replace($src, $replaceSrc, $originContent);
+                            $content = str_replace($src, $replaceSrc, $content);
                         } else {
                             //image article non ajouté en bdd     
                             echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
@@ -608,8 +608,7 @@ class Article extends AbstractRepository
                     }
                 }
 
-
-                $article->setContent($newContent);
+                $article->setContent($content);
             }
             if (!empty($_POST["editArticle-form-title"])) {
                 $whereSql = ["title" => $_POST['editArticle-form-title']];
@@ -628,6 +627,7 @@ class Article extends AbstractRepository
 
             if ($this->articleRepository->save($article)->success) {
                 echo json_encode(['success' => true]);
+                exit;
             } else {
                 //erreur sql : article non ajouté en bdd
                 http_response_code(400);
