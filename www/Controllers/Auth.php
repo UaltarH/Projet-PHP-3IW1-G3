@@ -187,7 +187,7 @@ class Auth
             $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
             $result = $this->userRepository->getOneWhere($whereSql, new User);
             if (!is_bool($result)) {
-                $result->setPassword($newPassword);
+                $result->setPasswordWithoutHash($newPassword);
                 $responseQuery = $this->userRepository->save($result);
                 if ($responseQuery->success) {
                     $messageInfo = "Votre mot de passe à bien été modifié";
@@ -213,10 +213,11 @@ class Auth
             $view->assign("form", $formResetPassword->getConfig());
             if ($formResetPassword->isSubmited() && $formResetPassword->isValid()) {
                 if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
+                    $newPwd = password_hash($_POST['password'], PASSWORD_DEFAULT);;
                     //send mail for reset password
                     $to = $informationsUser['email'];
-                    $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='".Config::getConfig()['website']['baseurl']."reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
-                    $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
+                    $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='".Config::getConfig()['website']['baseurl']."reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $newPwd . "'> R&#233;initialiser votre mot de passe </a></b>";
+                    $subject = "R&#233;initialiser votre mot de passe de votre compte Carte chance.";
                     $resultSendMail = SendMailFunction($to, $contentMail, $subject);
                     $view->assign("messageInfoSendMail", "Un mail vous a été envoyé pour comfirmer votre changement de mot de passe");
                 }
@@ -239,20 +240,6 @@ class Auth
         $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
         $view->assign("informationsUser", $informationsUser);
 
-        //create form for reset password
-        $formResetPassword = new ResetPassword();
-        $view->assign("form", $formResetPassword->getConfig());
-        if ($formResetPassword->isSubmited() && $formResetPassword->isValid()) {
-            if ($formResetPassword->isPasswordValid($_POST['password'], $_POST['passwordConfirm'])) {
-                //send mail for reset password
-                $to = $informationsUser['email'];
-                $contentMail = "<b>Hello " . $informationsUser['pseudo'] . ", <a href='".Config::getConfig()['website']['baseurl']."reset-password?pseudo=" . urlencode($informationsUser['pseudo']) . "&key=" . $informationsUser['confirmAndResetToken'] . "&pwd=" . $_POST['password'] . "'> Réinitialiser votre mot de passe </a></b>";
-                $subject = "Réinitialiser votre mot de passe de votre compte Carte chance.";
-                $resultSendMail = SendMailFunction($to, $contentMail, $subject);
-                $view->assign("messageInfoSendMail", $resultSendMail);
-            }
-        }
-        $view->assign("formErrors", $formResetPassword->errors);
     }
 
     public function editProfile(): void
