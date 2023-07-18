@@ -14,6 +14,10 @@
                     <div class="form-group">
                         <label for="editArticle-form-content">Votre contenu d'article</label>
                         <button type="button" class="btn btn-primary btn-grapesjs" id="open-editor-edit">Ouvrir l'éditeur de contenu</button>
+                        </br>
+                        <div id="ul-article-version" style="display: inline-block;">
+
+                        </div>
                         <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor-edit" style="display: none;">Fermez l'éditeur</button>
                         <button type="button" class="btn btn-primary btn-grapesjs" id="save-button-edit" style="display: none;">Enregistrez votre contenu</button>
                         <div id="editorGrapesJsForEdit"></div>
@@ -110,5 +114,11 @@ document.getElementById('save-button-edit').addEventListener('click', function()
         alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
     }
 });
+
+//changer le contenu de lediteur de contenu quand on change de version d'article
+function changeContentEditor(encodedContent){
+    let content = decodeURIComponent(encodedContent);
+    editorEditArticle.setComponents(content);
+}
 
 </script>
