@@ -1,12 +1,7 @@
 <h1>Article management page :</h1>
 
 <!-- datatable -->
-<nav>
-    <ul>
-        <!-- /sys/user/list?action=faker -->
-        <li><a href="#">Generate</a></li>
-    </ul>
-</nav>
+
 <table id="articleTable" class="display">
     <thead>
         <tr>
@@ -335,7 +330,7 @@
             url: urlRes,
             data: data,
             dataType: "json", // type de retour attendu
-            //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
             context: $('.response-message'),
             processData: false, // Désactiver le traitement automatique des données
             contentType: false,
