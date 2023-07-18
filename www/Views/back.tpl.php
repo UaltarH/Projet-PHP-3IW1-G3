@@ -31,7 +31,7 @@ if (isset($_SESSION["token"])) {
     <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-   
+    <script src="/library/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
@@ -135,7 +135,6 @@ if (isset($_SESSION["token"])) {
 
 <script type="text/javascript">
     const path = window.location.pathname;
-    console.log(path);
     switch(path){
         case "/sys/dashboard":
             console.log("test");

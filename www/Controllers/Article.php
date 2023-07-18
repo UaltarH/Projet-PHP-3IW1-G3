@@ -9,6 +9,7 @@ use App\Core\Errors;
 
 use App\Models\Article as ArticleModel;
 use App\Models\Article_Category;
+use App\Models\Article_Memento;
 use App\Models\Game_Category;
 use App\Models\Game;
 use App\Models\Comment;
@@ -20,6 +21,7 @@ use App\Models\JoinTable\Game_Article;
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ArticleCategoryRepository;
+use App\Repository\ArticleMementoRepository;
 use App\Repository\GameArticleRepository;
 use App\Repository\GameCategoryRepository;
 use App\Repository\GameRepository;
@@ -47,6 +49,7 @@ class Article extends AbstractRepository
     private ArticleContentRepository $articleContentRepository;
     private CommentRepository $commentRepository;
     private ContentRepository $contentRepository;
+    private ArticleMementoRepository $articleMementoRepository;
 
     public function __construct()
     {
@@ -60,6 +63,7 @@ class Article extends AbstractRepository
         $this->articleContentRepository = new ArticleContentRepository();
         $this->commentRepository = new CommentRepository();
         $this->contentRepository = new ContentRepository();
+        $this->articleMementoRepository = new ArticleMementoRepository();
     }
 
 
@@ -607,7 +611,6 @@ class Article extends AbstractRepository
                         }
                     }
                 }
-
                 $article->setContent($content);
             }
             if (!empty($_POST["editArticle-form-title"])) {
@@ -625,9 +628,40 @@ class Article extends AbstractRepository
             }
             $article->setUpdatedDate(date("Y-m-d H:i:s"));
 
+            //avant de mettre a jour l'article il faut recuperer son ancien content pour le l'enregistrer dans la table article content 
+            $articleAncien = new ArticleModel();
+            $articleAncien = $this->articleRepository->getOneWhere(["id" => $_POST["id"]], $articleAncien);
+            $oldContent = $articleAncien->getContent();
+
             if ($this->articleRepository->save($article)->success) {
-                echo json_encode(['success' => true]);
-                exit;
+                //mtn on peut inserer dans la table article memento l'ancien content de l'article
+
+                //recuperer le nombre de memento deja enregistré pour cet article, pour ainsi savoir la version a enregistré
+
+                $newArticleMemento = new Article_Memento();
+
+                $result = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["id"]], $newArticleMemento);
+
+                if(is_bool($result)){
+                    $newArticleMemento->setTitle("version 1");
+                }else{
+                    $newArticleMemento->setTitle("version ".(count($result)+1));
+                }                
+                $newArticleMemento->setContent($oldContent);
+                $newArticleMemento->setCreatedDate(date("Y-m-d H:i:s"));
+                $newArticleMemento->setArticleId($_POST["id"]);
+
+                if ($this->articleMementoRepository->save($newArticleMemento)->success) {
+                    //memento added in bdd
+                    echo json_encode(['success' => true]);
+                    exit;
+                } else {
+                    //erreur sql : memento non ajouté en bdd
+                    http_response_code(400);
+                    Errors::define(500, 'Internal Server Error');
+                    echo json_encode(['success' => false]);
+                }
+
             } else {
                 //erreur sql : article non ajouté en bdd
                 http_response_code(400);
@@ -643,6 +677,47 @@ class Article extends AbstractRepository
             echo json_encode(['success' => false]);
         }
     }
+
+    public function getAllArticlesMomento(){        
+        header('Content-Type: application/json');        
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+        if (!empty($_POST["article_id"]))
+        {
+            $articlesMemento = new Article_Memento();
+            $articlesMemento = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["article_id"]], $articlesMemento);
+            if(is_bool($articlesMemento)){
+                echo json_encode(['success' => false]);
+                exit;
+            } else {
+                //serialize date :
+                $serializedData = [];
+                foreach ($articlesMemento as $memento) {
+                    $serializedData[] = [
+                        'id' => $memento->getId(),
+                        'title' => $memento->getTitle(),
+                        'content' => $memento->getContent(),
+                        'created_date' => $memento->getCreatedDate(),
+                        'article_id' => $memento->getArticleId()
+                    ];
+                }
+
+                echo json_encode(['success' => true, 'articlesMemento' => $serializedData]);
+                exit;
+            }
+        } else {
+            //manque des informations dans les posts 
+            http_response_code(400);
+            Errors::define(400, 'Invalid Info');
+            echo json_encode(['success' => false]);
+        }
+
+    }
+
+
 
     public function deleteArticle()
     {

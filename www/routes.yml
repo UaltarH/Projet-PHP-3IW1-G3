@@ -126,6 +126,10 @@ sys:
       controller: Article
       action: updateArticle
       access: [ADMIN, MODERATOR]
+    get-all-article-version:
+      controller: Article
+      action: getAllArticlesMomento
+      access: [ADMIN, MODERATOR]
 
   dashboard:
     controller: Dashboard

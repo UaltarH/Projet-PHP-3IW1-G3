@@ -215,10 +215,52 @@
                 allCrudButton.on('click', function(e){
                     selectedRow = table.row($(e.target).parents('tr')).data();
                     if($(e.target).hasClass('row-edit-button')) {
-                        //ouvrir la modal pour l'edition de l'article
+                        //recuperer le contenu de l'article selectionner pour l'utilisateur dans l'editeur
                         contentArticle = selectedRow.content;
+                        //afficher l'ancien contenu de l'article dans l'input text de la modal edit
                         document.getElementById("editArticle-form-title").value = selectedRow.title;
+
+                        //recuperer tous les versions de l'article (memento) avec un call ajax
+                        getAllArticleMemento(selectedRow.id)
+                        .then(function(articleMemento) {
+                            if (articleMemento.length > 0) {
+                                //creer la liste avec les versions de l'article si le resultat est non vide
+                                // Récupérer la référence de la div avec l'ID "memento"
+                                let ulVersions = document.getElementById("ul-article-version");
+                                let htmlContent = ` 
+                                <li class="nav-item dropdown" style="list-style-type: none;">
+                                    <a class="nav-link dropdown-toggle"role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Versions de l'article 
+                                    </a>
+                                    <ul class="dropdown-menu" style="width: 200px;"> `;
+
+                                htmlContent += articleMemento.map(version => `
+                                <li>
+                                    <a style="display: flex; justify-content: space-between" class="dropdown-item" onclick="changeContentEditor('${encodeURIComponent(version.content)}')">
+                                    ${version.title}
+                                    <p>${version.created_date}</p>
+                                    </a>
+                                </li>
+                                `).join("");
+
+                                htmlContent += `<li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" onclick="changeContentEditor('${encodeURIComponent(selectedRow.content)}')">Version acctuel</a>
+                                                </li>
+                                            </ul>
+                                        </li>`;
+
+                                // Ajouter le contenu HTML à la div
+                                ulVersions.innerHTML = htmlContent;
+                            }
+                        })
+                        .catch(function(error) {
+                            console.error(`Error: ${JSON.stringify(error)}`);
+                        });
                         
+                        //ouvrir la modal pour l'edition de l'article
                         openModalEditArticle();
                     }
                     else if ($(e.target).hasClass('row-delete-button')) {
@@ -236,7 +278,7 @@
 //
 
 
-//functions to call with ajax for the crud  
+//functions to call with ajax
 
     function createArticle(e, table){
         e.preventDefault();
@@ -391,6 +433,24 @@
             complete: function (xhr, status) {
                 showResponseMessage(status, "Delete");
             }
+        });
+    }
+
+    function getAllArticleMemento(articleId) {
+        return new Promise(function(resolve, reject) {
+            $.ajax({
+            type: "POST",
+            url: '/sys/article/get-all-article-version',
+            data: { article_id: articleId },
+            dataType: "json",
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            success: function(data) {
+                resolve(data.articlesMemento);
+            },
+            error: function(xhr, resp, error) {
+                reject(error);
+            }
+            });
         });
     }
 //
