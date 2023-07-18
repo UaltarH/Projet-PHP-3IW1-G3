@@ -197,15 +197,10 @@ class Auth
 
         } else {
             $editUserModalForm = new EditProfileFront();
-            $roles = $this->userRepository->fetchRoles();
-            $rolesOption = [];
-            foreach ($roles as $role) {
-                $rolesOption[$role["id"]] = $role["role_name"];
-            }
 
             $view = new View("Auth/resetPassword", "front");
             $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
-            $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
+            $view->assign("editUserForm", $editUserModalForm->getConfig());
             $view->assign("informationsUser", $informationsUser);
 
             //create form for reset password
@@ -229,15 +224,10 @@ class Auth
     public function profile(): void
     {
         $editUserModalForm = new EditProfileFront();
-        $roles = $this->userRepository->fetchRoles();
-        $rolesOption = [];
-        foreach ($roles as $role) {
-            $rolesOption[$role["id"]] = $role["role_name"];
-        }
 
         $view = new View("Main/profile", "front");
         $informationsUser = getAllInformationsFromToken($_SESSION["token"]);
-        $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
+        $view->assign("editUserForm", $editUserModalForm->getConfig());
         $view->assign("informationsUser", $informationsUser);
 
     }

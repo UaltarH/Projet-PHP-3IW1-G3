@@ -13,7 +13,7 @@ use function App\Core\TokenJwt\validateJWT;
 
 require_once '/var/www/html/Core/TokenJwt.php';
 
-require_once 'Core/SitemapXML.php';
+//require_once 'Core/SitemapXML.php';
 
 spl_autoload_register(function ($class) {
 
