@@ -242,7 +242,7 @@
                                                     <hr class="dropdown-divider">
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" onclick="changeContentEditor('${encodeURIComponent(selectedRow.content)}')">Version acctuel</a>
+                                                    <a class="dropdown-item" onclick="changeContentEditor('${encodeURIComponent(selectedRow.content)}')">Version actuelle</a>
                                                 </li>
                                             </ul>
                                         </li>`;
