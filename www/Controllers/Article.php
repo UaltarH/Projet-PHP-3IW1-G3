@@ -713,6 +713,7 @@ class Article extends AbstractRepository
             http_response_code(400);
             Errors::define(400, 'Invalid Info');
             echo json_encode(['success' => false]);
+            exit;
         }
 
     }
