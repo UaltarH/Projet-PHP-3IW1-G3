@@ -32,12 +32,15 @@ class Main extends AbstractModel
 
     public function home(): void     
     {
-        //utilisateur connecter:        
         $view = new View("Main/home", "front");
         if(isset($_SESSION['token']) && validateJWT($_SESSION['token'])){
             $view->assign("pseudo", getSpecificDataFromToken($_SESSION['token'], "pseudo"));
             $view->assign("roleId", getSpecificDataFromToken($_SESSION['token'], "roleId"));
         }
+
+        $articleModel = $this->articleRepository;
+        $newArticles = array_slice($articleModel->selectAll(new \App\Models\Article()), -5, 5);
+        $view->assign("newArticles", $newArticles);
     }
 
     public function contact(): void
