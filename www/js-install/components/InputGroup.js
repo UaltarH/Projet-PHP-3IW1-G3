@@ -7,30 +7,32 @@ export default function InputGroup(
   placeholder,
   helperText
 ) {
-  return [
-    {
-      type: "label",
-      attributes: {
-        for: labelFor,
-        class: " form-label p-1",
+  return {
+    type: "div",
+    children: [
+      {
+        type: "label",
+        attributes: {
+          for: labelFor,
+          class: "form-label p-1",
+        },
+        children: [labelText],
       },
-      children: [labelText],
-    },
-    {
-      type: "input",
-      attributes: {
-        type: inputType,
-        id: inputId,
-        name: inputName,
-        placeholder: placeholder,
-        class: "form-control",
+      {
+        type: "input",
+        attributes: {
+          type: inputType,
+          id: inputId,
+          name: inputName,
+          placeholder: placeholder,
+          class: "form-control",
+        },
       },
-    },
-
-    {
-      type: "div",
-      attributes: { class: "form-text mb-4 text-primary" },
-      children: [helperText],
-    },
-  ];
+      {
+        type: "div",
+        attributes: { class: "form-text mb-4 text-primary" },
+        children: [helperText],
+      },
+    ],
+  };
 }

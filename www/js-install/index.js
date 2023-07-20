@@ -4,7 +4,7 @@ import generateStructure from "./core/generateStructure.js";
 import Page1 from "./pages/Page1.js";
 import Exo from "./pages/Exo.js";
 
-const root = document.getElementById("root");
+export const root = document.getElementById("root");
 // BrowserRouter(routes, root, root.dataset.baseurl);
 
 root.appendChild(generateStructure(Page1()));

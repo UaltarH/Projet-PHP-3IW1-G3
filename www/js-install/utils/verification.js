@@ -1,6 +1,14 @@
 export default function form_check(variable, conf) {
-  if ("type" in conf && typeof variable !== conf.type)
-    return { isValid: false, message: `Le type attendu est "${conf.type}"` };
+  if ("type" in conf && typeof variable !== conf.type) {
+    if (typeof variable !== "object") {
+      if (typeof variable.value !== conf.type) {
+        return {
+          isValid: false,
+          message: `Le type attendu est "${conf.type}"`,
+        };
+      }
+    }
+  }
 
   if ("required" in conf && Array.isArray(conf.required)) {
     for (const field of conf.required) {
@@ -16,7 +24,7 @@ export default function form_check(variable, conf) {
   if ("properties" in conf) {
     for (const prop in conf.properties) {
       const validationResult = form_check(
-        variable[prop],
+        { field: prop, value: variable[prop] },
         conf.properties[prop]
       );
       if (!validationResult.isValid) {
@@ -25,7 +33,7 @@ export default function form_check(variable, conf) {
     }
   }
 
-  if ("value" in conf && variable !== conf.value) {
+  if ("value" in conf && variable.value !== conf.value) {
     if (typeof variable === "object") {
       if (JSON.stringify(variable) === JSON.stringify(conf.value)) {
         return { isValid: true };
@@ -66,28 +74,28 @@ export default function form_check(variable, conf) {
     };
   }
 
-  if ("min" in conf && variable < conf.min)
+  if ("min" in conf && variable.value.length < conf.min)
     return {
       isValid: false,
-      message: `Le champ ${variable} doit être supérieure ou égale à ${conf.min}`,
+      message: `Le champ ${variable.field} doit être supérieure ou égale à ${conf.min}`,
     };
 
-  if ("max" in conf && variable > conf.max)
+  if ("max" in conf && variable.value.length > conf.max)
     return {
       isValid: false,
-      message: `Le champ ${variable} doit être inférieure ou égale à ${conf.max}`,
+      message: `Le champ ${variable.field} doit être inférieure ou égale à ${conf.max}`,
     };
 
   if ("format" in conf && conf.format === "email") {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(variable)) {
+    if (!emailRegex.test(variable.value)) {
       return { isValid: false, message: "L'email n'est pas au format valide" };
     }
   }
 
   if ("format" in conf && conf.format === "tel") {
     const telRegex = /^0[1-9]([-. ]?[0-9]{2}){4}$/;
-    if (!telRegex.test(variable)) {
+    if (!telRegex.test(variable.value)) {
       return {
         isValid: false,
         message: "Le numéro de téléphone n'est pas au format valide",
@@ -96,12 +104,13 @@ export default function form_check(variable, conf) {
   }
 
   if ("format" in conf && conf.format === "password") {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/;
-    if (!passwordRegex.test(variable)) {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,}$/;
+    if (!passwordRegex.test(variable.value)) {
       return {
         isValid: false,
         message:
-          "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial",
+          "Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre, un caractère spécial, et être d'au moins 8 caractères",
       };
     }
   }
