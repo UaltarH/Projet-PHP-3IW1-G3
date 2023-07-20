@@ -13,7 +13,7 @@ use App\Repository\ContentRepository;
     // joinTable class
     // joinTable id (for use: id_article or id_jeux)
 // ex param:
-// $arrayConfContent['directory'] = "/var/www/html/uploads/articles/".$articleName."/";
+// $arrayConfContent['directory'] = "/var/www/html/public/uploads/articles/".$articleName."/";
 // $arrayConfContent['location'] = $arrayConfContent['directory'].$filename;
 // $arrayConfContent['fileName'] = $filename;
 // $arrayConfContent['fileContent'] = $_FILES['imagesArticle']['tmp_name'][$i];

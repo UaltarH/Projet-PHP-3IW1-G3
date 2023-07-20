@@ -31,6 +31,7 @@ class System
     public function userlist(): void
     {
         //TODO: access right
+
         $roles = $this->userRepository->fetchRoles();
         $rolesOption = [];
         $rolesOption[""] = "Choose a role";
@@ -39,10 +40,13 @@ class System
         }
         $createUserForm = new CreateUser();
         $editUserModalForm = new EditUser();
-        $view = new View("System/userlist", "back");
-        $view->assign("createUserForm", $createUserForm->getConfig($rolesOption));
-        $view->assign("editUserForm", $editUserModalForm->getConfig($rolesOption));
-
+        $createUserForm->setConfig($rolesOption);
+        $editUserModalForm->setConfig($rolesOption);
+        $view = new View("/System/userlist", "back");
+        $view->assign("createUserForm", $createUserForm->getConfig());
+        $view->assign("editUserForm", $editUserModalForm->getConfig());
+        $view->assign("createUserFormErrors", $createUserForm->errors);
+        $view->assign("editUserFormErrors", $editUserModalForm->errors);
         if(!empty($_GET["action"])) {
             $action = strtolower(trim($_GET["action"]));
             try{
@@ -53,8 +57,6 @@ class System
                 die('Error 404');
             }
         }
-        $view->assign("createUserFormErrors", $createUserForm->errors);
-        $view->assign("editUserFormErrors", $editUserModalForm->errors);
     } // end of userList()
 
 }
