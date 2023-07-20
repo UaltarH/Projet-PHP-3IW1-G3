@@ -13,7 +13,7 @@ if (isset($_SESSION["token"]) && validateJWT($_SESSION["token"])) {
 <header class="header">
 
     <h1>
-        <img src="/Assets/img/logo.png" alt="" style="height: 2em">
+        <img src="/assets/img/logo.png" alt="" style="height: 2em">
         <?= Config::getConfig()['website']['name']?>
     </h1>
 

@@ -1,6 +1,8 @@
 <h1>User List</h1>
 
-<?php include "Views/Partials/editUserModal.ptl.php" ?>
+<?php
+
+include "/var/www/html/Views/Partials/editUserModal.ptl.php" ?>
 
 <nav>
     <ul>

@@ -4,9 +4,9 @@ namespace  App\Core;
 
 use App\Core\Errors;
 
-define("APPLICATION_PATH", "application.yml");
-define("APPLICATION_DEV_PATH", "application-dev.yml");
-define("APPLICATION_PROD_PATH", "application-prod.yml");
+define("APPLICATION_PATH", "../application.yml");
+define("APPLICATION_DEV_PATH", "../application-dev.yml");
+define("APPLICATION_PROD_PATH", "../application-prod.yml");
 class Config
 {
     private static ?Config $instance = null;

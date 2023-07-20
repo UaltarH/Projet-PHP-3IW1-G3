@@ -313,7 +313,7 @@ class Article extends AbstractRepository
                                         $gameName = str_replace(" ", "_", $_POST['createArticleGame-form-titleGame']);
 
                                         $arrayConfContent = [];
-                                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $gameName . "/";
+                                        $arrayConfContent['directory'] = "/var/www/html/public/uploads/articles/" . $gameName . "/";
                                         $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                         $arrayConfContent['fileName'] = $filename;
                                         $arrayConfContent['fileContent'] = $fileData;
@@ -349,7 +349,7 @@ class Article extends AbstractRepository
                                     $gameName = str_replace(" ", "_", $_POST['createArticleGame-form-titleGame']);
 
                                     $arrayConfContent = [];
-                                    $arrayConfContent['directory'] = "/var/www/html/uploads/jeux/" . $gameName . "/";
+                                    $arrayConfContent['directory'] = "/var/www/html/public/uploads/jeux/" . $gameName . "/";
                                     $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                     $arrayConfContent['fileName'] = $filename;
                                     $arrayConfContent['fileContent'] = $_FILES['createArticleGame-form-imageJeu']['tmp_name'];
@@ -484,7 +484,7 @@ class Article extends AbstractRepository
                                 $articleName = str_replace(" ", "_", $_POST['createArticleAboutGame-form-titleArticle']);
 
                                 $arrayConfContent = [];
-                                $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $articleName . "/";
+                                $arrayConfContent['directory'] = "/var/www/html/public/uploads/articles/" . $articleName . "/";
                                 $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                                 $arrayConfContent['fileName'] = $filename;
                                 $arrayConfContent['fileContent'] = $fileData;
@@ -583,7 +583,7 @@ class Article extends AbstractRepository
                         $articleName = str_replace(" ", "_", $_POST['editArticle-form-title']);
 
                         $arrayConfContent = [];
-                        $arrayConfContent['directory'] = "/var/www/html/uploads/articles/" . $articleName . "/";
+                        $arrayConfContent['directory'] = "/var/www/html/public/uploads/articles/" . $articleName . "/";
                         $arrayConfContent['location'] = $arrayConfContent['directory'] . $filename;
                         $arrayConfContent['fileName'] = $filename;
                         $arrayConfContent['fileContent'] = $fileData;

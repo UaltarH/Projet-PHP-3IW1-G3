@@ -29,12 +29,12 @@ class Api
      */
     public function usercreate(): void
     {
-        header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
         }
+        header('Content-Type: application/json');
         $user = new User();
         $validator = new Validator();
         if (!empty($_POST["pseudo"]) && !empty($_POST["first_name"]) && !empty($_POST["last_name"]) && !empty($_POST["email"]) && !empty($_POST["phone_number"]) && !empty($_POST["role"])) {
@@ -77,12 +77,11 @@ class Api
      */
     public function userlist(): void
     {
-        if($_SERVER['REQUEST_METHOD'] != "GET") {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
-        // TODO : deny access to this url
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -116,12 +115,12 @@ class Api
    
     public function useredit(): void
     {
-        header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
+        header('Content-Type: application/json');
         $emptyFields = true;
         $user = new User();
         $validator = new Validator();

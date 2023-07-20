@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Core\Config;
+use App\Core\Errors;
 use App\Core\View;
 use App\Forms\EditProfileFront;
 use App\Forms\Register;
@@ -147,17 +148,16 @@ class Auth
 
     public function emailConfirmation(): void
     {
-        $view = new View("Auth/emailConfirmation", "front");
-        $messageInfo = [];
-
         if (isset($_GET['pseudo'], $_GET['key']) and !empty($_GET['pseudo']) and !empty($_GET['key'])) {
+            $view = new View("Auth/emailConfirmation", "front");
+            $messageInfo = [];
             $pseudo = htmlspecialchars(urldecode($_GET['pseudo']));
             $key = htmlspecialchars($_GET['key']);
 
             $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
             $result = $this->userRepository->getOneWhere($whereSql, new User);
             if (is_bool($result)) {
-                $messageInfo[] = "utilisateur introuvable belec au hack !";
+                $messageInfo[] = "utilisateur introuvable!";
             } else {
                 if ($result->getEmailConfirmation() == true) {
                     $messageInfo[] = "votre compte a deja été confirmé";
@@ -165,14 +165,15 @@ class Auth
                     $result->setEmailConfirmation(true);
                     $responseQuery = $this->userRepository->save($result);
                     if ($responseQuery->success) {
-                        $messageInfo[] = "votre compte a bien été confirmez, vous pouvez des maintenant vous connecter";
+                        $messageInfo[] = "Votre compte a bien été confirmé, vous pouvez des maintenant vous connecter";
                     }
                 }
             }
+            $view->assign("messageInfo", $messageInfo);
         } else {
-            $messageInfo[] = "les parametres de l'url sont incorrect";
+            Errors::define(400, 'Bad HTTP request');
+            exit();
         }
-        $view->assign("messageInfo", $messageInfo);
     }
 
     public function resetPassword(): void

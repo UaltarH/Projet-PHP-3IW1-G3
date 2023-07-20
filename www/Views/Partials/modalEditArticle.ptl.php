@@ -25,10 +25,10 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="/library/grapes.js/grapesjs/css/grapes.min.css">
-<script src="/library/grapes.js/grapesjs/grapes.min.js"></script>
-<script src="/library/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
-<script src="/library/grapes.js/packages/blocks-basic/index.js"></script>
+<link rel="stylesheet" href="/assets/vendor/grapes.js/grapesjs/css/grapes.min.css">
+<script src="/assets/vendor/grapes.js/grapesjs/grapes.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/blocks-basic/index.js"></script>
 
 
 <script type="text/javascript">

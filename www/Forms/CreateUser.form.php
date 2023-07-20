@@ -5,7 +5,7 @@ class CreateUser extends Validator
 {
     public string $method = "POST";
     protected array $config = [];
-    public function getConfig($roles): array
+    public function setConfig($roles): void
     {
         $this->config = [
             "config"=>[
@@ -86,6 +86,9 @@ class CreateUser extends Validator
                 ],
             ]
         ];
+    }
+    public function getConfig(): array
+    {
         return $this->config;
     }
 }
