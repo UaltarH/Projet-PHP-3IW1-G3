@@ -16,7 +16,7 @@ if (isset($_SESSION["token"])) {
     <meta charset="UTF-8">
     <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
     <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
 
     <meta charset="utf-8">
@@ -31,7 +31,7 @@ if (isset($_SESSION["token"])) {
     <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
