@@ -61,7 +61,7 @@ export default function Page1() {
           errorElement.remove();
         }
 
-        fetch("http://localhost/set-admin", {
+        fetch("/set-admin", {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
@@ -96,6 +96,7 @@ export default function Page1() {
               errorElement.remove();
             }
 
+            sessionStorage.setItem("currentPage", "page2");
             root.replaceChild(generateStructure(Page2()), root.firstChild);
           });
       }

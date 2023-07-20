@@ -76,6 +76,11 @@ set-admin:
   action: setAdmin
   access: [ALL]
 
+set-database:
+  controller: Installer
+  action: setDatabase
+  access: [ALL]
+
 post-comment:
   controller: Article
   action: postComment

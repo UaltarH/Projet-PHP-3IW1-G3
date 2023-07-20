@@ -53,7 +53,6 @@ export let phone_number = () =>
     "Entrez votre numéro de téléphone",
     "Entrez votre numéro de téléphone"
   );
-
 export let password = () =>
   InputGroup(
     "password",
@@ -88,55 +87,35 @@ export let bddPrefix = () =>
     "",
     "Entrez le préfixe de votre base de données."
   );
-export let bddName = () =>
+export let siteName = () =>
   InputGroup(
-    "bddName",
-    "Nom de la base de données",
+    "siteName",
+    "Nom du site",
     "text",
-    "bddName",
-    "bddName",
+    "siteName",
+    "siteName",
     "",
-    "Entrez le nom de votre base de données."
+    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
   );
-export let bddUser = () =>
+export let siteDescription = () =>
   InputGroup(
-    "bddUser",
-    "Votre nom d'utilisateur pour la BDD",
+    "siteDescription",
+    "Description du site",
     "text",
-    "bddUser",
-    "bddUser",
+    "siteDescription",
+    "siteDescription",
     "",
-    "Entrez le nom d'utilisateur pour la base de données."
+    "Entrez la description du site souhaité."
   );
-export let bddPassword = () =>
+export let adminEmail = () =>
   InputGroup(
-    "bddPassword",
-    "Mot de passe pour accéder à la base de données",
-    "password",
-    "bddPassword",
-    "bddPassword",
+    "adminEmail",
+    "E-mail de l'administrateur",
+    "email",
+    "adminEmail",
+    "adminEmail",
     "",
-    "Entrez votre mot de passe pour accéder à la base de données."
-  );
-export let host = () =>
-  InputGroup(
-    "host",
-    "Serveur de la base de données",
-    "text",
-    "host",
-    "host",
-    "",
-    "Entrez le nom du serveur de la base de données."
-  );
-export let bddPort = () =>
-  InputGroup(
-    "bddPort",
-    "Port de la base de données",
-    "text",
-    "bddPort",
-    "bddPort",
-    "",
-    "Entrez le port de la base de données."
+    "Entrez l'adresse mail de l'administrateur."
   );
 
 export let siteName = () =>

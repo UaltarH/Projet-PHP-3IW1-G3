@@ -158,4 +158,16 @@ class Installer extends Validator
             echo json_encode($response);
         }
     }
+
+    public function setDatabase()
+    {
+        // Récupérer les données envoyées en tant que JSON
+        $data = json_decode(file_get_contents('php://input'), true);
+        $hasErrors = false;
+
+        $bddPrefix = $data['bddPrefix'];
+        $siteName = $data['siteName'];
+        $siteDescription = $data['siteDescription'];
+        $adminEmail = $data['adminEmail'];
+    }
 }
