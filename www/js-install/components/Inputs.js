@@ -1,36 +1,83 @@
 import InputGroup from "./InputGroup.js";
 
-export let siteName = (error) =>
+// FirstPage of Installer, create an user
+
+export let pseudo = () =>
   InputGroup(
-    "siteName",
-    "Nom du site",
+    "pseudo",
+    "Pseudo",
     "text",
-    "siteName",
-    "siteName",
-    "",
-    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
+    "pseudo",
+    "pseudo",
+    "Entrez votre pseudo",
+    "Entrez votre pseudo"
   );
-export let adminEmail = (error) =>
+export let first_name = () =>
   InputGroup(
-    "adminEmail",
-    "E-mail de l'administrateur",
-    "email",
-    "adminEmail",
-    "adminEmail",
-    "",
-    "Entrez votre adresse mail d'administrateur."
+    "first_name",
+    "Prénom",
+    "text",
+    "first_name",
+    "first_name",
+    "Entrez votre prénom",
+    "Entrez votre prénom"
   );
-export let password = (error) =>
+export let last_name = () =>
+  InputGroup(
+    "last_name",
+    "Nom",
+    "text",
+    "last_name",
+    "last_name",
+    "Entrez votre nom",
+    "Entrez votre nom"
+  );
+export let email = () =>
+  InputGroup(
+    "email",
+    "E-mail",
+    "email",
+    "email",
+    "email",
+    "Entrez votre adresse mail",
+    "Entrez votre adresse mail d'aministrateur"
+  );
+
+export let phone_number = () =>
+  InputGroup(
+    "phone_number",
+    "Numéro de téléphone",
+    "tel",
+    "phone_number",
+    "phone_number",
+    "Entrez votre numéro de téléphone",
+    "Entrez votre numéro de téléphone"
+  );
+export let password = () =>
   InputGroup(
     "password",
     "Mot de passe",
     "password",
     "password",
     "password",
-    "",
+    "Entrez votre mot de passe",
     "Entrez votre mot de passe"
   );
-export let bddPrefix = (error) =>
+
+export let passwordConfirm = () =>
+  InputGroup(
+    "passwordConfirm",
+    "Confirmation du mot de passe",
+    "password",
+    "passwordConfirm",
+    "passwordConfirm",
+    "Confirmez votre mot de passe",
+    "Confirmez votre mot de passe"
+  );
+
+// SecondPage of Installer, control the database
+
+export let bddPrefix = () =>
   InputGroup(
     "bddPrefix",
     "Préfixe pour la base de données",
@@ -40,53 +87,44 @@ export let bddPrefix = (error) =>
     "",
     "Entrez le préfixe de votre base de données."
   );
-export let bddName = (error) =>
+export let siteName = () =>
   InputGroup(
-    "bddName",
-    "Nom de la base de données",
+    "siteName",
+    "Nom du site",
     "text",
-    "bddName",
-    "bddName",
+    "siteName",
+    "siteName",
     "",
-    "Entrez le nom de votre base de données."
+    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
   );
-export let bddUser = (error) =>
+export let siteDescription = () =>
   InputGroup(
-    "bddUser",
-    "Votre nom d'utilisateur pour la BDD",
+    "siteDescription",
+    "Description du site",
     "text",
-    "bddUser",
-    "bddUser",
+    "siteDescription",
+    "siteDescription",
     "",
-    "Entrez le nom d'utilisateur pour la base de données."
+    "Entrez la description du site souhaité."
   );
-export let bddPassword = (error) =>
+export let adminEmail = () =>
   InputGroup(
-    "bddPassword",
-    "Mot de passe pour accéder à la base de données",
-    "password",
-    "bddPassword",
-    "bddPassword",
+    "adminEmail",
+    "E-mail de l'administrateur",
+    "email",
+    "adminEmail",
+    "adminEmail",
     "",
-    "Entrez votre mot de passe pour accéder à la base de données."
+    "Entrez l'adresse mail de l'administrateur."
   );
-export let host = (error) =>
+
+export let siteName = () =>
   InputGroup(
-    "host",
-    "Serveur de la base de données",
+    "siteName",
+    "Nom du site",
     "text",
-    "host",
-    "host",
+    "siteName",
+    "siteName",
     "",
-    "Entrez le nom du serveur de la base de données."
-  );
-export let bddPort = (error) =>
-  InputGroup(
-    "bddPort",
-    "Port de la base de données",
-    "text",
-    "bddPort",
-    "bddPort",
-    "",
-    "Entrez le port de la base de données."
+    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
   );

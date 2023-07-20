@@ -1,32 +1,32 @@
 default:
   controller: Main
   action: home
-  access: [ ALL ]
+  access: [ALL]
 
 about-us:
   controller: Main
   action: aboutUs
-  access: [ ALL ]
+  access: [ALL]
 
 contact:
   controller: Main
   action: contact
-  access: [ ALL ]
+  access: [ALL]
 
 login:
   controller: Auth
   action: login
-  access: [ ALL ]
+  access: [ALL]
 
 logout:
   controller: Auth
   action: logout
-  access: [ ALL ]
+  access: [ALL]
 
 s-inscrire:
   controller: Auth
   action: register
-  access: [ ALL ]
+  access: [ALL]
 
 search:
   controller: Main
@@ -36,40 +36,55 @@ search:
 email-confirmation:
   controller: Auth
   action: emailConfirmation
-  access: [ ALL ]
+  access: [ALL]
 
 profil:
   controller: Auth
   action: profile
-  access: [ USER, MODERATOR, ADMIN ]
+  access: [USER, MODERATOR, ADMIN]
 
 edit-profile:
   controller: Auth
   action: editProfile
-  access: [ USER, MODERATOR, ADMIN ]
+  access: [USER, MODERATOR, ADMIN]
 
 reset-password:
   controller: Auth
   action: resetPassword
-  access: [ ALL ]
+  access: [ALL]
 
 jeux:
   controller: JeuxController
   action: allGames
-  access: [ ALL ]
+  access: [ALL]
   jeu:
     controller: JeuxController
     action: oneGame
-    access: [ ALL ]
+    access: [ALL]
 
 articles:
   controller: Article
   action: allArticles
-  access: [ ALL ]
+  access: [ALL]
   article:
     controller: Article
     action: oneArticle
-    access: [ ALL ]
+    access: [ALL]
+
+set-admin:
+  controller: Installer
+  action: setAdmin
+  access: [ALL]
+
+set-database:
+  controller: Installer
+  action: setDatabase
+  access: [ALL]
+
+post-comment:
+  controller: Article
+  action: postComment
+  access: [ USER, MODERATOR, ADMIN ]
 
 post-comment:
   controller: Article
@@ -79,7 +94,7 @@ post-comment:
 trucs-et-astuces:
   controller: Article
   action: allTrucsEtAstuces
-  access: [ ALL ]
+  access: [ALL]
 
 page:
   controller: ArticleController
@@ -88,7 +103,7 @@ page:
   allgames:
     controller: Article
     action: GetAllArticlesGame
-    access: [ ALL ]
+    access: [ALL]
 
   allaboutgames:
     controller: Article
@@ -100,7 +115,7 @@ sys:
     list:
       controller: System
       action: userlist
-      access: [ ADMIN, MODERATOR ]
+      access: [ADMIN, MODERATOR]
 
   article:
     articles-management:
@@ -158,24 +173,24 @@ api:
       controller: Api
       action: usercreate
       method: POST
-      access: [ ADMIN, MODERATOR ]
+      access: [ADMIN, MODERATOR]
 
     list:
       controller: Api
       action: userlist
       method: GET
-      params: [ length, start, search, draw ]
-      access: [ ADMIN, MODERATOR ]
+      params: [length, start, search, draw]
+      access: [ADMIN, MODERATOR]
 
     edit:
       controller: Api
       action: useredit
       method: POST
-      access: [ ADMIN ]
+      access: [ADMIN]
 
     delete:
       controller: Api
       action: userdelete
       method: DELETE
-      access: [ ADMIN ]
+      access: [ADMIN]
 

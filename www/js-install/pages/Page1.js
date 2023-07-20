@@ -1,82 +1,107 @@
-import { BrowserLink } from "../components/BrowserRouter.js";
 import form_check from "../utils/verification.js";
 import {
-  siteName,
-  adminEmail,
+  pseudo,
+  first_name,
+  last_name,
+  email,
+  phone_number,
   password,
-  bddPrefix,
-  bddName,
-  bddUser,
-  bddPassword,
-  host,
-  bddPort,
+  passwordConfirm,
 } from "../components/Inputs.js";
+import { root } from "../index.js";
+import generateStructure from "../core/generateStructure.js";
+import Page2 from "./Page2.js";
 
 const validationSchema = {
   type: "object",
   properties: {
-    siteName: { type: "string", min: 3, max: 20 },
-    adminEmail: { type: "string", format: "email" },
+    pseudo: { type: "string", min: 2, max: 20 },
+    first_name: { type: "string", min: 2, max: 20 },
+    last_name: { type: "string", min: 2, max: 20 },
+    email: { type: "string", min: 6, format: "email" },
+    phone_number: { type: "string", min: 3, format: "tel" },
     password: { type: "string", min: 8, format: "password" },
-    bddPrefix: { type: "string", min: 3, max: 20 },
-    bddName: { type: "string", min: 3, max: 20 },
-    bddUser: { type: "string", min: 3, max: 20 },
-    bddPassword: { type: "string", min: 8, format: "password" },
-    host: { type: "string", min: 3, max: 20 },
-    bddPort: { type: "number", min: 3, max: 20 },
+    passwordConfirm: { type: "string", min: 8, format: "passwordConfirm" },
   },
   required: [
-    "siteName",
-    "adminEmail",
+    "pseudo",
+    "first_name",
+    "last_name",
+    "email",
+    "phone_number",
     "password",
-    "bddPrefix",
-    "bddName",
-    "bddUser",
-    "bddPassword",
-    "host",
-    "bddPort",
+    "passwordConfirm",
   ],
 };
 
 export default function Page1() {
   function isValid(event) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const data = {};
-    formData.forEach((value, key) => (data[key] = value));
-    console.log(data);
+    try {
+      const formData = new FormData(event.currentTarget);
+      const data = {};
+      formData.forEach((value, key) => (data[key] = value));
 
-    // const formDataSiteName = { siteName: siteName };
-    // const formDataSiteNameJson = JSON.stringify(formDataSiteName);
-    // localStorage.setItem("formDataSiteName", formDataSiteNameJson);
-    // const formDataUser = { adminEmail: adminEmail, password: password };
-    // const formDataBdd = {
-    //   bddPrefix: bddPrefix,
-    //   bddName: bddName,
-    //   bddUser: bddUser,
-    //   bddPassword: bddPassword,
-    //   host: host,
-    //   bddPort: bddPort,
-    // };
+      const validationResult = form_check(data, validationSchema);
 
-    const validationResult = form_check(data, validationSchema);
-    let errorElement = document.getElementById("errorElement");
-
-    if (!validationResult.isValid) {
-      if (!errorElement) {
-        errorElement = document.createElement("div");
-        errorElement.id = "errorElement";
-        errorElement.classList.add("alert", "alert-danger");
+      let errorElement = document.getElementById("errorElement");
+      if (!validationResult.isValid) {
+        if (!errorElement) {
+          errorElement = document.createElement("div");
+          errorElement.id = "errorElement";
+          errorElement.classList.add("alert", "alert-danger");
+          errorElement.textContent = validationResult.message;
+          root.appendChild(errorElement);
+          errorElement.setAttribute("tabindex", "0");
+          errorElement.focus();
+        }
         errorElement.textContent = validationResult.message;
-        document.getElementById("bdd").appendChild(errorElement);
-      }
-      errorElement.textContent = validationResult.message;
-    } else {
-      console.log("Le formulaire est valide");
+      } else {
+        if (errorElement) {
+          errorElement.remove();
+        }
 
-      if (errorElement) {
-        errorElement.remove();
+        fetch("/set-admin", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Erreur lors de l'envoi du formulaire.");
+            }
+          })
+          .then((responseData) => {
+            console.log(responseData);
+
+            if (responseData.success === false) {
+              if (!errorElement) {
+                errorElement = document.createElement("div");
+                errorElement.id = "errorElement";
+                errorElement.classList.add("alert", "alert-danger");
+                errorElement.textContent = responseData.message;
+                root.appendChild(errorElement);
+                errorElement.setAttribute("tabindex", "0");
+                errorElement.focus();
+              }
+              errorElement.textContent = responseData.message;
+              throw new Error(responseData.message);
+            }
+            // Remplacer la structure de la page par Page2()
+            if (errorElement) {
+              errorElement.remove();
+            }
+
+            sessionStorage.setItem("currentPage", "page2");
+            root.replaceChild(generateStructure(Page2()), root.firstChild);
+          });
       }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -106,6 +131,7 @@ export default function Page1() {
         ],
         attributes: { class: "mb-4 p-2" },
       },
+
       {
         type: "form",
         attributes: {
@@ -117,35 +143,17 @@ export default function Page1() {
           submit: isValid,
         },
         children: [
-          {
-            type: "fieldset",
-            attributes: { id: "website", class: "border p-2" },
-            children: [...siteName()],
-          },
-          { type: "hr", attributes: { class: "hr" } },
-          {
-            type: "fieldset",
-            attributes: { id: "user", class: "border p-2" },
-            children: [...adminEmail(), ...password()],
-          },
-          { type: "hr", attributes: { class: "hr" } },
-          {
-            type: "fieldset",
-            attributes: { id: "bdd", class: "border p-2" },
-            children: [
-              ...bddPrefix(),
-              ...bddName(),
-              ...bddUser(),
-              ...bddPassword(),
-              ...host(),
-              ...bddPort(),
-            ],
-          },
-
+          pseudo(),
+          first_name(),
+          last_name(),
+          email(),
+          phone_number(),
+          password(),
+          passwordConfirm(),
           {
             type: "button",
             attributes: { type: "submit", class: "btn btn-primary text-white" },
-            children: ["Installer"],
+            children: ["Suivant"],
           },
         ],
       },
