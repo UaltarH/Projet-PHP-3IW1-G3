@@ -19,7 +19,12 @@
 
                         </div>
                         <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor-edit" style="display: none;">Fermez l'éditeur</button>
-                        <button type="button" class="btn btn-primary btn-grapesjs" id="save-button-edit" style="display: none;">Enregistrez votre contenu</button>
+                        <button type="button" class="btn btn-primary btn-grapesjs" id="save-button-edit" style="display: none;">Enregistrez votre contenu</button>                        
+
+                        <div class="alert alert-success editArticle" role="alert" style="display: none;">
+                            Le contenu de votre article a bien été enregistrer.
+                        </div>
+
                         <div id="editorGrapesJsForEdit"></div>
                     </div>
                     <input type="submit" name="submitEditArticle" id="submitEditArticle" class="btn btn-primary" value="Modifiez votre article">
@@ -110,6 +115,9 @@ document.getElementById('save-button-edit').addEventListener('click', function()
         contentArticle = contentArticle.replace(/<body/g, '<div');
         contentArticle = contentArticle.replace(/<\/body>/g, '</div>');
         contentArticle += '<style>' + css + '</style>';
+
+        let alertSuccess = document.getElementsByClassName('alert alert-success editArticle')[0];
+        alertSuccess.style.display = 'block';
     }else {
         alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
     }

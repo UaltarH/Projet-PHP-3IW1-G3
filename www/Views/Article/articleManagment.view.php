@@ -37,40 +37,6 @@
 <script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
 
-//gestions des boutons de modal
-    // Récupérer la référence à la modal create article
-    var modalCreateArticleElement = document.getElementById('multi-step-modal');
-    var modalCreateArticle = new bootstrap.Modal(modalCreateArticleElement);
-    $("#open-modalCreateGameArticle-btn").on('click', function(){
-        openModalCreateArticle();
-    }); 
-    $("#close-modalCreateGameArticle-btn").on('click', function(){
-        closeModalCreateArticle();
-    }); 
-    function openModalCreateArticle(){
-        modalCreateArticle.show();
-    }
-    function closeModalCreateArticle(){
-        modalCreateArticle.hide();
-    }
-
-    //modal edit article
-    var modalEdiotArticleElement = document.getElementById('editArticle-modal');
-    var modalEditArticle = new bootstrap.Modal(modalEdiotArticleElement);
-    $("#close-modalEditArticle-btn").on('click', function(){
-        closeModalEditArticle();
-    }); 
-
-    function openModalEditArticle(){
-        modalEditArticle.show();
-    }
-    function closeModalEditArticle(){
-        contentArticle = "";
-        document.getElementById("editArticle-form-title").value = "";
-        modalEditArticle.hide();
-    }
-//
-    
 // Formulaire à plusieurs étapes
     // Récupérer toutes les sections du formulaire
     const formSteps = document.querySelectorAll('.form-step');
@@ -167,6 +133,50 @@
     // Afficher les champs correspondant à l'option sélectionnée initialement
     showFieldsForOption(selectField.value);
 //
+
+
+//gestions des boutons de modal
+    // Récupérer la référence à la modal create article
+    var modalCreateArticleElement = document.getElementById('multi-step-modal');
+    var modalCreateArticle = new bootstrap.Modal(modalCreateArticleElement);
+    $("#open-modalCreateGameArticle-btn").on('click', function(){
+        openModalCreateArticle();
+    }); 
+    $("#close-modalCreateGameArticle-btn").on('click', function(){
+
+        closeModalCreateArticle();
+    }); 
+    function openModalCreateArticle(){
+        let alertSuccess = document.getElementsByClassName('alert alert-success addArticle')[0];
+        let alertDanger = document.getElementsByClassName('alert alert-danger addArticle')[0]; 
+        alertSuccess.style.display = 'none';
+        alertDanger.style.display = 'none';
+        modalCreateArticle.show();
+    }
+    function closeModalCreateArticle(){
+        showStep(0);
+        modalCreateArticle.hide();
+    }
+
+    //modal edit article
+    var modalEdiotArticleElement = document.getElementById('editArticle-modal');
+    var modalEditArticle = new bootstrap.Modal(modalEdiotArticleElement);
+    $("#close-modalEditArticle-btn").on('click', function(){
+        closeModalEditArticle();
+    }); 
+
+    function openModalEditArticle(){
+        let alertSuccess = document.getElementsByClassName('alert alert-success editArticle')[0];
+        alertSuccess.style.display = 'none';
+        modalEditArticle.show();
+    }
+    function closeModalEditArticle(){
+        contentArticle = "";
+        document.getElementById("editArticle-form-title").value = "";
+        modalEditArticle.hide();
+    }
+//
+    
 
 
 //gestion de la datatable 
@@ -360,9 +370,22 @@
                 closeModalCreateArticle();
                 // Afficher la première étape du formaulaire d'ajout d'article
                 showStep(0);
-                // reset content of the editor and update message of the editor
+                // reset content of the editor and close the editor and reset the btn
                 htmlContent = "";
-                document.getElementById('addArticleContent-info').textContent = "Votre article ne contient pas de contenu.";
+                if (editor) {
+                    editor.destroy();
+                    editor = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                    //remove style of the container
+                    var containerGrapeJs = document.getElementById('editorGrapesJs');
+                    containerGrapeJs.removeAttribute('style');
+                }
+                let btnOpenEditor = document.getElementById('open-editor');
+                let btnSave = document.getElementById('save-button');
+                let btnCloseEditor = document.getElementById('close-editor');
+                
+                btnCloseEditor.style.display = 'none';
+                btnOpenEditor.style.display = 'block';
+                btnSave.style.display = 'none';
 
                 table.ajax.reload();
             },
@@ -416,6 +439,23 @@
             context: $('.response-message'),
             success: function (data) {
                 closeModalEditArticle();
+
+                // reset content of the editor and close the editor and reset the btn
+                if (editorEditArticle) {
+                    editorEditArticle.destroy();
+                    editorEditArticle = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                    //remove style of the container
+                    var containerGrapeJs = document.getElementById('editorGrapesJsForEdit');
+                    containerGrapeJs.removeAttribute('style');
+                }
+
+                let btnOpenEditor = document.getElementById('open-editor-edit');
+                let btnSave = document.getElementById('save-button-edit');
+                let btnCloseEditor = document.getElementById('close-editor-edit');
+                
+                btnCloseEditor.style.display = 'none';
+                btnOpenEditor.style.display = 'block';
+                btnSave.style.display = 'none';
 
                 table.ajax.reload();
             },
@@ -473,9 +513,11 @@
     function showResponseMessage(status, action) {
         $('.response-message').addClass('active');
         if(status === "success") {
+            $('.response-message').addClass('success');
             $('.response-message').append(`<h2>${action} successful !</h2>`);
         }
         else {
+            $('.response-message').addClass('error');
             $('.response-message').append("<h2>Save fail !</h2>");
         }
         setTimeout(()=> {

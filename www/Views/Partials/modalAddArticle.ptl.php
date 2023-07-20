@@ -61,11 +61,18 @@
                     <!-- Étape 3 -->
                     <section id="step3" class="form-step">
                         <h2>Étape 3 ajouter votre contenu a votre article :</h2>
-                        <div class="form-group">
+                        <div class="form-group step3">
                             <button type="button" class="btn btn-primary btn-grapesjs" id="open-editor">Ouvrir l'éditeur de contenu</button>
                             <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor" style="display: none;">Fermez l'éditeur</button>
-                            <button type="button" class="btn btn-primary btn-grapesjs" id="save-button" style="display: none;">Enregistrez votre contenu</button>      
-                            <p id="addArticleContent-info">Votre article ne contient pas de contenu.</p>
+                            <button type="button" class="btn btn-primary btn-grapesjs" id="save-button" style="display: none;">Enregistrez votre contenu</button>                                  
+
+                            <div class="alert alert-danger addArticle" role="alert" style="display: none;">
+                                Votre article ne contient pas de contenu.
+                            </div>
+
+                            <div class="alert alert-success addArticle" role="alert" style="display: none;">
+                                Votre article a bien du contenu.
+                            </div>
                             
                             <div id="editorGrapesJs"></div>
                         </div>
@@ -532,13 +539,9 @@
             }
         });
 
-        // Ajoutez le contenu HTML à l'éditeur si il existe deja
-        let infoContent = document.getElementById('addArticleContent-info');
+        // Ajoutez le contenu HTML à l'éditeur si il existe deja        
         if(htmlContent != "") {
-            infoContent.textContent = "Votre article contient du contenu.";
             editor.setComponents(htmlContent);
-        }else {
-            infoContent.textContent = "Votre article ne contient pas de contenu.";
         }
 
         // afficher les bouttons de sauvegarde et de fermeture et cacher celui d'ouverture
@@ -579,11 +582,15 @@
             htmlContent = htmlContent.replace(/<\/body>/g, '</div>');
             htmlContent += '<style>' + css + '</style>';
             
-            let infoContent = document.getElementById('addArticleContent-info');
+            
+            let alertSuccess = document.getElementsByClassName('alert alert-success addArticle')[0];
+            let alertDanger = document.getElementsByClassName('alert alert-danger addArticle')[0]; 
             if(htmlContent != "") {
-                infoContent.textContent = "Votre article contient du contenu.";
+                alertSuccess.style.display = 'block';
+                alertDanger.style.display = 'none';
             } else {
-                infoContent.textContent = "Votre article ne contient pas de contenu.";
+                alertSuccess.style.display = 'none';
+                alertDanger.style.display = 'block';
             }
         }else {
             alert('Veuillez remplir le contenu de votre article avant de sauvegarder');

@@ -31,6 +31,15 @@ spl_autoload_register(function ($class) {
         include $classForm;
     }
 });
+// $config = Config::getInstance();
+// $config->setEnvironmentVariable("configEnd", true);
+
+// echo '<pre>';
+// var_dump($config->getConfig());
+// echo '</pre>';
+// die();
+
+
 /**
  * Affiche l'environnement du projet
  */
