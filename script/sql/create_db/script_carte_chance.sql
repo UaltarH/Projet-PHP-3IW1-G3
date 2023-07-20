@@ -86,7 +86,7 @@ CREATE TABLE carte_chance_article
 CREATE TABLE carte_chance_article_memento
 (
     id           UUID DEFAULT uuid_generate_v4(),
-    title        VARCHAR(64) NOT NULL UNIQUE,
+    title        VARCHAR(64) NOT NULL,
     content      TEXT        NOT NULL,
     created_date DATE        NOT NULL,
     article_id  UUID,

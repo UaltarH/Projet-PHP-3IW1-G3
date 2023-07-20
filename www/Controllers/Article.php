@@ -350,6 +350,9 @@ class Article extends AbstractRepository
                                 //mettre a jour le content de l'article avec les paths des images qui vont bien 
                                 $articleMaj = new ArticleModel();
                                 $articleMaj->setId($idNewArticle);
+                                if($newContent == ""){
+                                    $newContent = $_POST['content'];
+                                }
                                 $articleMaj->setContent($newContent);
                                 if ($this->articleRepository->save($articleMaj)->success) {
                                     //content de l'article mis a jour
@@ -459,7 +462,7 @@ class Article extends AbstractRepository
             if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
                 //il n'y a aucun elements dans la table qui contiens le meme titre 
                 $article->setTitle($_POST['createArticleAboutGame-form-titleArticle']);
-                $article->setContent(" ");
+                $article->setContent("pre content");
                 $article->setCreatedDate(date("Y-m-d H:i:s"));
                 $article->setUpdatedDate(date("Y-m-d H:i:s"));
                 $article->setCategoryId($categoryArticleAboutGameId);
@@ -477,12 +480,11 @@ class Article extends AbstractRepository
 
                         //ici on ajoute dans la table content les paths des images de notre article
                         //avant il faut parser le content pour trouver les balises img(base 64 ou url) et les remplacer par les paths des images
-                        $originContent = $_POST['content'];
+                        $content = $_POST['content'];
                         $pattern = '/<img[^>]+src="([^">]+)"/';
-                        preg_match_all($pattern, $originContent, $matches);
+                        preg_match_all($pattern, $content, $matches);
 
                         $srcImages = $matches[1];
-                        $newContent = "";
                         foreach ($srcImages as $src) {
                             if (strpos($src, 'data:image') === 0) { //verifie si c'est une image en base 64
                                 $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $src));
@@ -511,7 +513,7 @@ class Article extends AbstractRepository
                                     //image article ajouté
                                     //remplacer la balise img dans originContent
                                     $replaceSrc = "/uploads/articles/" . $articleName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                                    $newContent = str_replace($src, $replaceSrc, $originContent);
+                                    $content = str_replace($src, $replaceSrc, $content);
                                 } else {
                                     //image article non ajouté en bdd     
                                     echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
@@ -521,7 +523,10 @@ class Article extends AbstractRepository
                         //mettre a jour le content de l'article avec les paths des images qui vont bien 
                         $articleMaj = new ArticleModel();
                         $articleMaj->setId($idNewArticle);
-                        $articleMaj->setContent($newContent);
+                        if($content == ""){
+                            $content = $_POST['content'];
+                        }
+                        $articleMaj->setContent($content);
                         if ($this->articleRepository->save($articleMaj)) {
                             //content de l'article mis a jour
                             echo json_encode(['success' => true]);
@@ -571,8 +576,8 @@ class Article extends AbstractRepository
         }
 
         if (!empty($_POST["content"]) || !empty($_POST["editArticle-form-title"])) {
-            $article = new ArticleModel();
-            $article->setId($_POST["id"]);
+            $articleUpdate = new ArticleModel();
+            $articleUpdate->setId($_POST["id"]);
             if (!empty($_POST["content"])) {
                 //avant de set le content on doit parser le content pour trouver les balises img et les remplacer par les paths des images si il yen a de nouvelles:
 
@@ -617,29 +622,31 @@ class Article extends AbstractRepository
                         }
                     }
                 }
-                $article->setContent($content);
+                $articleUpdate->setContent($content);
             }
-            if (!empty($_POST["editArticle-form-title"])) {
+            //tester si le nouveau titre est different de l'ancien titre
+            $previousArticle= $this->articleRepository->getOneWhere(["id" => $_POST["id"]], $articleUpdate);
+            if($previousArticle->getTitle() != $_POST["editArticle-form-title"]){
                 $whereSql = ["title" => $_POST['editArticle-form-title']];
-                $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $article);
+                $resultQueryExist = $this->articleRepository->existOrNot($whereSql, $articleUpdate);
                 if (is_bool($resultQueryExist) || $resultQueryExist["column_exists"] == "none_exists") {
-                    $article->setTitle($_POST["editArticle-form-title"]);
+                    $articleUpdate->setTitle($_POST["editArticle-form-title"]);
                 } else {
                     // title is already used
                     //Le titre de l'article existe déjà
                     http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
-                    echo json_encode(['success' => false]);
+                    echo json_encode(['success' => false, 'error' => "Le titre de l'article existe déjà"]);
                 }
             }
-            $article->setUpdatedDate(date("Y-m-d H:i:s"));
+            
+            $articleUpdate->setUpdatedDate(date("Y-m-d H:i:s"));
 
             //avant de mettre a jour l'article il faut recuperer son ancien content pour le l'enregistrer dans la table article content 
-            $articleAncien = new ArticleModel();
-            $articleAncien = $this->articleRepository->getOneWhere(["id" => $_POST["id"]], $articleAncien);
-            $oldContent = $articleAncien->getContent();
+            
+            $oldContent = $previousArticle->getContent();
 
-            if ($this->articleRepository->save($article)->success) {
+            if ($this->articleRepository->save($articleUpdate)->success) {
                 //mtn on peut inserer dans la table article memento l'ancien content de l'article
 
                 //recuperer le nombre de memento deja enregistré pour cet article, pour ainsi savoir la version a enregistré
@@ -665,14 +672,14 @@ class Article extends AbstractRepository
                     //erreur sql : memento non ajouté en bdd
                     http_response_code(400);
                     Errors::define(500, 'Internal Server Error');
-                    echo json_encode(['success' => false]);
+                    echo json_encode(['success' => false, 'error' => "erreur sql : memento non ajouté en bdd"]);
                 }
 
             } else {
                 //erreur sql : article non ajouté en bdd
                 http_response_code(400);
                 Errors::define(500, 'Internal Server Error');
-                echo json_encode(['success' => false]);
+                echo json_encode(['success' => false, 'error' => "erreur sql : article non ajouté en bdd"]);
             }
 
 
@@ -680,7 +687,7 @@ class Article extends AbstractRepository
             //manque des informations dans les posts 
             http_response_code(400);
             Errors::define(400, 'Invalid Info');
-            echo json_encode(['success' => false]);
+            echo json_encode(['success' => false, 'error' => 'missing info']);
         }
     }
 
@@ -952,6 +959,7 @@ class Article extends AbstractRepository
         $comment = new Comment();
         $commentArticle = new Comment_article();
         $articleId = "";
+        $message = "Une erreur est survenue";
 
         if (isset($_POST["comment"], $_SESSION["token"], $_POST["articleId"])) {
             $articleId = $_POST['articleId'];
@@ -964,7 +972,8 @@ class Article extends AbstractRepository
             $commentArticle->setCommentId($commentFromBDD->getId());
             $commentArticle->setArticleId($articleId);
             $commentArticleModel->insertIntoJoinTable($commentArticle);
+            $message = "Votre commentaire est en attente de modération";
         }
-        header("Location: /articles/article?id=$articleId");
+        header("Location: /articles/article?id=$articleId&message=$message");
     }
 }
