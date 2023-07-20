@@ -34,7 +34,7 @@
 
 <!-- script js pour la datatable -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
 
 //gestions des boutons de modal
@@ -249,11 +249,33 @@
 
                                 // Ajouter le contenu HTML à la div
                                 ulVersions.innerHTML = htmlContent;
+                            } else{
+                                document.getElementById("ul-article-version").innerHTML = "";
                             }
                         })
                         .catch(function(error) {
                             console.error(`Error: ${JSON.stringify(error)}`);
                         });
+
+                        // reset content of the editor 
+                        if (editorEditArticle) {
+                            editorEditArticle.destroy();
+                            editorEditArticle = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                            //remove style of the container
+                            var containerGrapeJs = document.getElementById('editorGrapesJsForEdit');
+                            containerGrapeJs.removeAttribute('style');
+                        }
+
+                        //reset btn of the modal
+                        let btnOpenEditor = document.getElementById('open-editor-edit');
+                        let btnSave = document.getElementById('save-button-edit');
+                        let btnCloseEditor = document.getElementById('close-editor-edit');
+                        
+                        btnCloseEditor.style.display = 'none';
+                        btnOpenEditor.style.display = 'block';
+                        btnSave.style.display = 'none';
+
+
                         
                         //ouvrir la modal pour l'edition de l'article
                         openModalEditArticle();
@@ -263,12 +285,12 @@
                         deleteArticle(e, table);
                     }
                 });
-
-                //declanche les appels ajax quand on submit un des formulaires
-                $('input[name="submitEditArticle"]').on('click', function(e) { editArticle(e, table); });
-                $('input[name="submitCreateArticle"]').on('click', function(e) { createArticle(e, table); });
             }
-        });            
+        });      
+        
+        //declanche les appels ajax quand on submit un des formulaires
+        $('input[name="submitEditArticle"]').on('click', function(e) { editArticle(e, table); });
+        $('input[name="submitCreateArticle"]').on('click', function(e) { createArticle(e, table); });
     });
 //
 
@@ -383,9 +405,6 @@
             if(data["content"] == selectedRow.content){
                 delete data["content"];
             }
-            if(data["editArticle-form-title"] == selectedRow.title){
-                delete data["editArticle-form-title"];
-            }
         }
         
         $.ajax({
@@ -397,6 +416,7 @@
             context: $('.response-message'),
             success: function (data) {
                 closeModalEditArticle();
+
                 table.ajax.reload();
             },
             error: function (xhr, resp, error) {

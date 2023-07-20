@@ -16,7 +16,7 @@ if (isset($_SESSION["token"])) {
     <meta charset="UTF-8">
     <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
     <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
 
     <meta charset="utf-8">
@@ -27,11 +27,11 @@ if (isset($_SESSION["token"])) {
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
           rel="stylesheet">
-    <link href="/Assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/library/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
@@ -39,7 +39,7 @@ if (isset($_SESSION["token"])) {
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
         <a href="/sys/dashboard" class="logo d-flex align-items-center">
-            <img src="/Assets/img/logo.png" alt="">
+            <img src="/assets/img/logo.png" alt="">
             <span class="d-none d-lg-block"><?=\App\Core\Config::getConfig()['website']['name']?> Backoffice</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
@@ -126,12 +126,10 @@ if (isset($_SESSION["token"])) {
 
 <?php $this->partial("footer", []) ?>
 
-
-
 </body>
 
-<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/Assets/js/main.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/main.js"></script>
 
 <script type="text/javascript">
     const path = window.location.pathname;

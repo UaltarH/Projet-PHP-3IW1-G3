@@ -1,9 +1,11 @@
-<div class="modal" id="multi-step-modal" tabindex="-1" role="dialog" aria-labelledby="multi-step-modal-label" aria-hidden="true">
+<div class="modal" id="multi-step-modal" tabindex="-1" role="dialog" aria-labelledby="multi-step-modal-label"
+     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="multi-step-modal-label">Formulaire à plusieurs étapes</h5>
-                <button type="button" class="btn-close" id="close-modalCreateGameArticle-btn" aria-label="Close"></button>
+                <button type="button" class="btn-close" id="close-modalCreateGameArticle-btn"
+                        aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="multi-step-form-create-article" action="" method="POST">
@@ -13,9 +15,9 @@
                         <div class="form-group">
                             <select class="form-control" id="field1" name="categoriesArticle" required>
                                 <option value="" selected disabled hidden>Choisir le type d'article</option>
-                                <?php foreach ($config["categoriesArticle"] as $value=>$name): ?>
-                                    <option value=<?= $value?>> <?= $name ?> </option>
-                                <?php endforeach;?>
+                                <?php foreach ($config["categoriesArticle"] as $value => $name): ?>
+                                    <option value=<?= $value ?>> <?= $name ?> </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <button type="button" class="btn btn-primary next-step">Suivant</button>
@@ -28,45 +30,56 @@
                         <div id="step2-option1" style="display: none;">
                             <div class="form-group">
                                 <label for="createArticleGame-form-titleGame">Votre titre de jeu et de l'article</label>
-                                <input type="text" class="form-control" id="createArticleGame-form-titleGame" name="createArticleGame-form-titleGame" >
+                                <input type="text" class="form-control" id="createArticleGame-form-titleGame"
+                                       name="createArticleGame-form-titleGame">
 
                                 <label for="createArticleGame-form-categoryGame">Votre categorie de jeux</label>
-                                <select class="form-control" id="createArticleGame-form-categoryGame" name="createArticleGame-form-categoryGame" >
-                                    <?php foreach ($config["categoriesGame"] as $value=>$name): ?>
-                                        <option value=<?= $value?>> <?= $name ?> </option>
-                                    <?php endforeach;?>
+                                <select class="form-control" id="createArticleGame-form-categoryGame"
+                                        name="createArticleGame-form-categoryGame">
+                                    <?php foreach ($config["categoriesGame"] as $value => $name): ?>
+                                        <option value=<?= $value ?>> <?= $name ?> </option>
+                                    <?php endforeach; ?>
                                 </select>
 
                                 <label for="createArticleGame-form-imageJeu">Votre image du jeu</label>
-                                <input name="createArticleGame-form-imageJeu" class="form-control" id="createArticleGame-form-imageJeu" type="file">
+                                <input name="createArticleGame-form-imageJeu" class="form-control"
+                                       id="createArticleGame-form-imageJeu" type="file">
                             </div>
                         </div>
                         <!-- Champs de la deuxième étape - quand on a selectionnez truc et astuce -->
                         <div id="step2-option2" style="display: none;">
                             <div class="form-group">
                                 <label for="createArticleAboutGame-form-game">Votre jeu</label>
-                                <select class="form-control" id="createArticleAboutGame-form-game" name="createArticleAboutGame-form-game" >
-                                    <?php foreach ($config["games"] as $value=>$name): ?>
-                                        <option value=<?= $value?>> <?= $name ?> </option>
-                                    <?php endforeach;?>
+                                <select class="form-control" id="createArticleAboutGame-form-game"
+                                        name="createArticleAboutGame-form-game">
+                                    <?php foreach ($config["games"] as $value => $name): ?>
+                                        <option value=<?= $value ?>> <?= $name ?> </option>
+                                    <?php endforeach; ?>
                                 </select>
 
                                 <label for="createArticleAboutGame-form-titleArticle">Votre titre d'article</label>
-                                <input type="text" class="form-control" id="createArticleAboutGame-form-titleArticle" name="createArticleAboutGame-form-titleArticle" >                                
+                                <input type="text" class="form-control" id="createArticleAboutGame-form-titleArticle"
+                                       name="createArticleAboutGame-form-titleArticle">
                             </div>
-                        </div>  
+                        </div>
                         <button type="button" class="btn btn-secondary prev-step">Précédent</button>
-                        <button type="button" class="btn btn-primary next-step">Suivant</button>                                          
+                        <button type="button" class="btn btn-primary next-step">Suivant</button>
                     </section>
                     <!-- Étape 3 -->
                     <section id="step3" class="form-step">
                         <h2>Étape 3 ajouter votre contenu a votre article :</h2>
                         <div class="form-group">
-                            <button type="button" class="btn btn-primary btn-grapesjs" id="open-editor">Ouvrir l'éditeur de contenu</button>
-                            <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor" style="display: none;">Fermez l'éditeur</button>
-                            <button type="button" class="btn btn-primary btn-grapesjs" id="save-button" style="display: none;">Enregistrez votre contenu</button>      
+                            <button type="button" class="btn btn-primary btn-grapesjs" id="open-editor">Ouvrir l'éditeur
+                                de contenu
+                            </button>
+                            <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor"
+                                    style="display: none;">Fermez l'éditeur
+                            </button>
+                            <button type="button" class="btn btn-primary btn-grapesjs" id="save-button"
+                                    style="display: none;">Enregistrez votre contenu
+                            </button>
                             <p id="addArticleContent-info">Votre article ne contient pas de contenu.</p>
-                            
+
                             <div id="editorGrapesJs"></div>
                         </div>
                         <button type="button" class="btn btn-secondary prev-step">Précédent</button>
@@ -79,14 +92,32 @@
 </div>
 
 
-<link rel="stylesheet" href="/library/grapes.js/grapesjs/css/grapes.min.css">
-<script src="/library/grapes.js/grapesjs/grapes.min.js"></script>
-<script src="/library/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
-<script src="/library/grapes.js/packages/blocks-basic/index.js"></script>
+<link rel="stylesheet" href="/assets/vendor/grapes.js/grapesjs/css/grapes.min.css">
+<script src="/assets/vendor/grapes.js/grapesjs/grapes.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/blocks-basic/index.js"></script>
 
 <script type="text/javascript">
-    
-//grapes.js 
+
+    //grapes.js
+    var templateArticle = `<main>
+        <section>
+            <h1>Titre de l'article</h1>
+            <p>Contenu de l'article</p>
+        </section>
+        <div>
+            <h5>Nom de l'auteur</h5>
+        </div>
+        </main>
+        <style>
+            section {
+                text-align: center;
+            }
+            p {
+                text-align: justify;
+            }
+        </style>`;
+
     var templateSpotify = ` <main>
 			<section id="section1">
 				<div class="container">
@@ -501,11 +532,11 @@
     var htmlContent = "";
     var editor; // Déclaration de la variable editor en dehors des fonctions de clic
 
-    document.getElementById('open-editor').addEventListener('click', function() {
+    document.getElementById('open-editor').addEventListener('click', function () {
         editor = grapesjs.init({
             container: '#editorGrapesJs',
-            pageManager: true, 
-            storageManager:  {
+            pageManager: true,
+            storageManager: {
                 type: 'indexeddb',
             },
             plugins: ['grapesjs-tabs', 'gjs-blocks-basic'],
@@ -524,8 +555,8 @@
                     },
                     {
                         id: 'template2',
-                        label: 'Template 2',
-                        content: '<div>Contenu du template 2</div>'
+                        label: 'Article',
+                        content: templateArticle
                     }
                     // Ajoutez d'autres templates ici
                 ]
@@ -534,10 +565,10 @@
 
         // Ajoutez le contenu HTML à l'éditeur si il existe deja
         let infoContent = document.getElementById('addArticleContent-info');
-        if(htmlContent != "") {
+        if (htmlContent != "") {
             infoContent.textContent = "Votre article contient du contenu.";
             editor.setComponents(htmlContent);
-        }else {
+        } else {
             infoContent.textContent = "Votre article ne contient pas de contenu.";
         }
 
@@ -551,7 +582,7 @@
         btnOpenEditor.style.display = 'none';
     });
 
-    document.getElementById('close-editor').addEventListener('click', function() {
+    document.getElementById('close-editor').addEventListener('click', function () {
         if (editor) {
             editor.destroy();
             editor = null; // Réinitialise la variable editor après avoir détruit l'éditeur
@@ -563,14 +594,14 @@
         let btnOpenEditor = document.getElementById('open-editor');
         let btnSave = document.getElementById('save-button');
         let btnCloseEditor = document.getElementById('close-editor');
-        
+
         btnCloseEditor.style.display = 'none';
         btnOpenEditor.style.display = 'block';
         btnSave.style.display = 'none';
     });
 
     var saveButton = document.getElementById('save-button');
-    saveButton.addEventListener('click', function() {
+    saveButton.addEventListener('click', function () {
         if (editor) { // Vérifiez si editor est défini avant d'accéder à ses méthodes
             htmlContent = editor.getHtml();
             let css = editor.getCss();
@@ -578,14 +609,14 @@
             htmlContent = htmlContent.replace(/<body/g, '<div');
             htmlContent = htmlContent.replace(/<\/body>/g, '</div>');
             htmlContent += '<style>' + css + '</style>';
-            
+
             let infoContent = document.getElementById('addArticleContent-info');
-            if(htmlContent != "") {
+            if (htmlContent != "") {
                 infoContent.textContent = "Votre article contient du contenu.";
             } else {
                 infoContent.textContent = "Votre article ne contient pas de contenu.";
             }
-        }else {
+        } else {
             alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
         }
     });
