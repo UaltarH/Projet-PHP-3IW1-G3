@@ -42,6 +42,6 @@ export default function generateStructure(structure) {
     }
   }
 
-  //structure.node = element;
+  structure.node = element;
   return element;
 }
