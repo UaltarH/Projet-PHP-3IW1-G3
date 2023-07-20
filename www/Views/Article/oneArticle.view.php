@@ -42,6 +42,9 @@
                         <input type="submit" class="btn bg-secondary send btn-sm" value="Commenter"
                                style="color: white">
                     </div>
+                    <div class="alert alert-info">
+                        <?= $_GET["message"] ?? "" ?>
+                    </div>
                 </form>
             </div>
         </div>
