@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Core\SQL;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Errors;
@@ -18,6 +17,7 @@ use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Article_content;
 use App\Models\JoinTable\Game_Article;
 
+use App\Models\User;
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ArticleCategoryRepository;
@@ -30,8 +30,12 @@ use App\Repository\ArticleContentRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ContentRepository;
 
+use App\Repository\UserRepository;
+use function App\Core\TokenJwt\getAllInformationsFromToken;
+use function App\Core\TokenJwt\validateJWT;
 use function App\Services\AddFileContent\AddFileContentFunction;
 use function App\Services\HttpMethod\getHttpMethodVarContent;
+use function App\Core\TokenJwt\getSpecificDataFromToken;
 
 require_once '/var/www/html/Services/HttpMethod.php';
 require_once '/var/www/html/Services/AddFileContent.php';
@@ -50,6 +54,7 @@ class Article extends AbstractRepository
     private CommentRepository $commentRepository;
     private ContentRepository $contentRepository;
     private ArticleMementoRepository $articleMementoRepository;
+    private UserRepository $userRepository;
 
     public function __construct()
     {
@@ -64,6 +69,7 @@ class Article extends AbstractRepository
         $this->commentRepository = new CommentRepository();
         $this->contentRepository = new ContentRepository();
         $this->articleMementoRepository = new ArticleMementoRepository();
+        $this->userRepository = new UserRepository();
     }
 
 
@@ -642,11 +648,11 @@ class Article extends AbstractRepository
 
                 $result = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["id"]], $newArticleMemento);
 
-                if(is_bool($result)){
+                if (is_bool($result)) {
                     $newArticleMemento->setTitle("version 1");
-                }else{
-                    $newArticleMemento->setTitle("version ".(count($result)+1));
-                }                
+                } else {
+                    $newArticleMemento->setTitle("version " . (count($result) + 1));
+                }
                 $newArticleMemento->setContent($oldContent);
                 $newArticleMemento->setCreatedDate(date("Y-m-d H:i:s"));
                 $newArticleMemento->setArticleId($_POST["id"]);
@@ -678,18 +684,18 @@ class Article extends AbstractRepository
         }
     }
 
-    public function getAllArticlesMomento(){        
-        header('Content-Type: application/json');        
+    public function getAllArticlesMomento()
+    {
+        header('Content-Type: application/json');
         if ($_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
-        if (!empty($_POST["article_id"]))
-        {
+        if (!empty($_POST["article_id"])) {
             $articlesMemento = new Article_Memento();
             $articlesMemento = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["article_id"]], $articlesMemento);
-            if(is_bool($articlesMemento)){
+            if (is_bool($articlesMemento)) {
                 echo json_encode(['success' => false]);
                 exit;
             } else {
@@ -716,7 +722,6 @@ class Article extends AbstractRepository
         }
 
     }
-
 
 
     public function deleteArticle()
@@ -888,7 +893,7 @@ class Article extends AbstractRepository
 
     public function oneArticle()
     {
-        if (empty($_GET["id"])){
+        if (empty($_GET["id"])) {
             header("Location: /articles");
             return;
         }
@@ -900,6 +905,7 @@ class Article extends AbstractRepository
         $commentArticleModel = $this->commentArticleRepository;
         $articleModel = $this->articleRepository;
         $articleCategoryModel = $this->articleCategoryRepository;
+        $userModel = $this->userRepository;
 
         $whereSql = ["id" => $articleId];
         $article = $articleModel->getOneWhere($whereSql, new \App\Models\Article());
@@ -909,14 +915,22 @@ class Article extends AbstractRepository
 
         $comments = [];
         foreach ($commentArticles as $commentArticle) {
-            $whereSql = ["id" => $commentArticle->getCommentId()];
+            $whereSql = [
+                "id" => $commentArticle->getCommentId(),
+                "accepted" => true,
+                "moderated" => true,
+            ];
             $comment = $commentModel->getOneWhere($whereSql, new Comment());
-            $comments[] = $comment;
+            if ($comment) {
+                $whereSql = ["id" => $comment->getUserId()];
+                $user = $userModel->getOneWhere($whereSql, new User());
+                $comments[] = ["comment" => $comment, "user" => $user->getPseudo()];
+            }
         }
 
         $whereSql = ["article_id" => $article->getId()];
         $articleGame = $articleGameModel->getOneWhere($whereSql, new Game_Article());
-        if ($articleGame){
+        if ($articleGame) {
             $whereSql = ["id" => $articleGame->getJeuxId()];
             $game = $jeuxModel->getOneWhere($whereSql, new Game());
             $view->assign("game", $game);
@@ -929,5 +943,28 @@ class Article extends AbstractRepository
         $view->assign("article", $article);
         $view->assign("comments", $comments);
         $view->assign("category", $category);
+    }
+
+    public function postComment()
+    {
+        $commentModel = $this->commentRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $comment = new Comment();
+        $commentArticle = new Comment_article();
+        $articleId = "";
+
+        if (isset($_POST["comment"], $_SESSION["token"], $_POST["articleId"])) {
+            $articleId = $_POST['articleId'];
+            $token = $_SESSION["token"];
+            $userId = getSpecificDataFromToken($token, "id");
+            $comment->setContent($_POST["comment"]);
+            $comment->setUserId($userId);
+            $commentId = $commentModel->save($comment)->idNewElement;
+            $commentFromBDD = $commentModel->getOneWhere(["id" => $commentId], new Comment());
+            $commentArticle->setCommentId($commentFromBDD->getId());
+            $commentArticle->setArticleId($articleId);
+            $commentArticleModel->insertIntoJoinTable($commentArticle);
+        }
+        header("Location: /articles/article?id=$articleId");
     }
 }

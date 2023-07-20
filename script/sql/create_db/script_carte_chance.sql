@@ -55,7 +55,7 @@ CREATE TABLE carte_chance_comment
 (
     id            UUID    DEFAULT uuid_generate_v4() UNIQUE,
     content       TEXT                  NOT NULL,
-    creation_date DATE                  NOT NULL,
+    creation_date DATE    DEFAULT CURRENT_DATE NOT NULL,
     moderated     BOOLEAN DEFAULT FALSE NOT NULL,
     accepted      BOOLEAN DEFAULT FALSE NOT NULL,
     user_id       UUID,

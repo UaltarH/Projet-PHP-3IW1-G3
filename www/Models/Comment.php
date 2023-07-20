@@ -81,17 +81,17 @@ class Comment  extends AbstractModel
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isUserId(): bool
+    public function getUserId(): string
     {
         return $this->user_id;
     }
 
     /**
-     * @param bool $user_id
+     * @param string $user_id
      */
-    public function setUserId(bool $user_id): void
+    public function setUserId(string $user_id): void
     {
         $this->user_id = $user_id;
     }
