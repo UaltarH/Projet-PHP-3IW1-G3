@@ -5,7 +5,7 @@ class EditProfileFront extends Validator
 {
     public string $method = "POST";
     protected array $config = [];
-    public function getConfig($roles): array
+    public function getConfig(): array
     {
         $this->config = [
             "config"=>[
