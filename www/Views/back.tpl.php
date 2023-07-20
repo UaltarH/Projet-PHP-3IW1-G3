@@ -31,6 +31,7 @@ if (isset($_SESSION["token"])) {
     <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/library/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
 
@@ -86,31 +87,31 @@ if (isset($_SESSION["token"])) {
 <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
         <li class="nav-item">
-            <a class="nav-link " href="/sys/dashboard">
+            <a class="nav-link collapsed" href="/sys/dashboard" id="navbar-links-dash">
                 <i class="bi bi-grid"></i>
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/sys/user/list">
+        <li class="nav-item navbar-links">
+            <a class="nav-link collapsed" href="/sys/user/list" id="navbar-links-user">
                 <i class="bi bi-person"></i>
                 <span>Utilisateurs</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/sys/article/articles-management">
+        <li class="nav-item navbar-links">
+            <a class="nav-link collapsed" href="/sys/article/articles-management" id="navbar-links-article">
                 <i class="bi bi-bag"></i>
                 <span>Articles</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/sys/comment/list">
+        <li class="nav-item navbar-links">
+            <a class="nav-link collapsed" href="/sys/comment/list" id="navbar-links-comments">
                 <i class="bi bi-chat-dots"></i>
                 <span>Commentaires</span>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/">
+        <li class="nav-item navbar-links">
+            <a class="nav-link collapsed" href="/" id="navbar-links-front">
                 <i class="bi bi-box-arrow-left"></i>
                 <span>La Carte Chance</span>
             </a>
@@ -125,9 +126,32 @@ if (isset($_SESSION["token"])) {
 
 <?php $this->partial("footer", []) ?>
 
+
+
+</body>
+
 <script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/Assets/js/main.js"></script>
 
-</body>
+<script type="text/javascript">
+    const path = window.location.pathname;
+    switch(path){
+        case "/sys/dashboard":
+            console.log("test");
+            document.querySelector("#navbar-links-dash").classList.remove("collapsed");            
+            break;
+        case "/sys/user/list":
+            document.querySelector("#navbar-links-user").classList.remove("collapsed");            
+            break;
+        case "/sys/article/articles-management":
+            document.querySelector("#navbar-links-article").classList.remove("collapsed");            
+            break;
+        case "/sys/comment/list":
+            document.querySelector("#navbar-links-comments").classList.remove("collapsed");            
+            break;
+        default:
+            break;
+    }
+</script>
 
 </html>

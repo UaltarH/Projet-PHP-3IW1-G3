@@ -17,17 +17,15 @@ if ($hasNonEmptySubArray): ?>
                 <tr class="bg-light border-1">
                     <th scope="col" width="10%">Date</th>
                     <th scope="col" width="33%">Titre</th>
-                    <th scope="col" width="33%">Contenu</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php $counter = 0; ?>
                 <?php foreach ($articleWhere as $articles): ?>
-                        <tr style="cursor: pointer" onclick="rowClicked('articles/article?id=<?= $articles->getTitle() ?>')" class="border-1">
+                        <tr style="cursor: pointer" onclick="rowClicked('articles/article?id=<?= $articles->getId() ?>')" class="border-1">
                             <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getCreatedDate() ?></td>
                             <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getTitle() ?></td>
-                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getContent() ?></td>
-                        </tr>
+                        </tr>git add .
                         <?php $counter++; ?>
                 <?php endforeach; ?>
                 </tbody>
@@ -59,7 +57,7 @@ if ($hasNonEmptySubArray): ?>
                 <tbody>
                 <?php $counter = 0; ?>
                 <?php foreach ($jeuxWhere as $jeux): ?>
-                        <tr style="cursor: pointer" onclick="rowClicked('jeux/jeu?id=<?= $jeux->getTitle() ?>')" class="border-1">
+                        <tr style="cursor: pointer" onclick="rowClicked('jeux/jeu?id=<?= $jeux->getId() ?>')" class="border-1">
                             <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $jeux->getTitle() ?></td>
                         </tr>
                         <?php $counter++; ?>

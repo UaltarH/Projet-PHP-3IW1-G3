@@ -6,16 +6,20 @@ use App\Core\View;
 
 use App\Models\Article;
 use App\Models\Comment;
+use App\Models\Content;
 use App\Models\JoinTable\Comment_article;
 use App\Models\Game_Category;
 use App\Models\Game;
 use App\Models\JoinTable\Game_Article;
+use App\Models\JoinTable\Game_Content;
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentArticleRepository;
 use App\Repository\CommentRepository;
+use App\Repository\ContentRepository;
 use App\Repository\GameArticleRepository;
 use App\Repository\GameCategoryRepository;
+use App\Repository\GameContentRepository;
 use App\Repository\GameRepository;
 
 class JeuxController extends AbstractRepository
@@ -26,6 +30,9 @@ class JeuxController extends AbstractRepository
     private GameRepository $gameRepository;
     private CommentArticleRepository $commentArticleRepository;
     private CommentRepository $commentRepository;
+    private GameContentRepository $gameContentRepository;
+    private ContentRepository $contentRepository;
+
     public function __construct() {
         $this->articleRepository = new ArticleRepository();
         $this->gameCategoryRepository = new GameCategoryRepository();
@@ -33,6 +40,8 @@ class JeuxController extends AbstractRepository
         $this->gameRepository = new GameRepository();
         $this->commentArticleRepository = new CommentArticleRepository();
         $this->commentRepository = new CommentRepository();
+        $this->gameContentRepository = new GameContentRepository();
+        $this->contentRepository = new ContentRepository();
     }
     public function allgames(){
         $view = new View("Jeux/allGames", "front");
@@ -60,9 +69,23 @@ class JeuxController extends AbstractRepository
         $articleJeuModel = $this->gameArticleRepository;
         $commentArticleModel = $this->commentArticleRepository;
         $articleModel = $this->articleRepository;
+        $gameContentModel = $this->gameContentRepository;
+        $contentModel = $this->contentRepository;
 
         $whereSql = ["id" => $_GET["id"]];
         $jeu = $jeuxModel->getOneWhere($whereSql, new Game());
+
+        $whereSql = ["jeux_id" => $jeu->getId()];
+        $jeuContent = $gameContentModel->getOneWhere($whereSql, new Game_Content());
+
+        if ($jeuContent) {
+            $whereSql = ["id" => $jeuContent->getContentId()];
+            $content = $contentModel->getOneWhere($whereSql, new Content());
+
+            $url = $content->getPathContent();
+            $url = implode("/", array_slice(explode("/", $url), 4));
+            $view->assign("imageUrl", $url);
+        }
 
         $whereSql = ["id" => $jeu->getCategory_id()];
         $categorie = $categorieJeuxModel->getOneWhere($whereSql, new Game_Category());

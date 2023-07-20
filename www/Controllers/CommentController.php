@@ -18,7 +18,6 @@ class CommentController extends AbstractRepository
         $this->commentRepository = new CommentRepository();
     }
     public function index() {
-        $id = $_GET["id"];
         $commentaireModel = $this->commentRepository;
 
         $whereSql = ["moderated" => false];

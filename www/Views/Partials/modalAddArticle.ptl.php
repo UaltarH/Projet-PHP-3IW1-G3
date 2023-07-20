@@ -585,7 +585,6 @@
             } else {
                 infoContent.textContent = "Votre article ne contient pas de contenu.";
             }
-            console.log(htmlContent);
         }else {
             alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
         }

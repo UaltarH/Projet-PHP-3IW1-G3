@@ -31,7 +31,7 @@ s-inscrire:
 search:
   controller: Main
   action: search
-  access: [ALL]
+  access: [ ALL ]
 
 email-confirmation:
   controller: Auth
@@ -76,6 +76,16 @@ set-admin:
   action: setAdmin
   access: [ALL]
 
+post-comment:
+  controller: Article
+  action: postComment
+  access: [ USER, MODERATOR, ADMIN ]
+
+post-comment:
+  controller: Article
+  action: postComment
+  access: [ USER, MODERATOR, ADMIN ]
+
 trucs-et-astuces:
   controller: Article
   action: allTrucsEtAstuces
@@ -84,7 +94,7 @@ trucs-et-astuces:
 page:
   controller: ArticleController
   action: getArticle
-  access: [ALL]
+  access: [ ALL ]
   allgames:
     controller: Article
     action: GetAllArticlesGame
@@ -93,7 +103,7 @@ page:
   allaboutgames:
     controller: Article
     action: GetAllArticlesAboutGame
-    access: [ALL]
+    access: [ ALL ]
 
 sys:
   user:
@@ -106,46 +116,50 @@ sys:
     articles-management:
       controller: Article
       action: articlesManagement
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     datatable:
       controller: Article
       action: articleDatatable
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     create-article-game:
       controller: Article
       action: createArticleGame
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     create-article-about-game:
       controller: Article
       action: createArticleAboutGame
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     delete-article:
       controller: Article
       action: deleteArticle
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     edit-article:
       controller: Article
       action: updateArticle
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
+    get-all-article-version:
+      controller: Article
+      action: getAllArticlesMomento
+      access: [ ADMIN, MODERATOR ]
 
   dashboard:
     controller: Dashboard
     action: index
-    access: [ADMIN, MODERATOR]
+    access: [ ADMIN, MODERATOR ]
   comment:
     list:
       controller: CommentController
       action: index
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
     edit:
       controller: CommentController
       action: edit
-      params: [id]
-      access: [ADMIN, MODERATOR]
+      params: [ id ]
+      access: [ ADMIN, MODERATOR ]
     moderate:
       controller: CommentController
       action: moderate
-      access: [ADMIN, MODERATOR]
+      access: [ ADMIN, MODERATOR ]
 
 ## todo : test method for Api calls
 api:
@@ -174,3 +188,4 @@ api:
       action: userdelete
       method: DELETE
       access: [ADMIN]
+
