@@ -88,56 +88,6 @@ export let bddPrefix = () =>
     "",
     "Entrez le préfixe de votre base de données."
   );
-export let bddName = () =>
-  InputGroup(
-    "bddName",
-    "Nom de la base de données",
-    "text",
-    "bddName",
-    "bddName",
-    "",
-    "Entrez le nom de votre base de données."
-  );
-export let bddUser = () =>
-  InputGroup(
-    "bddUser",
-    "Votre nom d'utilisateur pour la BDD",
-    "text",
-    "bddUser",
-    "bddUser",
-    "",
-    "Entrez le nom d'utilisateur pour la base de données."
-  );
-export let bddPassword = () =>
-  InputGroup(
-    "bddPassword",
-    "Mot de passe pour accéder à la base de données",
-    "password",
-    "bddPassword",
-    "bddPassword",
-    "",
-    "Entrez votre mot de passe pour accéder à la base de données."
-  );
-export let host = () =>
-  InputGroup(
-    "host",
-    "Serveur de la base de données",
-    "text",
-    "host",
-    "host",
-    "",
-    "Entrez le nom du serveur de la base de données."
-  );
-export let bddPort = () =>
-  InputGroup(
-    "bddPort",
-    "Port de la base de données",
-    "text",
-    "bddPort",
-    "bddPort",
-    "",
-    "Entrez le port de la base de données."
-  );
 
 export let siteName = () =>
   InputGroup(
@@ -148,4 +98,26 @@ export let siteName = () =>
     "siteName",
     "",
     "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
+  );
+
+export let siteDescription = () =>
+  InputGroup(
+    "siteDescription",
+    "Description du site",
+    "text",
+    "siteDescription",
+    "siteDescription",
+    "",
+    "Entrez la description du site souhaité."
+  );
+
+export let adminEmail = () =>
+  InputGroup(
+    "adminEmail",
+    "E-mail de l'administrateur",
+    "email",
+    "adminEmail",
+    "adminEmail",
+    "",
+    "Entrez l'adresse mail de l'administrateur."
   );

@@ -54,17 +54,17 @@ root.appendChild(generateStructure(Page1()));
 
 // BrowserRouter(routes, root);
 
-//function BrowserRouter({ routes }) {
-//  window.history.pushState = function (state, title, path) {
-//    oldPushState.call(window.history, state, title, path);
-//    window.dispatchEvent(new Event("popstate"));
-//  };
-//  function generate() {
-//    this.setState({ path: window.location.pathname });
-//  }
-//  window.addEventListener("popstate", generate);
-//  return {
-//    type: routes[this.state.path].path,
-//    attributes: routes[this.state.path].props,
-//  };
-//}
+// function BrowserRouter({ routes }) {
+//   window.history.pushState = function (state, title, path) {
+//     oldPushState.call(window.history, state, title, path);
+//     window.dispatchEvent(new Event("popstate"));
+//   };
+//   function generate() {
+//     this.setState({ path: window.location.pathname });
+//   }
+//   window.addEventListener("popstate", generate);
+//   return {
+//     type: routes[this.state.path].path,
+//     attributes: routes[this.state.path].props,
+//   };
+// }
