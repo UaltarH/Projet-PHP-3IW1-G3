@@ -952,6 +952,7 @@ class Article extends AbstractRepository
         $comment = new Comment();
         $commentArticle = new Comment_article();
         $articleId = "";
+        $message = "Une erreur est survenue";
 
         if (isset($_POST["comment"], $_SESSION["token"], $_POST["articleId"])) {
             $articleId = $_POST['articleId'];
@@ -964,7 +965,8 @@ class Article extends AbstractRepository
             $commentArticle->setCommentId($commentFromBDD->getId());
             $commentArticle->setArticleId($articleId);
             $commentArticleModel->insertIntoJoinTable($commentArticle);
+            $message = "Votre commentaire est en attente de modération";
         }
-        header("Location: /articles/article?id=$articleId");
+        header("Location: /articles/article?id=$articleId&message=$message");
     }
 }
