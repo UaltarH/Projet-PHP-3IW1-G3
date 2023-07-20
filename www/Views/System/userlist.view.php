@@ -73,10 +73,10 @@ include "/var/www/html/Views/Partials/editUserModal.ptl.php" ?>
                 });
 
                 $('#closeModal').on('click', function(e){ handleCloseEditModal(); });
-                $('input[name="submitEditUser"]').on('click', function(e) { handleEditSubmit(e, table); });
-                $('input[name="submitCreateUser"]').on('click', function(e) { handleCreateSubmit(e, table); });
             }
         });
+        $('input[name="submitEditUser"]').on('click', function(e) { handleEditSubmit(e, table); });
+        $('input[name="submitCreateUser"]').on('click', function(e) { handleCreateSubmit(e, table); });
     });
 
     

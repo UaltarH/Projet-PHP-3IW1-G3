@@ -1,20 +1,15 @@
 <?php
-//cette classe represente le originator dans le design pattern Memento
-
+//cette classe represente le memento dans le design pattern Memento
 namespace App\Models;
 
 
-class Article extends AbstractModel
+class Article_Memento extends AbstractModel
 {
     private string $id = "0";
-    protected string $content;
     protected string $title;
+    protected string $content;
     protected string $created_date;
-    protected string $updated_date;
-    protected string $category_id;
-
-    public function __construct(){
-    }
+    protected string $article_id;
 
     /**
      * @return string
@@ -33,31 +28,31 @@ class Article extends AbstractModel
     }
 
     /**
-    * @return String
-    */
+     * return string
+     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
     /**
-     * @param String $title
-     */
+     * @param string $title 
+     */ 
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
     /**
-    * @return String
-    */
+     * return string
+     */
     public function getContent(): string
     {
         return $this->content;
     }
 
     /**
-     * @param String $content
+     * @param string $content 
      */
     public function setContent(string $content): void
     {
@@ -65,15 +60,15 @@ class Article extends AbstractModel
     }
 
     /**
-    * @return String
-    */
+     * return string
+     */
     public function getCreatedDate(): string
     {
         return $this->created_date;
     }
 
     /**
-     * @param String $content
+     * @param string $created_date 
      */
     public function setCreatedDate(string $created_date): void
     {
@@ -81,34 +76,18 @@ class Article extends AbstractModel
     }
 
     /**
-    * @return String
-    */
-    public function getUpdatedDate(): string
-    {
-        return $this->updated_date;
-    }
-
-    /**
-     * @param String $content
+     * return string
      */
-    public function setUpdatedDate(string $updated_date): void
+    public function getArticleId(): string
     {
-        $this->updated_date = $updated_date;
+        return $this->article_id;
     }
 
     /**
-     * @return string
+     * @param string $article_id 
      */
-    public function getCategoryId(): string
+    public function setArticleId(string $article_id): void
     {
-        return $this->category_id;
-    }
-
-    /**
-    * @param string $id
-    */
-    public function setCategoryId(string $category_id): void
-    {
-        $this->category_id = $category_id;
+        $this->article_id = $article_id;
     }
 }

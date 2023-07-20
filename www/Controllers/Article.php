@@ -2,13 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Core\SQL;
 use App\Core\View;
 use App\Core\Config;
 use App\Core\Errors;
 
 use App\Models\Article as ArticleModel;
 use App\Models\Article_Category;
+use App\Models\Article_Memento;
 use App\Models\Game_Category;
 use App\Models\Game;
 use App\Models\Comment;
@@ -17,9 +17,11 @@ use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Article_content;
 use App\Models\JoinTable\Game_Article;
 
+use App\Models\User;
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ArticleCategoryRepository;
+use App\Repository\ArticleMementoRepository;
 use App\Repository\GameArticleRepository;
 use App\Repository\GameCategoryRepository;
 use App\Repository\GameRepository;
@@ -28,8 +30,12 @@ use App\Repository\ArticleContentRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ContentRepository;
 
+use App\Repository\UserRepository;
+use function App\Core\TokenJwt\getAllInformationsFromToken;
+use function App\Core\TokenJwt\validateJWT;
 use function App\Services\AddFileContent\AddFileContentFunction;
 use function App\Services\HttpMethod\getHttpMethodVarContent;
+use function App\Core\TokenJwt\getSpecificDataFromToken;
 
 require_once '/var/www/html/Services/HttpMethod.php';
 require_once '/var/www/html/Services/AddFileContent.php';
@@ -47,6 +53,8 @@ class Article extends AbstractRepository
     private ArticleContentRepository $articleContentRepository;
     private CommentRepository $commentRepository;
     private ContentRepository $contentRepository;
+    private ArticleMementoRepository $articleMementoRepository;
+    private UserRepository $userRepository;
 
     public function __construct()
     {
@@ -60,6 +68,8 @@ class Article extends AbstractRepository
         $this->articleContentRepository = new ArticleContentRepository();
         $this->commentRepository = new CommentRepository();
         $this->contentRepository = new ContentRepository();
+        $this->articleMementoRepository = new ArticleMementoRepository();
+        $this->userRepository = new UserRepository();
     }
 
 
@@ -566,9 +576,9 @@ class Article extends AbstractRepository
             if (!empty($_POST["content"])) {
                 //avant de set le content on doit parser le content pour trouver les balises img et les remplacer par les paths des images si il yen a de nouvelles:
 
-                $originContent = $_POST['content'];
+                $content = $_POST['content'];
                 $pattern = '/<img[^>]+src="([^">]+)"/';
-                preg_match_all($pattern, $originContent, $matches);
+                preg_match_all($pattern, $content, $matches);
 
                 $srcImages = $matches[1];
 
@@ -600,16 +610,14 @@ class Article extends AbstractRepository
                             //image article ajouté
                             //remplacer la balise img dans originContent
                             $replaceSrc = "/uploads/articles/" . $articleName . "/" . $filename; //on fait ca car avec le path entier ca ne marche pas dans l'htlm
-                            $newContent = str_replace($src, $replaceSrc, $originContent);
+                            $content = str_replace($src, $replaceSrc, $content);
                         } else {
                             //image article non ajouté en bdd     
                             echo json_encode(['success' => false, 'error' => $responseAddContent->message]);
                         }
                     }
                 }
-
-
-                $article->setContent($newContent);
+                $article->setContent($content);
             }
             if (!empty($_POST["editArticle-form-title"])) {
                 $whereSql = ["title" => $_POST['editArticle-form-title']];
@@ -626,8 +634,40 @@ class Article extends AbstractRepository
             }
             $article->setUpdatedDate(date("Y-m-d H:i:s"));
 
+            //avant de mettre a jour l'article il faut recuperer son ancien content pour le l'enregistrer dans la table article content 
+            $articleAncien = new ArticleModel();
+            $articleAncien = $this->articleRepository->getOneWhere(["id" => $_POST["id"]], $articleAncien);
+            $oldContent = $articleAncien->getContent();
+
             if ($this->articleRepository->save($article)->success) {
-                echo json_encode(['success' => true]);
+                //mtn on peut inserer dans la table article memento l'ancien content de l'article
+
+                //recuperer le nombre de memento deja enregistré pour cet article, pour ainsi savoir la version a enregistré
+
+                $newArticleMemento = new Article_Memento();
+
+                $result = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["id"]], $newArticleMemento);
+
+                if (is_bool($result)) {
+                    $newArticleMemento->setTitle("version 1");
+                } else {
+                    $newArticleMemento->setTitle("version " . (count($result) + 1));
+                }
+                $newArticleMemento->setContent($oldContent);
+                $newArticleMemento->setCreatedDate(date("Y-m-d H:i:s"));
+                $newArticleMemento->setArticleId($_POST["id"]);
+
+                if ($this->articleMementoRepository->save($newArticleMemento)->success) {
+                    //memento added in bdd
+                    echo json_encode(['success' => true]);
+                    exit;
+                } else {
+                    //erreur sql : memento non ajouté en bdd
+                    http_response_code(400);
+                    Errors::define(500, 'Internal Server Error');
+                    echo json_encode(['success' => false]);
+                }
+
             } else {
                 //erreur sql : article non ajouté en bdd
                 http_response_code(400);
@@ -643,6 +683,46 @@ class Article extends AbstractRepository
             echo json_encode(['success' => false]);
         }
     }
+
+    public function getAllArticlesMomento()
+    {
+        header('Content-Type: application/json');
+        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+        if (!empty($_POST["article_id"])) {
+            $articlesMemento = new Article_Memento();
+            $articlesMemento = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["article_id"]], $articlesMemento);
+            if (is_bool($articlesMemento)) {
+                echo json_encode(['success' => false]);
+                exit;
+            } else {
+                //serialize date :
+                $serializedData = [];
+                foreach ($articlesMemento as $memento) {
+                    $serializedData[] = [
+                        'id' => $memento->getId(),
+                        'title' => $memento->getTitle(),
+                        'content' => $memento->getContent(),
+                        'created_date' => $memento->getCreatedDate(),
+                        'article_id' => $memento->getArticleId()
+                    ];
+                }
+
+                echo json_encode(['success' => true, 'articlesMemento' => $serializedData]);
+                exit;
+            }
+        } else {
+            //manque des informations dans les posts 
+            http_response_code(400);
+            Errors::define(400, 'Invalid Info');
+            echo json_encode(['success' => false]);
+        }
+
+    }
+
 
     public function deleteArticle()
     {
@@ -813,7 +893,7 @@ class Article extends AbstractRepository
 
     public function oneArticle()
     {
-        if (empty($_GET["id"])){
+        if (empty($_GET["id"])) {
             header("Location: /articles");
             return;
         }
@@ -825,6 +905,7 @@ class Article extends AbstractRepository
         $commentArticleModel = $this->commentArticleRepository;
         $articleModel = $this->articleRepository;
         $articleCategoryModel = $this->articleCategoryRepository;
+        $userModel = $this->userRepository;
 
         $whereSql = ["id" => $articleId];
         $article = $articleModel->getOneWhere($whereSql, new \App\Models\Article());
@@ -834,14 +915,22 @@ class Article extends AbstractRepository
 
         $comments = [];
         foreach ($commentArticles as $commentArticle) {
-            $whereSql = ["id" => $commentArticle->getCommentId()];
+            $whereSql = [
+                "id" => $commentArticle->getCommentId(),
+                "accepted" => true,
+                "moderated" => true,
+            ];
             $comment = $commentModel->getOneWhere($whereSql, new Comment());
-            $comments[] = $comment;
+            if ($comment) {
+                $whereSql = ["id" => $comment->getUserId()];
+                $user = $userModel->getOneWhere($whereSql, new User());
+                $comments[] = ["comment" => $comment, "user" => $user->getPseudo()];
+            }
         }
 
         $whereSql = ["article_id" => $article->getId()];
         $articleGame = $articleGameModel->getOneWhere($whereSql, new Game_Article());
-        if ($articleGame){
+        if ($articleGame) {
             $whereSql = ["id" => $articleGame->getJeuxId()];
             $game = $jeuxModel->getOneWhere($whereSql, new Game());
             $view->assign("game", $game);
@@ -854,5 +943,28 @@ class Article extends AbstractRepository
         $view->assign("article", $article);
         $view->assign("comments", $comments);
         $view->assign("category", $category);
+    }
+
+    public function postComment()
+    {
+        $commentModel = $this->commentRepository;
+        $commentArticleModel = $this->commentArticleRepository;
+        $comment = new Comment();
+        $commentArticle = new Comment_article();
+        $articleId = "";
+
+        if (isset($_POST["comment"], $_SESSION["token"], $_POST["articleId"])) {
+            $articleId = $_POST['articleId'];
+            $token = $_SESSION["token"];
+            $userId = getSpecificDataFromToken($token, "id");
+            $comment->setContent($_POST["comment"]);
+            $comment->setUserId($userId);
+            $commentId = $commentModel->save($comment)->idNewElement;
+            $commentFromBDD = $commentModel->getOneWhere(["id" => $commentId], new Comment());
+            $commentArticle->setCommentId($commentFromBDD->getId());
+            $commentArticle->setArticleId($articleId);
+            $commentArticleModel->insertIntoJoinTable($commentArticle);
+        }
+        header("Location: /articles/article?id=$articleId");
     }
 }

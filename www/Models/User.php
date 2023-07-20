@@ -116,6 +116,11 @@ class User extends AbstractModel
         $this->password = password_hash($password, PASSWORD_DEFAULT);
     }
 
+    public function setPasswordWithoutHash(string $password): void
+    {
+        $this->password = $password;
+    }
+
 
     public function getEmailConfirmation(): bool
     {

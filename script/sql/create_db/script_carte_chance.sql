@@ -55,7 +55,7 @@ CREATE TABLE carte_chance_comment
 (
     id            UUID    DEFAULT uuid_generate_v4() UNIQUE,
     content       TEXT                  NOT NULL,
-    creation_date DATE                  NOT NULL,
+    creation_date DATE    DEFAULT CURRENT_DATE NOT NULL,
     moderated     BOOLEAN DEFAULT FALSE NOT NULL,
     accepted      BOOLEAN DEFAULT FALSE NOT NULL,
     user_id       UUID,
@@ -81,6 +81,17 @@ CREATE TABLE carte_chance_article
     category_id  UUID,
     PRIMARY KEY (id),
     FOREIGN KEY (category_id) REFERENCES carte_chance_article_category (id) ON DELETE CASCADE
+);
+
+CREATE TABLE carte_chance_article_memento
+(
+    id           UUID DEFAULT uuid_generate_v4(),
+    title        VARCHAR(64) NOT NULL UNIQUE,
+    content      TEXT        NOT NULL,
+    created_date DATE        NOT NULL,
+    article_id  UUID,
+    PRIMARY KEY (id),
+    FOREIGN KEY (article_id) REFERENCES carte_chance_article (id) ON DELETE CASCADE
 );
 
 -- CREATE TABLE carte_chance_page (

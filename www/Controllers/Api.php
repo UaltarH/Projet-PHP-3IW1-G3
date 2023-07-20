@@ -182,12 +182,13 @@ class Api
             $user->setId($_POST["id"]);
             if($this->userRepository->save($user)->success) {
                 echo json_encode(['success' => true]);
+                exit();
             }
             else {
                 Errors::define(500, 'Internal Server Error');
                 echo json_encode(['success' => false, 'message'=>'Internal Server Error']);
+                exit();
             }
-            exit();
         }
         else {
             Errors::define(500, 'Invalid Info');

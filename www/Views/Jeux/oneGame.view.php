@@ -1,12 +1,18 @@
 <div class="game">
+    <?php if (isset($imageUrl)): ?>
+        <img src="/<?= $imageUrl ?>">
+    <?php endif; ?>
     <h2><?= $jeu->getTitle() ?></h2>
     <h7><?= $categorie->getCategoryName() ?></h7>
     <?php if (isset($articles)): ?>
         <?php foreach ($articles as $article): ?>
             <div class="mt-5 border p-2" style="min-width: 50vw">
-                <h5><a href='/articles/article?id=<?= $article->getId() ?>' style="text-decoration: none; color: black;"><?= $article->getTitle() ?></a></h5>
+                <h5><a href='/articles/article?id=<?= $article->getId() ?>'
+                       style="text-decoration: none; color: black;"><?= $article->getTitle() ?></a></h5>
                 <p><?= $article->getContent() ?></p>
-                <div class="toggle-table-btn" onclick="toggleTable(this)" style="cursor: pointer">Afficher les commentaires</div>
+                <div class="toggle-table-btn" onclick="toggleTable(this)" style="cursor: pointer">Afficher les
+                    commentaires
+                </div>
                 <?php if (isset($articles)): ?>
                     <?php foreach ($commentsByArticles as $commentsByArticle): ?>
                         <table class="table table-responsive table-borderless" style="display: none;">
