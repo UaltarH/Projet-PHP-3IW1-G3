@@ -17,7 +17,6 @@ if ($hasNonEmptySubArray): ?>
                 <tr class="bg-light border-1">
                     <th scope="col" width="10%">Date</th>
                     <th scope="col" width="33%">Titre</th>
-                    <th scope="col" width="33%">Contenu</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -26,8 +25,7 @@ if ($hasNonEmptySubArray): ?>
                         <tr style="cursor: pointer" onclick="rowClicked('articles/article?id=<?= $articles->getId() ?>')" class="border-1">
                             <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getCreatedDate() ?></td>
                             <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getTitle() ?></td>
-                            <td class="<?php echo ($counter % 2 == 0) ? 'bg-light' : 'bs-gray'; ?>"><?= $articles->getContent() ?></td>
-                        </tr>
+                        </tr>git add .
                         <?php $counter++; ?>
                 <?php endforeach; ?>
                 </tbody>
