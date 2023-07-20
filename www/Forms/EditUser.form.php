@@ -5,7 +5,7 @@ class EditUser extends Validator
 {
     public string $method = "POST";
     protected array $config = [];
-    public function getConfig($roles): array
+    public function setConfig($roles): void
     {
         $this->config = [
             "config"=>[
@@ -68,7 +68,6 @@ class EditUser extends Validator
                     "max"=>10,
                     "error"=>"Numéro de téléphone incorrect",
                 ],
-                //TODO : select join role/user
                 "role"=>[
                     "id"=>"edit-user-form-role",
                     "class"=>"form-input",
@@ -97,6 +96,9 @@ class EditUser extends Validator
                 ],
             ]
         ];
+    }
+    public function getConfig(): array
+    {
         return $this->config;
     }
 }

@@ -34,7 +34,7 @@
 
 <!-- script js pour la datatable -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
 
 // Formulaire à plusieurs étapes
