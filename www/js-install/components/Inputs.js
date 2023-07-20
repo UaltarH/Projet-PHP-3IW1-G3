@@ -53,7 +53,6 @@ export let phone_number = () =>
     "Entrez votre numéro de téléphone",
     "Entrez votre numéro de téléphone"
   );
-
 export let password = () =>
   InputGroup(
     "password",
@@ -88,7 +87,6 @@ export let bddPrefix = () =>
     "",
     "Entrez le préfixe de votre base de données."
   );
-
 export let siteName = () =>
   InputGroup(
     "siteName",
@@ -99,7 +97,6 @@ export let siteName = () =>
     "",
     "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
   );
-
 export let siteDescription = () =>
   InputGroup(
     "siteDescription",
@@ -110,7 +107,6 @@ export let siteDescription = () =>
     "",
     "Entrez la description du site souhaité."
   );
-
 export let adminEmail = () =>
   InputGroup(
     "adminEmail",
@@ -120,4 +116,15 @@ export let adminEmail = () =>
     "adminEmail",
     "",
     "Entrez l'adresse mail de l'administrateur."
+  );
+
+export let siteName = () =>
+  InputGroup(
+    "siteName",
+    "Nom du site",
+    "text",
+    "siteName",
+    "siteName",
+    "",
+    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
   );
