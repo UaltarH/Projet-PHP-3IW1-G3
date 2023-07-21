@@ -1,6 +1,6 @@
 ---
 installation:
-  done: true
+  done: fase
   on-going: false
 bdd:
   host: database
@@ -12,13 +12,13 @@ bdd:
   user:
     pseudo: Gauthier
     firstname: Gauthier
-    lastname: LO
+    lastname: Lo
     email: lo.gauthier.glo@gmail.com
     phone: 0651957268
     password: Azerty1!
 errorLog: explicit
 website:
-  name: Mon site
+  name: Mon site&#039;
   description: Ma description&#039;
   baseurl: http://localhost/
 mail:
