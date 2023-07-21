@@ -14,8 +14,8 @@ if (isset($_SESSION["token"])) {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
-    <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
+    <title><?= \App\Core\Config::getConfig()['website']['name'] ?></title>
+    <meta name="description" content="<?= \App\Core\Config::getConfig()['website']['description'] ?>">
     <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
 
@@ -40,7 +40,7 @@ if (isset($_SESSION["token"])) {
     <div class="d-flex align-items-center justify-content-between">
         <a href="/sys/dashboard" class="logo d-flex align-items-center">
             <img src="/Assets/img/logo.png" alt="">
-            <span class="d-none d-lg-block"><?=\App\Core\Config::getConfig()['website']['name']?> Backoffice</span>
+            <span class="d-none d-lg-block"><?= \App\Core\Config::getConfig()['website']['name'] ?> Backoffice</span>
         </a>
         <i class="bi bi-list toggle-sidebar-btn"></i>
     </div>
@@ -63,7 +63,7 @@ if (isset($_SESSION["token"])) {
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
+                        <a class="dropdown-item d-flex align-items-center" href="/profil">
                             <i class="bi bi-person"></i>
                             <span>Mon compte</span>
                         </a>
@@ -72,7 +72,7 @@ if (isset($_SESSION["token"])) {
                         <hr class="dropdown-divider">
                     </li>
                     <li>
-                        <a class="dropdown-item d-flex align-items-center" href="logout">
+                        <a class="dropdown-item d-flex align-items-center" href="/logout">
                             <i class="bi bi-box-arrow-right"></i>
                             <span>Se déconnecter</span>
                         </a>
@@ -127,7 +127,6 @@ if (isset($_SESSION["token"])) {
 <?php $this->partial("footer", []) ?>
 
 
-
 </body>
 
 <script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -135,23 +134,37 @@ if (isset($_SESSION["token"])) {
 
 <script type="text/javascript">
     const path = window.location.pathname;
-    switch(path){
+    switch (path) {
         case "/sys/dashboard":
             console.log("test");
-            document.querySelector("#navbar-links-dash").classList.remove("collapsed");            
+            document.querySelector("#navbar-links-dash").classList.remove("collapsed");
             break;
         case "/sys/user/list":
-            document.querySelector("#navbar-links-user").classList.remove("collapsed");            
+            document.querySelector("#navbar-links-user").classList.remove("collapsed");
             break;
         case "/sys/article/articles-management":
-            document.querySelector("#navbar-links-article").classList.remove("collapsed");            
+            document.querySelector("#navbar-links-article").classList.remove("collapsed");
             break;
         case "/sys/comment/list":
-            document.querySelector("#navbar-links-comments").classList.remove("collapsed");            
+            document.querySelector("#navbar-links-comments").classList.remove("collapsed");
             break;
         default:
             break;
     }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $(".dropdown-menu").hide();
+
+        $(".nav-profile").click(function (event) {
+            event.preventDefault();
+
+            $(".dropdown-menu").toggle();
+        });
+    });
 </script>
 
 </html>
