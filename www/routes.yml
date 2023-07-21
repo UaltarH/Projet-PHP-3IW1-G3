@@ -86,11 +86,6 @@ installer:
     action: setDatabase
     access: [ALL]
 
-post-comment:
-  controller: Article
-  action: postComment
-  access: [ USER, MODERATOR, ADMIN ]
-
 trucs-et-astuces:
   controller: Article
   action: allTrucsEtAstuces
@@ -144,7 +139,7 @@ sys:
       access: [ ADMIN, MODERATOR ]
     get-all-article-version:
       controller: Article
-      action: getAllArticlesMomento
+      action: getAllArticlesMemento
       access: [ ADMIN, MODERATOR ]
 
   dashboard:
@@ -166,7 +161,6 @@ sys:
       action: moderate
       access: [ ADMIN, MODERATOR ]
 
-## todo : test method for Api calls
 api:
   user:
     add:

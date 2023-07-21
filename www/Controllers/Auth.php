@@ -5,9 +5,11 @@ namespace App\Controllers;
 use App\Core\Config;
 use App\Core\Errors;
 use App\Core\View;
+
 use App\Forms\EditProfileFront;
 use App\Forms\Register;
 use App\Forms\Connection;
+
 use App\Models\Role;
 use App\Models\User;
 use App\Forms\ResetPassword;
@@ -149,6 +151,12 @@ class Auth
 
     public function emailConfirmation(): void
     {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         if (isset($_GET['pseudo'], $_GET['key']) and !empty($_GET['pseudo']) and !empty($_GET['key'])) {
             $view = new View("Auth/emailConfirmation", "front");
             $messageInfo = [];
@@ -236,6 +244,12 @@ class Auth
 
     public function editProfile(): void
     {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $id = getSpecificDataFromToken($_SESSION['token'], "id");
         $user = $this->userRepository->getOneWhere(["id" => $id], new User);
         foreach ($_POST as $key => $value) {

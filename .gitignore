@@ -2,6 +2,7 @@
 .idea/
 .DS_Store
 www/public/uploads/
+www/uploads/
 dfsefs
 www/public/assets/css/style.css.map
 style.css

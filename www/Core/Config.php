@@ -27,6 +27,15 @@ class Config
         }
         self::setConfig($configFileName);
     }
+
+    public function setEnvironmentVariable($keyVariable, $valueVariable){
+        $configFileName = constant('APPLICATION_'.$this->getEnvironment().'_PATH');
+        $config = self::getConfig();
+        $config[$keyVariable] = $valueVariable;
+        $yaml = yaml_emit($config);
+        file_put_contents($configFileName, $yaml);
+    }
+
     /**
      * @return string
      */

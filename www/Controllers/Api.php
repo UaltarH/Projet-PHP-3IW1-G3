@@ -5,9 +5,9 @@ namespace App\Controllers;
 use App\Core\Config;
 use App\Core\Errors;
 use App\Core\Validator;
-use App\Models\Article;
+
 use App\Models\User;
-use App\Repository\ArticleRepository;
+
 use App\Repository\UserRepository;
 
 use function App\Services\HttpMethod\getHttpMethodVarContent;
@@ -16,11 +16,9 @@ require_once '/var/www/html/Services/HttpMethod.php';
 class Api
 {
     private UserRepository $userRepository;
-    private ArticleRepository $articleRepository;
     private array $config;
     public function __construct() {
         $this->userRepository = new UserRepository();
-        $this->articleRepository = new ArticleRepository();
         $this->config = Config::getInstance()->getConfig();
     }
 
@@ -46,7 +44,7 @@ class Api
                 $user->setPassword(trim($_POST['pseudo']));
                 $user->setRoleId($_POST["role"]);
                 $user->setPhoneNumber($_POST['phone_number']);
-                $user->setEmailConfirmation(false);
+                $user->setEmailConfirmation(true);
                 $user->setDateInscription(date("Y-m-d H:i:s"));
 
                 if($this->userRepository->save($user)->success) {

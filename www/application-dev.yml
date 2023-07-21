@@ -1,4 +1,7 @@
 ---
+installation:
+  done: false
+  on-going: false
 bdd:
   host: database
   dbname: esgi
@@ -11,7 +14,9 @@ website:
   name: La Carte Chance
   description: Retrouvez tous vos jeux de societe preferes sur notre site !
   baseurl: http://localhost/
-installation:
-  done: false
-  on-going: true
+mail:
+  mailer: smtp
+  host: mailcatcher
+  port: 1025
+  mailFrom: carte_chance_admin@myges.fr
 ...

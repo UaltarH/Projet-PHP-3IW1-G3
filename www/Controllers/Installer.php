@@ -184,8 +184,6 @@ class Installer extends Validator
         $siteName = $data['siteName'];
         $siteDescription = $data['siteDescription'];
         $adminEmail = $data['adminEmail'];
-
-
     }
 
     /**

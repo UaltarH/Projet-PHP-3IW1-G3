@@ -3,21 +3,15 @@
 namespace App\Controllers;
 
 use App\Core\View;
+use App\Core\Errors;
 
 use App\Forms\CreateUser;
 use App\Forms\EditUser;
-use App\Repository\ArticleRepository;
-use App\Repository\ArticleCategoryRepository;
-use App\Repository\GameArticleRepository;
-use App\Repository\GameCategoryRepository;
-use App\Repository\GameRepository;
+
 use App\Repository\UserRepository;
 
 
 use mysql_xdevapi\Exception;
-
-use function App\Services\AddFileContent\AddFileContentFunction;
-require_once '/var/www/html/Services/AddFileContent.php';
 
 class System
 {
@@ -30,8 +24,6 @@ class System
 
     public function userlist(): void
     {
-        //TODO: access right
-
         $roles = $this->userRepository->fetchRoles();
         $rolesOption = [];
         $rolesOption[""] = "Choose a role";
@@ -57,6 +49,6 @@ class System
                 die('Error 404');
             }
         }
-    } // end of userList()
+    } 
 
 }

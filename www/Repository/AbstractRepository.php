@@ -213,7 +213,7 @@ abstract class AbstractRepository
             }
             //securisé les injections xss
             if(is_string($value) ){
-                if(self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article"){
+                if(self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article" && self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article_memento"){
                     $columns[$key] = htmlspecialchars($value);
                 } else{
                     if($key != "content"){

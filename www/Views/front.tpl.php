@@ -12,17 +12,19 @@
 </head>
 
 <body>
-    <main>
-        <div class="response-message"></div>
-        <?php
-        if(\App\Core\Config::getConfig()['installation']['done'])
-            $this->partial("header", [])
-        ?>
+    <div class="content-wrapper">
+        <main>
+            <div class="response-message"></div>
+            <?php
+            if(\App\Core\Config::getConfig()['installation']['done'])
+                $this->partial("header", [])
+            ?>
 
-        <div class="container">
-            <?php include $this->view; ?>
-        </div>
-    </main>
+            <div class="container">
+                <?php include $this->view; ?>
+            </div>
+        </main>
+    </div>
     <?php
     if(\App\Core\Config::getConfig()['installation']['done'])
         $this->partial("footer", [])

@@ -7,11 +7,13 @@ use App\Core\View;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\Content;
-use App\Models\JoinTable\Comment_article;
 use App\Models\Game_Category;
 use App\Models\Game;
+
+use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Game_Article;
 use App\Models\JoinTable\Game_Content;
+
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentArticleRepository;
@@ -62,6 +64,12 @@ class JeuxController extends AbstractRepository
 
     public function oneGame()
     {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         $view = new View("Jeux/oneGame", "front");
         $jeuxModel = $this->gameRepository;
         $categorieJeuxModel = $this->gameCategoryRepository;

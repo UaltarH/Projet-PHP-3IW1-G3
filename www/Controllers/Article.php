@@ -13,11 +13,12 @@ use App\Models\Game_Category;
 use App\Models\Game;
 use App\Models\Comment;
 use App\Models\Content;
+use App\Models\User;
+
 use App\Models\JoinTable\Comment_article;
 use App\Models\JoinTable\Article_content;
 use App\Models\JoinTable\Game_Article;
 
-use App\Models\User;
 use App\Repository\AbstractRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ArticleCategoryRepository;
@@ -29,10 +30,8 @@ use App\Repository\CommentArticleRepository;
 use App\Repository\ArticleContentRepository;
 use App\Repository\CommentRepository;
 use App\Repository\ContentRepository;
-
 use App\Repository\UserRepository;
-use function App\Core\TokenJwt\getAllInformationsFromToken;
-use function App\Core\TokenJwt\validateJWT;
+
 use function App\Services\AddFileContent\AddFileContentFunction;
 use function App\Services\HttpMethod\getHttpMethodVarContent;
 use function App\Core\TokenJwt\getSpecificDataFromToken;
@@ -75,6 +74,12 @@ class Article extends AbstractRepository
 
     public function getArticle()
     {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         $view = new View("Article/article", "front");
         //tester si il y a un id dans l'url( avec GET )(le numéro represente l'id de l'article en bdd)
         if (isset($_GET['number'])) {
@@ -184,8 +189,12 @@ class Article extends AbstractRepository
 
     public function articleDatatable(): void
     {
-        //TODO: access right
-        // deny access to this url
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -247,13 +256,12 @@ class Article extends AbstractRepository
 
     public function createArticleGame()
     {
-        header('Content-Type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
         }
-
+        header('Content-Type: application/json');        
 
         if (!empty($_POST["createArticleGame-form-titleGame"]) &&
             !empty($_POST["createArticleGame-form-categoryGame"]) &&
@@ -436,7 +444,7 @@ class Article extends AbstractRepository
     public function createArticleAboutGame()
     {
         header('Content-Type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
@@ -568,12 +576,12 @@ class Article extends AbstractRepository
 
     public function updateArticle()
     {
-        header('Content-Type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
-            echo json_encode("Bad Method");
+            echo json_encode(['success' => false]);
             exit;
         }
+        header('Content-Type: application/json');
 
         if (!empty($_POST["content"]) || !empty($_POST["editArticle-form-title"])) {
             $articleUpdate = new ArticleModel();
@@ -691,14 +699,15 @@ class Article extends AbstractRepository
         }
     }
 
-    public function getAllArticlesMomento()
+    public function getAllArticlesMemento()
     {
-        header('Content-Type: application/json');
-        if ($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
-            echo json_encode("Bad Method");
+            echo json_encode(['success' => false]);
             exit;
         }
+        header('Content-Type: application/json');
+
         if (!empty($_POST["article_id"])) {
             $articlesMemento = new Article_Memento();
             $articlesMemento = $this->articleMementoRepository->getAllWhere(["article_id" => $_POST["article_id"]], $articlesMemento);
@@ -900,6 +909,12 @@ class Article extends AbstractRepository
 
     public function oneArticle()
     {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         if (empty($_GET["id"])) {
             header("Location: /articles");
             return;
@@ -954,6 +969,12 @@ class Article extends AbstractRepository
 
     public function postComment()
     {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $commentModel = $this->commentRepository;
         $commentArticleModel = $this->commentArticleRepository;
         $comment = new Comment();
