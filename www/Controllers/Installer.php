@@ -32,7 +32,6 @@ class Installer extends Validator
         }
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
-        $hasErrors = false;
 
 
         // Accéder aux valeurs des champs du formulaire
@@ -52,19 +51,19 @@ class Installer extends Validator
         header('Content-Type: application/json; charset=utf-8');
         //$pseudo
         if ($validator->isEmpty($pseudo)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le pseudo est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($pseudo, 2)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le pseudo doit faire au moins 2 caractères', 'data' => $pseudo);
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMaxLength($pseudo, 20)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le pseudo doit faire au maximum 20 caractères');
             echo json_encode($response);
             exit();
@@ -72,18 +71,19 @@ class Installer extends Validator
 
         //$first_name
         if ($validator->isEmpty($first_name)) {
+            
             $response = array('success' => false, 'message' => 'Le prénom est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($first_name, 2)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le prénom doit faire au moins 2 caractères');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMaxLength($first_name, 20)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le prénom doit faire au maximum 20 caractères');
             echo json_encode($response);
             exit();
@@ -91,19 +91,19 @@ class Installer extends Validator
 
         //$last_name
         if ($validator->isEmpty($last_name)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le nom est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($last_name, 2)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le nom doit faire au moins 2 caractères');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMaxLength($last_name, 20)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le nom doit faire au maximum 20 caractères');
             echo json_encode($response);
             exit();
@@ -112,8 +112,14 @@ class Installer extends Validator
         //$email
 
         if ($validator->isEmpty($email)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'L\'email est vide');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isEmailValid($email)) {
+            echo $email;
+            $response = array('success' => false, 'message' => 'Email invalide');
             echo json_encode($response);
             exit();
         }
@@ -121,20 +127,20 @@ class Installer extends Validator
         // phone_number
 
         if ($validator->isEmpty($phone_number)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($phone_number, 10)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone doit faire au moins 10 caractères');
             echo json_encode($response);
             exit();
         }
 
         if (!$validator->isPhoneNumberValid($phone_number)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone est invalide');
             echo json_encode($response);
             exit();
@@ -143,45 +149,41 @@ class Installer extends Validator
         // password
 
         if ($validator->isEmpty($password)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le mot de passe est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($password, 8)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Le mot de passe doit faire au moins 8 caractères');
             echo json_encode($response);
             exit();
         }
 
         if (!$validator->isPasswordValid($password, $passwordConfirm)) {
-            $hasErrors = true;
+            
             $response = array('success' => false, 'message' => 'Les mots de passe ne correspondent pas');
             echo json_encode($response);
             exit();
         };
 
-        if (!$hasErrors) {
-            // Renvoyer une réponse JSON de succès
-            $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès',);
-            
-            // TODO : remplir fichier config
-            
-            $conf = Config::getInstance();
-            $conf->updateConfig(['bdd', 'user', 'pseudo'], $pseudo);
-            $conf->updateConfig(['bdd', 'user', 'firstname'], $first_name);
-            $conf->updateConfig(['bdd', 'user', 'lastname'], $last_name);
-            $conf->updateConfig(['bdd', 'user', 'email'], $email);
-            $conf->updateConfig(['bdd', 'user', 'phone'], $phone_number);
-            $conf->updateConfig(['bdd', 'user', 'password'], $password);
-            
-            echo json_encode($response);
-        } else {
-            // Renvoyer une réponse JSON avec un message d'erreur
-            $response = array('success' => false, 'message' => 'Internal Server Error');
-            echo json_encode($response);
-        }
+        // Renvoyer une réponse JSON de succès
+        
+        $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès',);
+
+        // TODO : remplir fichier config
+
+        $conf = Config::getInstance();
+        $conf->updateConfig(['bdd', 'user', 'pseudo'], $pseudo);
+        $conf->updateConfig(['bdd', 'user', 'firstname'], $first_name);
+        $conf->updateConfig(['bdd', 'user', 'lastname'], $last_name);
+        $conf->updateConfig(['bdd', 'user', 'email'], $email);
+        $conf->updateConfig(['bdd', 'user', 'phone'], $phone_number);
+        $conf->updateConfig(['bdd', 'user', 'password'], $password);
+
+        echo json_encode($response);
+
     }
 
     public function setDatabase()
@@ -192,20 +194,43 @@ class Installer extends Validator
         }
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
-        $hasErrors = false;
 
-        $bddPrefix = $data['bddPrefix'];
-        $siteName = $data['siteName'];
-        $siteDescription = $data['siteDescription'];
-        $adminEmail = $data['adminEmail'];
+        $bddPrefix = strtolower(htmlspecialchars(trim($data['bddPrefix'])));
+        $siteName = htmlspecialchars(trim($data['siteName']));
+        $siteDescription = htmlspecialchars(trim($data['siteDescription']));
+        $adminEmail = htmlspecialchars(trim($data['adminEmail']));
 
-        // TODO : faire les vérifications
-        // gerer les failles xss s'inspirer dans la methode save du repository abstract
+        $validator = new Validator();
+
+        if ($validator->isEmpty($siteName)) {
+            
+            $response = array('success' => false, 'message' => 'Nom du site vide');
+            echo json_encode($response);
+            exit();
+        }
+        if ($validator->isEmpty($siteDescription)) {
+            
+            $response = array('success' => false, 'message' => 'Description du site vide');
+            echo json_encode($response);
+            exit();
+        }
+        if ($validator->isEmpty($bddPrefix) || !$validator->isPrefixValid($bddPrefix)) {
+            
+            $response = array('success' => false, 'message' => 'Prefix invalide');
+            echo json_encode($response);
+            exit();
+        }
+        if ($validator->isEmpty($adminEmail) || !$validator->isEmailValid($adminEmail)) {
+            
+            $response = array('success' => false, 'message' => 'Email vide');
+            echo json_encode($response);
+            exit();
+        }
 
         $conf = Config::getInstance();
         $conf->updateConfig(['bdd', 'prefix'], $bddPrefix);
-        $conf->updateConfig(['website', 'name'], $siteName);    
-        $conf->updateConfig(['website', 'description'], $siteDescription);    
+        $conf->updateConfig(['website', 'name'], $siteName);
+        $conf->updateConfig(['website', 'description'], $siteDescription);
         $conf->updateConfig(['mail', 'mailFrom'], $adminEmail);
 
         $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès');
@@ -252,7 +277,24 @@ class Installer extends Validator
         try {
                 
             $pdo = new PDO("pgsql:host=" . $dbHost . ";dbname=" . $dbName . ";port=" . $dbPort , $dbUser , $dbPass);
-            $res = $pdo->exec($scriptSQLParsed);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
+            $queryPrepared = $pdo->prepare($scriptSQLParsed);
+            $res = $queryPrepared->execute();
+
+            if($res){
+                
+                //si le script a bien été executé, on met à jour le fichier de config
+                $conf = Config::getInstance();
+                $conf->updateConfig(['installation', 'done'], true);
+                $conf->updateConfig(['installation', 'on-going'], false);
+                $response = array('success' => true, 'message' => 'L\'initialisation du site a été effectuée avec succès');
+                echo json_encode($response);
+            }
+            else{
+                
+                $response = array('success' => false, 'message' => 'Erreur lors du lancement du script return false');
+                echo json_encode($response);
+            }
 
         } catch (PDOException $e) {
             // Gérer les erreurs de connexion ou d'exécution du script SQL
@@ -261,18 +303,7 @@ class Installer extends Validator
             echo json_encode($response);
         }
 
-        if($res){
-            //si le script a bien été executé, on met à jour le fichier de config
-            $conf = Config::getInstance();
-            $conf->updateConfig(['installation', 'done'], true);
-            $conf->updateConfig(['installation', 'on-going'], false);
-            $response = array('success' => true, 'message' => 'L\'initialisation du site a été effectuée avec succès');
-            echo json_encode($response);
-        }
-        else{
-            $response = array('success' => false, 'message' => 'Erreur lors du lancement du script return false');
-            echo json_encode($response);
-        }
+
 
     }
 }

@@ -108,7 +108,7 @@ class Article extends AbstractRepository
         $whereSql = ["category_name" => "Jeux"];
         $fkInfosQuery = [
             [
-                "table" => $this->config['bdd']['prefix'] . "article_category",
+                "table" => $this->config['bdd']['prefix'] . "_article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -134,7 +134,7 @@ class Article extends AbstractRepository
         $whereSql = ["category_name" => "Trucs et astuces"];
         $fkInfosQuery = [
             [
-                "table" => $this->config['bdd']['prefix'] . "article_category",
+                "table" => $this->config['bdd']['prefix'] . "_article_category",
                 "foreignKeys" => [
                     "originColumn" => "category_id",
                     "targetColumn" => "id"
@@ -215,37 +215,37 @@ class Article extends AbstractRepository
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => "carte_chance_game_article",
+                    "table" => $this->config['bdd']['prefix']."_game_article",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "id",
-                            "table" => "carte_chance_article"
+                            "table" => $this->config['bdd']['prefix']."_article"
                         ],
                         "targetColumn" => "article_id"
                     ]
                 ],
                 [
-                    "table" => "carte_chance_game",
+                    "table" => $this->config['bdd']['prefix']."_game",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "jeux_id",
-                            "table" => "carte_chance_game_article"
+                            "table" => $this->config['bdd']['prefix']."_game_article"
                         ],
                         "targetColumn" => "id"
                     ]
                 ],
                 [
-                    "table" => "carte_chance_article_category",
+                    "table" => $this->config['bdd']['prefix']."_article_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
-                            "table" => "carte_chance_article"
+                            "table" => $this->config['bdd']['prefix']."_article"
                         ],
                         "targetColumn" => "id"
                     ]
                 ],
                 [
-                    "table" => "carte_chance_game_category",
+                    "table" => $this->config['bdd']['prefix']."_game_category",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "category_id",
-                            "table" => "carte_chance_game"
+                            "table" => $this->config['bdd']['prefix']."_game"
                         ],
                         "targetColumn" => "id"
                     ]
