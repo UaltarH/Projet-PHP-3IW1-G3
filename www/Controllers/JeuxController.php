@@ -91,7 +91,7 @@ class JeuxController extends AbstractRepository
             $content = $contentModel->getOneWhere($whereSql, new Content());
 
             $url = $content->getPathContent();
-            $url = implode("/", array_slice(explode("/", $url), 4));
+            $url = implode("/", array_slice(explode("/", $url), 5));
             $view->assign("imageUrl", $url);
         }
 

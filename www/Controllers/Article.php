@@ -16,7 +16,7 @@ use App\Models\Content;
 use App\Models\User;
 
 use App\Models\JoinTable\Comment_article;
-use App\Models\JoinTable\Article_content;
+use App\Models\JoinTable\Article_Content;
 use App\Models\JoinTable\Game_Article;
 
 use App\Repository\AbstractRepository;
@@ -767,7 +767,7 @@ class Article extends AbstractRepository
         }
 
         //id des contents lié a l'article
-        $article_content = new Article_content();
+        $article_content = new Article_Content();
         $article_contents = $this->articleContentRepository->getAllWhere(["article_id" => $delete['id']], $article_content);
         $ids_contents = [];
         foreach ($article_contents as $article_content) {
