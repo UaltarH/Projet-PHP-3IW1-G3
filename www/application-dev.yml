@@ -1,6 +1,6 @@
 ---
 installation:
-  done: fase
+  done: false
   on-going: false
 bdd:
   host: database
