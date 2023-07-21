@@ -16,7 +16,7 @@ if (isset($_SESSION["token"])) {
     <meta charset="UTF-8">
     <title><?=\App\Core\Config::getConfig()['website']['name']?></title>
     <meta name="description" content="<?=\App\Core\Config::getConfig()['website']['description']?>">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="./style.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
 
     <meta charset="utf-8">

@@ -71,20 +71,20 @@ articles:
     action: oneArticle
     access: [ALL]
 
-set-admin:
+installer:
   controller: Installer
-  action: setAdmin
+  action: installer
   access: [ALL]
 
-set-database:
-  controller: Installer
-  action: setDatabase
-  access: [ALL]
+  set-admin:
+    controller: Installer
+    action: setAdmin
+    access: [ALL]
 
-post-comment:
-  controller: Article
-  action: postComment
-  access: [ USER, MODERATOR, ADMIN ]
+  set-database:
+    controller: Installer
+    action: setDatabase
+    access: [ALL]
 
 post-comment:
   controller: Article

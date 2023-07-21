@@ -42,9 +42,27 @@ $uriExploded = explode("?", $uriStr);
 $uriStr = strtolower(trim($uriExploded[0], "/"));
 
 $uri = [];
-if(empty($uriStr))
-    $uri[0] = "default";
-else $uri = explode('/', $uriStr);
+/**
+ *
+ */
+if(!Config::getConfig()['installation']['done'] ) {
+    if(!Config::getConfig()['installation']['on-going']) {
+        $uri[0] = "installer";
+    }
+    else {
+        if($uriStr !== "installer/set-admin" && $uriStr !== "installer/set-database" && $uriStr !== "installer"){
+            $uri[0] = "installer";
+        }
+        else {
+            $uri = explode('/', $uriStr);
+        }
+    }
+}
+else {
+    if(empty($uriStr))
+        $uri[0] = "default";
+    else $uri = explode('/', $uriStr);
+}
 if (!file_exists("../routes.yml")) {
     Errors::define(500, "Le fichier routes.yml n'existe pas");
     exit;

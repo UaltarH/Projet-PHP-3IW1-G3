@@ -94,6 +94,7 @@ class Auth
 
     public function register(): void
     {
+
         $form = new Register();
         $view = new View("Auth/register", "front");
         $view->assign("form", $form->getConfig());

@@ -2,15 +2,30 @@
 
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\Validator;
 use App\Core\Errors;
+use App\Core\View;
 
 
 class Installer extends Validator
 {
-
+    public function installer()
+    {
+        if(Config::getConfig()['installation']['done']) {
+            Errors::define(400, "Bad Request");
+            exit();
+        }
+        $view = new View('Installer/installer', "front");
+        //écrire dans application-[ENV].yml => installation.on-going = true
+        Config::updateConfig(['installation', 'on-going'], true);
+    }
     public function setAdmin()
     {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            Errors::define(400, "La méthode utilisée n'est pas POST");
+            exit();
+        }
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
         $hasErrors = false;
@@ -30,11 +45,7 @@ class Installer extends Validator
 
         // Effectuer les traitements nécessaires avec les valeurs des champs
 
-        // Vérifier que la méthode est utilisée est bien POST
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            Errors::define(500, "La méthode utilisée n'est pas POST");
-        }
-
+        header('Content-Type: application/json; charset=utf-8');
         //$pseudo
         if ($validator->isEmpty($pseudo)) {
             $hasErrors = true;
@@ -57,7 +68,6 @@ class Installer extends Validator
 
         //$first_name
         if ($validator->isEmpty($first_name)) {
-            $hasErrors = true;
             $response = array('success' => false, 'message' => 'Le prénom est vide');
             echo json_encode($response);
             exit();
@@ -151,6 +161,7 @@ class Installer extends Validator
         if (!$hasErrors) {
             // Renvoyer une réponse JSON de succès
             $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès',);
+            // TODO : remplir fichier config
             echo json_encode($response);
         } else {
             // Renvoyer une réponse JSON avec un message d'erreur
@@ -161,6 +172,10 @@ class Installer extends Validator
 
     public function setDatabase()
     {
+        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+            Errors::define(400, "La méthode utilisée n'est pas POST");
+            exit();
+        }
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
         $hasErrors = false;
@@ -169,5 +184,16 @@ class Installer extends Validator
         $siteName = $data['siteName'];
         $siteDescription = $data['siteDescription'];
         $adminEmail = $data['adminEmail'];
+
+
+    }
+
+    /**
+     * Init the website
+     * @return void
+     */
+    public function init()
+    {
+    //TODO : écrire à la toute fin de la page 2 dans le fichier application-[ENV].yml => installation.on-going = false && installation.done = true;
     }
 }
