@@ -58,7 +58,45 @@ export default function Page2() {
         if (errorElement) {
           errorElement.remove();
         }
-        window.location.href = "/login";
+        fetch("/installer/set-database", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+          },
+        }).then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Erreur lors de l'envoi du formulaire.");
+          }
+        }).then((responseData) => {
+          console.log(responseData);
+
+          if(responseData.success === true) {
+            //fetch pour lancer l'initialisation du site (creation sql)
+            fetch("/installer/init-site", {
+              method: "POST",
+              body: JSON.stringify(data),
+              headers: {
+                "Content-Type": "application/json; charset=utf-8",
+              },
+            }).then((response) => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw new Error("Erreur lors de l'envoi du formulaire.");
+              }
+            }).then((responseData) => {
+              if(responseData.success === true) {
+                // rediriger vers login 
+                window.location.href = "/login";
+              } else {                
+                console.log(responseData);
+              }
+            });
+          }
+        });
       }
     } catch (error) {
       console.error(error);

@@ -1,6 +1,6 @@
 ---
 installation:
-  done: false
+  done: true
   on-going: false
 bdd:
   host: database
@@ -8,15 +8,22 @@ bdd:
   port: 5432
   username: esgi
   password: Test1234
-  prefix: carte_chance_
+  prefix: mapa
+  user:
+    pseudo: zaza
+    firstname: zaza
+    lastname: zazaz
+    email: zaz@dz.Fr
+    phone: 0676767861
+    password: Azer123@
 errorLog: explicit
 website:
-  name: La Carte Chance
-  description: Retrouvez tous vos jeux de societe preferes sur notre site !
+  name: aza
+  description: zaza
   baseurl: http://localhost/
 mail:
   mailer: smtp
   host: mailcatcher
   port: 1025
-  mailFrom: carte_chance_admin@myges.fr
+  mailFrom: aza@dz.Fr
 ...

@@ -7,6 +7,9 @@ use App\Core\Validator;
 use App\Core\Errors;
 use App\Core\View;
 
+use PDO;
+use PDOException;
+
 
 class Installer extends Validator
 {
@@ -17,8 +20,9 @@ class Installer extends Validator
             exit();
         }
         $view = new View('Installer/installer', "front");
+
         //écrire dans application-[ENV].yml => installation.on-going = true
-        Config::updateConfig(['installation', 'on-going'], true);
+        Config::getInstance()->updateConfig(['installation', 'on-going'], true);
     }
     public function setAdmin()
     {
@@ -161,7 +165,17 @@ class Installer extends Validator
         if (!$hasErrors) {
             // Renvoyer une réponse JSON de succès
             $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès',);
+            
             // TODO : remplir fichier config
+            
+            $conf = Config::getInstance();
+            $conf->updateConfig(['bdd', 'user', 'pseudo'], $pseudo);
+            $conf->updateConfig(['bdd', 'user', 'firstname'], $first_name);
+            $conf->updateConfig(['bdd', 'user', 'lastname'], $last_name);
+            $conf->updateConfig(['bdd', 'user', 'email'], $email);
+            $conf->updateConfig(['bdd', 'user', 'phone'], $phone_number);
+            $conf->updateConfig(['bdd', 'user', 'password'], $password);
+            
             echo json_encode($response);
         } else {
             // Renvoyer une réponse JSON avec un message d'erreur
@@ -184,6 +198,18 @@ class Installer extends Validator
         $siteName = $data['siteName'];
         $siteDescription = $data['siteDescription'];
         $adminEmail = $data['adminEmail'];
+
+        // TODO : faire les vérifications
+        // gerer les failles xss s'inspirer dans la methode save du repository abstract
+
+        $conf = Config::getInstance();
+        $conf->updateConfig(['bdd', 'prefix'], $bddPrefix);
+        $conf->updateConfig(['website', 'name'], $siteName);    
+        $conf->updateConfig(['website', 'description'], $siteDescription);    
+        $conf->updateConfig(['mail', 'mailFrom'], $adminEmail);
+
+        $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès');
+        echo json_encode($response);
     }
 
     /**
@@ -192,6 +218,61 @@ class Installer extends Validator
      */
     public function init()
     {
-    //TODO : écrire à la toute fin de la page 2 dans le fichier application-[ENV].yml => installation.on-going = false && installation.done = true;
+
+        //recuperer le contenu de mon script sql et remplacer le prefix et ajouter dans le script l'ajout du user de base
+        $scriptPath = "/var/www/html/script/sql/create_db/script_carte_chance_template.sql";
+        $scriptSQLcontent = file_get_contents($scriptPath);
+        $scriptSQLParsed = str_replace('$prefix$', Config::getConfig()['bdd']['prefix'], $scriptSQLcontent);
+        $userBdd = Config::getConfig()['bdd']['user'];
+        
+        $lengthKey = 20;
+        $userId = "";
+        for ($i = 0; $i < $lengthKey; $i++) {
+            $userId .= mt_rand(0, 20);
+        }
+
+        $userToken = "";
+        for ($i = 0; $i < $lengthKey; $i++) {
+            $userToken .= mt_rand(0, 20);
+        }
+
+        $stringInsertUser = " INSERT INTO ". Config::getConfig()['bdd']['prefix'] . "_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token, phone_number, date_inscription, role_id)
+        VALUES ( uuid_generate_v4(), '". $userBdd['pseudo'] ."', '" . $userBdd['firstname'] . "', '" . $userBdd['lastname'] . "', '" . $userBdd['email'] . "', '" . password_hash($userBdd['password'], PASSWORD_DEFAULT) . "', TRUE," . $userToken . ", " . $userBdd['phone'] . ", '" . date("Y-m-d H:i:s") . "', (SELECT id FROM " . Config::getConfig()['bdd']['prefix'] . "_role WHERE role_name = 'admin'));";
+
+        $scriptSQLParsed .= $stringInsertUser;
+        
+
+        //si le script a bien été modifié, on execute le script
+        $dbHost = Config::getConfig()['bdd']['host']; 
+        $dbName = Config::getConfig()['bdd']['dbname']; 
+        $dbPort = Config::getConfig()['bdd']['port'];  
+        $dbUser = Config::getConfig()['bdd']['username']; 
+        $dbPass = Config::getConfig()['bdd']['password']; 
+        
+        try {
+                
+            $pdo = new PDO("pgsql:host=" . $dbHost . ";dbname=" . $dbName . ";port=" . $dbPort , $dbUser , $dbPass);
+            $res = $pdo->exec($scriptSQLParsed);
+
+        } catch (PDOException $e) {
+            // Gérer les erreurs de connexion ou d'exécution du script SQL
+            echo "Erreur : " . $e->getMessage();
+            $response = array('success' => false, 'message' => 'Erreur lors du lancement du script SQL');
+            echo json_encode($response);
+        }
+
+        if($res){
+            //si le script a bien été executé, on met à jour le fichier de config
+            $conf = Config::getInstance();
+            $conf->updateConfig(['installation', 'done'], true);
+            $conf->updateConfig(['installation', 'on-going'], false);
+            $response = array('success' => true, 'message' => 'L\'initialisation du site a été effectuée avec succès');
+            echo json_encode($response);
+        }
+        else{
+            $response = array('success' => false, 'message' => 'Erreur lors du lancement du script return false');
+            echo json_encode($response);
+        }
+
     }
 }

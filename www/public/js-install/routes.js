@@ -17,5 +17,5 @@ export default {
   //     cols: 10,
   //   },
   // },
-  "/login": { component: "" },
+  //"/login": { component: "" },
 };
