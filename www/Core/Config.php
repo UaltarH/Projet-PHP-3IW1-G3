@@ -64,6 +64,7 @@ class Config
     }
 
     /***
+     * @param $file
      * @return void
      */
     private function setConfig($file): void
@@ -79,5 +80,30 @@ class Config
             self::getInstance()->getConfig();
         }
         return self::$config;
+    }
+
+    /**
+     * Modifies la valeur d'une clé dans le fichier de config
+     * Parcours les clés passées en paramètre et modifie la valeur de la dernière clé
+     * @param $keys : Tableau de clé
+     * @param $newValue
+     * @return bool
+     */
+    public static function updateConfig($keys, $newValue): bool
+    {
+        $configFileName = constant('APPLICATION_'. self::getInstance()->getEnvironment().'_PATH');
+        $data = self::getConfig();
+        $currentData = &$data;
+        foreach ($keys as $key) {
+                if (!isset($currentData[$key])) {
+                    Errors::define(400, "Route not exist");
+                    exit;
+                }
+                $currentData = &$currentData[$key];
+        }
+        $currentData = $newValue;
+        $yaml = yaml_emit($data);
+        $result = file_put_contents($configFileName, $yaml);
+        return $result !== false;
     }
 }

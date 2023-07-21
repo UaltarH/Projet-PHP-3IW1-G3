@@ -61,11 +61,11 @@ export default function Page1() {
           errorElement.remove();
         }
 
-        fetch("/set-admin", {
+        fetch("/installer/set-admin", {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json; charset=utf-8",
           },
         })
           .then((response) => {

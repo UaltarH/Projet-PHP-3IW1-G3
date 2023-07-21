@@ -1,5 +1,7 @@
 ---
-configEnd: true
+installation:
+  done: false
+  on-going: false
 bdd:
   host: database
   dbname: esgi
@@ -10,13 +12,11 @@ bdd:
 errorLog: explicit
 website:
   name: La Carte Chance
-  description: "Retrouvez tous vos jeux de soci\xE9t\xE9 pr\xE9f\xE9r\xE9s sur notre
-    site !"
+  description: Retrouvez tous vos jeux de societe preferes sur notre site !
   baseurl: http://localhost/
 mail:
   mailer: smtp
   host: mailcatcher
   port: 1025
   mailFrom: carte_chance_admin@myges.fr
-
 ...

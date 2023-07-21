@@ -117,14 +117,3 @@ export let adminEmail = () =>
     "",
     "Entrez l'adresse mail de l'administrateur."
   );
-
-export let siteName = () =>
-  InputGroup(
-    "siteName",
-    "Nom du site",
-    "text",
-    "siteName",
-    "siteName",
-    "",
-    "Entrez le nom du site souhaité, ce dernier doit être unique et ne pas être composé d'espace."
-  );
