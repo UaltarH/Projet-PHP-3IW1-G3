@@ -1,6 +1,6 @@
 ---
 installation:
-  done: true
+  done: false
   on-going: false
 bdd:
   host: database
@@ -10,20 +10,20 @@ bdd:
   password: Test1234
   prefix: esgi
   user:
-    pseudo: admin
-    firstname: admin
-    lastname: admin
-    email: admin@admin.com
-    phone: "0611111111"
+    pseudo: Gauthier
+    firstname: Gauthier
+    lastname: Lo
+    email: lo.gauthier.glo@gmail.com
+    phone: 0651957268
     password: Azerty1!
 errorLog: explicit
 website:
-  name: Chance
-  description: Test
+  name: Mon site&#039;
+  description: Ma description&#039;
   baseurl: http://localhost/
 mail:
   mailer: smtp
   host: mailcatcher
   port: 1025
-  mailFrom: admin@admin.com
+  mailFrom: lo.gauthier.glo@gmail.com
 ...

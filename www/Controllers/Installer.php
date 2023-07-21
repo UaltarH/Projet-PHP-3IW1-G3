@@ -35,10 +35,10 @@ class Installer extends Validator
 
 
         // Accéder aux valeurs des champs du formulaire
-        $pseudo = $data['pseudo'];
-        $first_name = $data['first_name'];
-        $last_name = $data['last_name'];
-        $email = $data['email'];
+        $pseudo = htmlspecialchars(trim($data['pseudo']));
+        $first_name = htmlspecialchars(trim($data['first_name']));
+        $last_name = htmlspecialchars(trim($data['last_name']));
+        $email = htmlspecialchars(trim($data['email']));
         $phone_number = $data['phone_number'];
         $password = $data['password'];
         $passwordConfirm = $data['passwordConfirm'];
