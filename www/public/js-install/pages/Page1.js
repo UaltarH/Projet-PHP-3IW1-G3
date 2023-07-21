@@ -15,10 +15,10 @@ import Page2 from "./Page2.js";
 const validationSchema = {
   type: "object",
   properties: {
-    pseudo: { type: "string", min: 2, max: 20 },
+    pseudo: { type: "string", min: 2, max: 20, space: false },
     first_name: { type: "string", min: 2, max: 20 },
     last_name: { type: "string", min: 2, max: 20 },
-    email: { type: "string", min: 6, format: "email" },
+    email: { type: "string", min: 6, format: "email", space: false },
     phone_number: { type: "string", min: 3, format: "tel" },
     password: { type: "string", min: 8, format: "password" },
     passwordConfirm: { type: "string", min: 8, format: "passwordConfirm" },

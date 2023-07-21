@@ -11,10 +11,10 @@ import form_check from "../utils/verification.js";
 const validationSchema2 = {
   type: "object",
   properties: {
-    bddPrefix: { type: "string", min: 2, max: 20 },
-    siteName: { type: "string", min: 2, max: 20 },
+    bddPrefix: { type: "string", min: 2, max: 20, space: false },
+    siteName: { type: "string", min: 2, max: 20, space: false },
     siteDescription: { type: "string", min: 2, max: 80 },
-    adminEmail: { type: "string", min: 6, format: "email" },
+    adminEmail: { type: "string", min: 6, format: "email", space: false },
   },
   required: ["bddPrefix", "siteName", "siteDescription", "adminEmail"],
 };
