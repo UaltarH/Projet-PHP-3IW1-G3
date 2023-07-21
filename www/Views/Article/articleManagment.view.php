@@ -181,8 +181,9 @@
 
 //gestion de la datatable 
     var selectedRow;
+    let timeout;
+    let responseMessage = $('.response-message');
     $(document).ready(function() {
-
         $('input[required]').siblings("");
         let table = $('#articleTable').DataTable({
             'processing': true,
@@ -363,7 +364,7 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             processData: false, // Désactiver le traitement automatique des données
             contentType: false,
             success: function (data) {            
@@ -436,7 +437,7 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             success: function (data) {
                 closeModalEditArticle();
 
@@ -478,7 +479,7 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             success: function (data) {
                 table.ajax.reload();
             },
@@ -511,18 +512,22 @@
 //
 
     function showResponseMessage(status, action) {
-        $('.response-message').addClass('active');
+        if(!!timeout)
+            clearTimeout(timeout);
+        responseMessage.children().remove();
+        responseMessage.addClass('active');
         if(status === "success") {
-            $('.response-message').addClass('success');
-            $('.response-message').append(`<h2>${action} successful !</h2>`);
+            responseMessage.addClass('success');
+            responseMessage.append(`<h2>${action} successful !</h2>`);
         }
         else {
-            $('.response-message').addClass('error');
-            $('.response-message').append("<h2>Save fail !</h2>");
+            responseMessage.addClass('error');
+            responseMessage.append("<p>Save fail !</p>");
         }
-        setTimeout(()=> {
-            $('.response-message').children().remove();
-        }, 2000);
+        timeout = setTimeout(()=> {
+            responseMessage.children().remove();
+            responseMessage.removeClass("active error success");
+        }, 5000);
     }
 
 </script>

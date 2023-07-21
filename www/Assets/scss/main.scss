@@ -19,6 +19,7 @@ $font-family-base: "Poppins", sans-serif;
 
 // Partials
 
+@import "./partials/common.scss";
 @import "./partials/_header.scss";
 @import "./partials/_footer.scss";
 @import "./partials/_game.scss";
@@ -27,6 +28,8 @@ $font-family-base: "Poppins", sans-serif;
 @import "./partials/form";
 @import "./partials/datatable";
 @import "./partials/articleManagment";
+@import "./partials/about-us";
+@import "./partials/contact";
 
 // Views
 @import "./views/_back.tpl.scss";

@@ -13,4 +13,10 @@ website:
   description: "Retrouvez tous vos jeux de soci\xE9t\xE9 pr\xE9f\xE9r\xE9s sur notre
     site !"
   baseurl: http://localhost/
+mail:
+  mailer: smtp
+  host: mailcatcher
+  port: 1025
+  mailFrom: carte_chance_admin@myges.fr
+
 ...
