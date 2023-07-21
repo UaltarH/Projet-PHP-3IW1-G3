@@ -12,7 +12,7 @@ const validationSchema2 = {
   type: "object",
   properties: {
     bddPrefix: { type: "string", min: 2, max: 20, space: false },
-    siteName: { type: "string", min: 2, max: 20, space: false },
+    siteName: { type: "string", min: 2, max: 20 },
     siteDescription: { type: "string", min: 2, max: 80 },
     adminEmail: { type: "string", min: 6, format: "email", space: false },
   },
