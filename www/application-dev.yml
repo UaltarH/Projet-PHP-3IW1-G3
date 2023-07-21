@@ -8,22 +8,22 @@ bdd:
   port: 5432
   username: esgi
   password: Test1234
-  prefix: esgi
+  prefix: mapa
   user:
-    pseudo: Gauthier
-    firstname: Gauthier
-    lastname: Lo
-    email: lo.gauthier.glo@gmail.com
-    phone: 0651957268
-    password: Azerty1!
+    pseudo: <script>alert("H");
+    firstname: mathieu
+    lastname: pannetrat
+    email: mathieu@gmail.com
+    phone: 0678787874
+    password: Azerty123@
 errorLog: explicit
 website:
-  name: Mon site&#039;
-  description: Ma description&#039;
+  name: le site de mathieu
+  description: descrzszszez
   baseurl: http://localhost/
 mail:
   mailer: smtp
   host: mailcatcher
   port: 1025
-  mailFrom: lo.gauthier.glo@gmail.com
+  mailFrom: mapa@gmail.com
 ...
