@@ -110,6 +110,11 @@ page:
     action: GetAllArticlesAboutGame
     access: [ ALL ]
 
+post-comment:
+  controller: Article
+  action: postComment
+  access: [ USER, MODERATOR, ADMIN ]
+  
 sys:
   user:
     list:
@@ -165,6 +170,7 @@ sys:
       controller: CommentController
       action: moderate
       access: [ ADMIN, MODERATOR ]
+
 
 api:
   user:
