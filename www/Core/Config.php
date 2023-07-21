@@ -89,7 +89,7 @@ class Config
      * @param $newValue
      * @return bool
      */
-    public static function updateConfig($keys, $newValue): bool
+    public function updateConfig($keys, $newValue): bool
     {
         $configFileName = constant('APPLICATION_'. self::getInstance()->getEnvironment().'_PATH');
         $data = self::getConfig();
@@ -104,6 +104,7 @@ class Config
         $currentData = $newValue;
         $yaml = yaml_emit($data);
         $result = file_put_contents($configFileName, $yaml);
+        $this->setConfig($configFileName);
         return $result !== false;
     }
 }

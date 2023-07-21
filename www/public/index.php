@@ -50,7 +50,7 @@ if(!Config::getConfig()['installation']['done'] ) {
         $uri[0] = "installer";
     }
     else {
-        if($uriStr !== "installer/set-admin" && $uriStr !== "installer/set-database" && $uriStr !== "installer"){
+        if($uriStr !== "installer/set-admin" && $uriStr !== "installer/set-database" && $uriStr !== "installer" && $uriStr !== "installer/init-site"){
             $uri[0] = "installer";
         }
         else {

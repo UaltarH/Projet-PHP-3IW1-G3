@@ -85,6 +85,11 @@ installer:
     controller: Installer
     action: setDatabase
     access: [ALL]
+  
+  init-site:
+    controller: Installer
+    action: init
+    access: [ALL]
 
 trucs-et-astuces:
   controller: Article
