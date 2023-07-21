@@ -51,59 +51,50 @@ class Installer extends Validator
         header('Content-Type: application/json; charset=utf-8');
         //$pseudo
         if ($validator->isEmpty($pseudo)) {
-            
             $response = array('success' => false, 'message' => 'Le pseudo est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($pseudo, 2)) {
-            
             $response = array('success' => false, 'message' => 'Le pseudo doit faire au moins 2 caractères', 'data' => $pseudo);
             echo json_encode($response);
             exit();
         }
-        if (!$validator->isMaxLength($pseudo, 20)) {
-            
-            $response = array('success' => false, 'message' => 'Le pseudo doit faire au maximum 20 caractères');
+        if (!$validator->isMaxLength($pseudo, 15)) {
+            $response = array('success' => false, 'message' => 'Le pseudo doit faire au maximum 15 caractères');
             echo json_encode($response);
             exit();
         }
 
         //$first_name
         if ($validator->isEmpty($first_name)) {
-            
             $response = array('success' => false, 'message' => 'Le prénom est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($first_name, 2)) {
-            
             $response = array('success' => false, 'message' => 'Le prénom doit faire au moins 2 caractères');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMaxLength($first_name, 20)) {
-            
-            $response = array('success' => false, 'message' => 'Le prénom doit faire au maximum 20 caractères');
+            $response = array('success' => false, 'message' => 'Le prénom doit faire au maximum 60 caractères');
             echo json_encode($response);
             exit();
         }
 
         //$last_name
         if ($validator->isEmpty($last_name)) {
-            
             $response = array('success' => false, 'message' => 'Le nom est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($last_name, 2)) {
-            
             $response = array('success' => false, 'message' => 'Le nom doit faire au moins 2 caractères');
             echo json_encode($response);
             exit();
         }
-        if (!$validator->isMaxLength($last_name, 20)) {
-            
+        if (!$validator->isMaxLength($last_name, 60)) {
             $response = array('success' => false, 'message' => 'Le nom doit faire au maximum 20 caractères');
             echo json_encode($response);
             exit();
@@ -112,13 +103,21 @@ class Installer extends Validator
         //$email
 
         if ($validator->isEmpty($email)) {
-            
             $response = array('success' => false, 'message' => 'L\'email est vide');
             echo json_encode($response);
             exit();
         }
+        if (!$validator->isMinLength($email, 6)) {
+            $response = array('success' => false, 'message' => 'L\'email doit faire au moins 6 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($email, 64)) {
+            $response = array('success' => false, 'message' => 'L\'email doit faire au maximum 64 caractères');
+            echo json_encode($response);
+            exit();
+        }
         if (!$validator->isEmailValid($email)) {
-            echo $email;
             $response = array('success' => false, 'message' => 'Email invalide');
             echo json_encode($response);
             exit();
@@ -127,20 +126,22 @@ class Installer extends Validator
         // phone_number
 
         if ($validator->isEmpty($phone_number)) {
-            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($phone_number, 10)) {
-            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone doit faire au moins 10 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($phone_number, 10)) {
+            $response = array('success' => false, 'message' => 'Le numéro de téléphone doit faire au maximum 10 caractères');
             echo json_encode($response);
             exit();
         }
 
         if (!$validator->isPhoneNumberValid($phone_number)) {
-            
             $response = array('success' => false, 'message' => 'Le numéro de téléphone est invalide');
             echo json_encode($response);
             exit();
@@ -149,20 +150,22 @@ class Installer extends Validator
         // password
 
         if ($validator->isEmpty($password)) {
-            
             $response = array('success' => false, 'message' => 'Le mot de passe est vide');
             echo json_encode($response);
             exit();
         }
         if (!$validator->isMinLength($password, 8)) {
-            
             $response = array('success' => false, 'message' => 'Le mot de passe doit faire au moins 8 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($password, 32)) {
+            $response = array('success' => false, 'message' => 'Le mot de passe doit faire au maximum 32 caractères');
             echo json_encode($response);
             exit();
         }
 
         if (!$validator->isPasswordValid($password, $passwordConfirm)) {
-            
             $response = array('success' => false, 'message' => 'Les mots de passe ne correspondent pas');
             echo json_encode($response);
             exit();
@@ -171,8 +174,6 @@ class Installer extends Validator
         // Renvoyer une réponse JSON de succès
         
         $response = array('success' => true, 'message' => 'Le formulaire a été traité avec succès',);
-
-        // TODO : remplir fichier config
 
         $conf = Config::getInstance();
         $conf->updateConfig(['bdd', 'user', 'pseudo'], $pseudo);
@@ -202,27 +203,72 @@ class Installer extends Validator
 
         $validator = new Validator();
 
+        // nom du site
         if ($validator->isEmpty($siteName)) {
-            
             $response = array('success' => false, 'message' => 'Nom du site vide');
             echo json_encode($response);
             exit();
         }
+        if (!$validator->isMinLength($siteName, 2)) {
+            $response = array('success' => false, 'message' => 'Le nom du site doit faire au moins 2 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($siteName, 20)) {
+            $response = array('success' => false, 'message' => 'Le nom du site doit faire au maximum 20 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        // description du site
         if ($validator->isEmpty($siteDescription)) {
-            
             $response = array('success' => false, 'message' => 'Description du site vide');
             echo json_encode($response);
             exit();
         }
+        if (!$validator->isMinLength($siteDescription, 2)) {
+            $response = array('success' => false, 'message' => 'La description du site doit faire au moins 2 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($siteDescription, 80)) {
+            $response = array('success' => false, 'message' => 'La description du site doit faire au maximum 20 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        // prefix
         if ($validator->isEmpty($bddPrefix) || !$validator->isPrefixValid($bddPrefix)) {
-            
             $response = array('success' => false, 'message' => 'Prefix invalide');
             echo json_encode($response);
             exit();
         }
-        if ($validator->isEmpty($adminEmail) || !$validator->isEmailValid($adminEmail)) {
-            
+        if (!$validator->isMinLength($bddPrefix, 2)) {
+            $response = array('success' => false, 'message' => 'Le prefix doit faire au moins 2 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($bddPrefix, 64)) {
+            $response = array('success' => false, 'message' => 'Le prefix doit faire au maximum 64 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        // email admin
+        if ($validator->isEmpty($adminEmail)) {
             $response = array('success' => false, 'message' => 'Email vide');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMinLength($adminEmail, 6)) {
+            $response = array('success' => false, 'message' => 'L\'email doit faire au moins 2 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if (!$validator->isMaxLength($adminEmail, 64)) {
+            $response = array('success' => false, 'message' => 'L\'email doit faire au maximum 20 caractères');
+            echo json_encode($response);
+            exit();
+        }
+        if(!$validator->isEmailValid($adminEmail)) {
+            $response = array('success' => false, 'message' => 'Format d\'email invalide');
             echo json_encode($response);
             exit();
         }

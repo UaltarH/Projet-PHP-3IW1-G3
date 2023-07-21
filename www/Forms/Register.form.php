@@ -31,7 +31,7 @@ class Register extends Validator
                     "type" => "text",
                     "error" => "Votre pseudo existe dèja",
                     "min" => 2,
-                    "max" => 60,
+                    "max" => 15,
                     "required" => true
                 ],
                 "first_name" => [
@@ -63,6 +63,8 @@ class Register extends Validator
                     "placeholder" => "Votre email",
                     "type" => "email",
                     "error" => "Votre email est incorrect",
+                    "min" => 2,
+                    "max" => 64,
                     "required" => true
                 ],
                 "phone_number" => [
@@ -85,6 +87,7 @@ class Register extends Validator
                     "type" => "password",
                     "error" => "Votre mot de passe doit faire au minimum 8 caractères avec minimum 1 minuscules, 1 majuscules et 1 chiffre",
                     "min" => 8,
+                    "max" => 32,
                     "required" => true
                 ],
                 "passwordConfirm" => [

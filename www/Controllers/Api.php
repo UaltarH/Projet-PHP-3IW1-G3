@@ -63,7 +63,7 @@ class Api
             }
         }
         else {
-            Errors::define(400, 'Missing Info');
+            Errors::define(404, 'Missing Info');
             echo json_encode(['success' => false, 'message' => 'Missing Info']);
             exit();
         }

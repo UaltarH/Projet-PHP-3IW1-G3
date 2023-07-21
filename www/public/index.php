@@ -37,19 +37,22 @@ spl_autoload_register(function ($class) {
 //var_dump(Config::getConfig());
 //echo '</pre>';
 //Afficher le controller et l'action correspondant à l'URI
+
 $uriStr = $_SERVER["REQUEST_URI"];
 $uriExploded = explode("?", $uriStr);
 $uriStr = strtolower(trim($uriExploded[0], "/"));
 
 $uri = [];
-/**
- *
- */
+
+// Test si l'installation a déjà été faite
 if(!Config::getConfig()['installation']['done'] ) {
+    // Si l'installation est en cours ou non
     if(!Config::getConfig()['installation']['on-going']) {
+        // on redirige vers l'installeur
         $uri[0] = "installer";
     }
     else {
+        // on permet seulement les routes suivantes
         if($uriStr !== "installer/set-admin" && $uriStr !== "installer/set-database" && $uriStr !== "installer" && $uriStr !== "installer/init-site"){
             $uri[0] = "installer";
         }
@@ -58,7 +61,7 @@ if(!Config::getConfig()['installation']['done'] ) {
         }
     }
 }
-else {
+else { // installation déjà faite
     if(empty($uriStr))
         $uri[0] = "default";
     else $uri = explode('/', $uriStr);
@@ -71,12 +74,13 @@ $routes = yaml_parse_file("../routes.yml");
 $controller = null;
 $action = null;
 $routeArray = $routes;
+// s'il y a plusieurs "niveau" dans l'uri eg: /sys/user/list
 if (count($uri) > 1) {
     foreach ($uri as $value) {
         if (isset($routeArray[$value])) {
             $routeArray = $routeArray[$value];
         } else {
-            Errors::define(400, "Route not exist");
+            Errors::define(404, "Route not exist");
             exit;
         }
     }
@@ -84,7 +88,7 @@ if (count($uri) > 1) {
     if (isset($routeArray[$uri[0]])) {
         $routeArray = $routeArray[$uri[0]];
     } else {
-        Errors::define(400, "Route not exist");
+        Errors::define(404, "Route not exist");
         exit;
     }
 }
@@ -143,7 +147,7 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                Errors::define(404, 'Vous n\'avez pas les droits pour accéder à cette page');
                                 exit;
                             }
                             break;
@@ -152,7 +156,7 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                Errors::define(404, 'Vous n\'avez pas les droits pour accéder à cette page');
                                 exit;
                             }
                             break;
@@ -161,25 +165,25 @@ if(isset($routeArray["access"])) {
                                 $objController->$action();
                             }
                             else{
-                                Errors::define(400, 'Vous n\'avez pas les droits pour accéder à cette page');
+                                Errors::define(404, 'Vous n\'avez pas les droits pour accéder à cette page');
                                 exit;
                             }
                         default:
-                            Errors::define(400, 'Le role de l\'utilisateur n\'existe pas');
+                            Errors::define(404, 'Le role de l\'utilisateur n\'existe pas');
                             exit;
                     }
                 }
             } else {
-                Errors::define(400, 'Token invalide ou expiré');
+                Errors::define(401, 'Token invalide ou expiré');
                 exit;
             }
        }
        else{
-           Errors::define(400, 'Pas de Token');
+           Errors::define(401, 'Pas de Token');
            exit;
        }
     }
 } else {
-    Errors::define(400, 'the route doesn\'t have access key');
+    Errors::define(500, 'the route doesn\'t have access key');
     exit;
 }
