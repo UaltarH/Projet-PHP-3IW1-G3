@@ -1,0 +1,29 @@
+---
+installation:
+  done: false
+  on-going: false
+bdd:
+  host: database
+  dbname: esgi
+  port: 5432
+  username: esgi
+  password: Test1234
+  prefix: esgi
+  user:
+    pseudo: Gauthier
+    firstname: Gauthier
+    lastname: Lo
+    email: lo.gauthier.glo@gmail.com
+    phone: 0651957268
+    password: Azerty1!
+errorLog: explicit
+website:
+  name: Mon site&#039;
+  description: Ma description&#039;
+  baseurl: http://localhost/
+mail:
+  mailer: smtp
+  host: mailcatcher
+  port: 1025
+  mailFrom: lo.gauthier.glo@gmail.com
+...

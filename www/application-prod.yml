@@ -1,0 +1,29 @@
+---
+installation:
+  done: false
+  on-going: false
+bdd:
+  host: database
+  dbname: esgi
+  port: 5432
+  username: esgi
+  password: Test1234
+  prefix: carte_chance_
+  user:
+    pseudo: zaza
+    firstname: zaza
+    lastname: zazaz
+    email: zaz@dz.Fr
+    phone: 0676767861
+    password: Azer123@
+errorLog: minimal
+website:
+  name: La Carte Chance
+  description: Retrouvez tous vos jeux de société préférés sur notre site !
+  baseurl: http://vps35.heliohost.us/
+mail:
+  mailer: smtp
+  host: mailcatcher
+  port: 1025
+  mailFrom: carte_chance_admin@myges.fr
+...

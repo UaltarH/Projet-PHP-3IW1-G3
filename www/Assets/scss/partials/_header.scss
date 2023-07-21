@@ -1,0 +1,21 @@
+.header {
+  h1 {
+    text-align: center;
+    color: var(--primary);
+  }
+
+  .navbar {
+    .nav-item,
+    .dropdown-item {
+      @extend .text-white;
+
+      border-radius: 5px;
+      &:hover {
+        background-color: var(--primary);
+      }
+      .nav-link {
+        @extend .text-white;
+      }
+    }
+  }
+}

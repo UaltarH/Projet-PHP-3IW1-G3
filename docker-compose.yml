@@ -1,0 +1,48 @@
+version: "3"
+services:
+  web:
+    build: site
+    ports:
+      - "80:80"
+    volumes:
+      - ./www/:/var/www/html/
+      - ./script/sql/create_db/:/var/www/html/script/sql/create_db/
+      - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./server/apache2.conf:/etc/apache2/apache2.conf
+      - ./server/php.ini:/usr/local/etc/php/php.ini
+
+  database:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # - ./script/sql/create_db/script_carte_chance.sql:/docker-entrypoint-initdb.d/script_carte_chance.sql
+    environment:
+      POSTGRES_DB: esgi
+      POSTGRES_USER: esgi
+      POSTGRES_PASSWORD: Test1234
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  sass:
+    build: sass
+    volumes:
+      - ./www:/home
+    # command: sass --watch "/home/Assets/scss/main.scss:/home/style.css"
+    command: sass --watch "/home/Assets/scss/main.scss:/home/public/style.css" --no-source-map && npx postcss /home/public/style.css --use autoprefixer --output /home/public/style.css
+
+  mailcatcher:
+    restart: always
+    image: dockage/mailcatcher:0.8.2
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+
+volumes:
+  pgdata:
