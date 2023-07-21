@@ -211,6 +211,16 @@ abstract class AbstractRepository
             if (is_bool($value)) {
                 $columns[$key] = $value ? 'true' : 'false'; // Convertir la valeur booléenne en chaîne de caractères
             }
+            //securisé les injections xss
+            if(is_string($value) ){
+                if(self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article" && self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article_memento"){
+                    $columns[$key] = htmlspecialchars($value);
+                } else{
+                    if($key != "content"){
+                        $columns[$key] = htmlspecialchars($value);
+                    }
+                }
+            }
         }
         $response = new ResponseSave();
         $response->success = $queryPrepared->execute($columns);

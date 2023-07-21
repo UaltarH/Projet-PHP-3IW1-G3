@@ -1,3 +1,7 @@
+---
+installation:
+  done: false
+  on-going: false
 bdd:
   host: database
   dbname: esgi
@@ -10,3 +14,9 @@ website:
   name: La Carte Chance
   description: Retrouvez tous vos jeux de société préférés sur notre site !
   baseurl: http://vps35.heliohost.us/
+mail:
+  mailer: smtp
+  host: mailcatcher
+  port: 1025
+  mailFrom: carte_chance_admin@myges.fr
+...

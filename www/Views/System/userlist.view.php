@@ -1,6 +1,8 @@
 <h1>User List</h1>
 
-<?php include "Views/Partials/editUserModal.ptl.php" ?>
+<?php
+
+include "/var/www/html/Views/Partials/editUserModal.ptl.php" ?>
 
 <nav>
     <ul>
@@ -71,10 +73,10 @@
                 });
 
                 $('#closeModal').on('click', function(e){ handleCloseEditModal(); });
-                $('input[name="submitEditUser"]').on('click', function(e) { handleEditSubmit(e, table); });
-                $('input[name="submitCreateUser"]').on('click', function(e) { handleCreateSubmit(e, table); });
             }
         });
+        $('input[name="submitEditUser"]').on('click', function(e) { handleEditSubmit(e, table); });
+        $('input[name="submitCreateUser"]').on('click', function(e) { handleCreateSubmit(e, table); });
     });
 
     

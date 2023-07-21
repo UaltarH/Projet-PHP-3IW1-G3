@@ -4,9 +4,9 @@ namespace  App\Core;
 
 use App\Core\Errors;
 
-define("APPLICATION_PATH", "application.yml");
-define("APPLICATION_DEV_PATH", "application-dev.yml");
-define("APPLICATION_PROD_PATH", "application-prod.yml");
+define("APPLICATION_PATH", "../application.yml");
+define("APPLICATION_DEV_PATH", "../application-dev.yml");
+define("APPLICATION_PROD_PATH", "../application-prod.yml");
 class Config
 {
     private static ?Config $instance = null;
@@ -27,6 +27,15 @@ class Config
         }
         self::setConfig($configFileName);
     }
+
+    public function setEnvironmentVariable($keyVariable, $valueVariable){
+        $configFileName = constant('APPLICATION_'.$this->getEnvironment().'_PATH');
+        $config = self::getConfig();
+        $config[$keyVariable] = $valueVariable;
+        $yaml = yaml_emit($config);
+        file_put_contents($configFileName, $yaml);
+    }
+
     /**
      * @return string
      */
@@ -55,6 +64,7 @@ class Config
     }
 
     /***
+     * @param $file
      * @return void
      */
     private function setConfig($file): void
@@ -70,5 +80,31 @@ class Config
             self::getInstance()->getConfig();
         }
         return self::$config;
+    }
+
+    /**
+     * Modifies la valeur d'une clé dans le fichier de config
+     * Parcours les clés passées en paramètre et modifie la valeur de la dernière clé
+     * @param $keys : Tableau de clé
+     * @param $newValue
+     * @return bool
+     */
+    public function updateConfig($keys, $newValue): bool
+    {
+        $configFileName = constant('APPLICATION_'. self::getInstance()->getEnvironment().'_PATH');
+        $data = self::getConfig();
+        $currentData = &$data;
+        foreach ($keys as $key) {
+                if (!isset($currentData[$key])) {
+                    Errors::define(400, "Route not exist");
+                    exit;
+                }
+                $currentData = &$currentData[$key];
+        }
+        $currentData = $newValue;
+        $yaml = yaml_emit($data);
+        $result = file_put_contents($configFileName, $yaml);
+        $this->setConfig($configFileName);
+        return $result !== false;
     }
 }

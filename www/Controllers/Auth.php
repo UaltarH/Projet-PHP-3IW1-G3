@@ -3,10 +3,13 @@
 namespace App\Controllers;
 
 use App\Core\Config;
+use App\Core\Errors;
 use App\Core\View;
+
 use App\Forms\EditProfileFront;
 use App\Forms\Register;
 use App\Forms\Connection;
+
 use App\Models\Role;
 use App\Models\User;
 use App\Forms\ResetPassword;
@@ -93,6 +96,7 @@ class Auth
 
     public function register(): void
     {
+
         $form = new Register();
         $view = new View("Auth/register", "front");
         $view->assign("form", $form->getConfig());
@@ -147,17 +151,22 @@ class Auth
 
     public function emailConfirmation(): void
     {
-        $view = new View("Auth/emailConfirmation", "front");
-        $messageInfo = [];
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
 
         if (isset($_GET['pseudo'], $_GET['key']) and !empty($_GET['pseudo']) and !empty($_GET['key'])) {
+            $view = new View("Auth/emailConfirmation", "front");
+            $messageInfo = [];
             $pseudo = htmlspecialchars(urldecode($_GET['pseudo']));
             $key = htmlspecialchars($_GET['key']);
 
             $whereSql = ["pseudo" => $pseudo, "confirm_and_reset_token" => $key];
             $result = $this->userRepository->getOneWhere($whereSql, new User);
             if (is_bool($result)) {
-                $messageInfo[] = "utilisateur introuvable belec au hack !";
+                $messageInfo[] = "utilisateur introuvable!";
             } else {
                 if ($result->getEmailConfirmation() == true) {
                     $messageInfo[] = "votre compte a deja été confirmé";
@@ -165,14 +174,15 @@ class Auth
                     $result->setEmailConfirmation(true);
                     $responseQuery = $this->userRepository->save($result);
                     if ($responseQuery->success) {
-                        $messageInfo[] = "votre compte a bien été confirmez, vous pouvez des maintenant vous connecter";
+                        $messageInfo[] = "Votre compte a bien été confirmé, vous pouvez des maintenant vous connecter";
                     }
                 }
             }
+            $view->assign("messageInfo", $messageInfo);
         } else {
-            $messageInfo[] = "les parametres de l'url sont incorrect";
+            Errors::define(400, 'Bad HTTP request');
+            exit();
         }
-        $view->assign("messageInfo", $messageInfo);
     }
 
     public function resetPassword(): void
@@ -234,6 +244,12 @@ class Auth
 
     public function editProfile(): void
     {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $id = getSpecificDataFromToken($_SESSION['token'], "id");
         $user = $this->userRepository->getOneWhere(["id" => $id], new User);
         foreach ($_POST as $key => $value) {

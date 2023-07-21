@@ -27,14 +27,13 @@ if (isset($_SESSION["token"])) {
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
           rel="stylesheet">
-    <link href="/Assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/Assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/Assets/css/dashboard_style.css"/>
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/css/dashboard_style.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script src="/library/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-
 
 <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="d-flex align-items-center justify-content-between">
@@ -83,54 +82,53 @@ if (isset($_SESSION["token"])) {
     </nav>
 </header>
 
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/sys/dashboard" id="navbar-links-dash">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/user/list" id="navbar-links-user">
+                    <i class="bi bi-person"></i>
+                    <span>Utilisateurs</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/article/articles-management" id="navbar-links-article">
+                    <i class="bi bi-bag"></i>
+                    <span>Articles</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/comment/list" id="navbar-links-comments">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Commentaires</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/" id="navbar-links-front">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>La Carte Chance</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/sys/dashboard" id="navbar-links-dash">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/user/list" id="navbar-links-user">
-                <i class="bi bi-person"></i>
-                <span>Utilisateurs</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/article/articles-management" id="navbar-links-article">
-                <i class="bi bi-bag"></i>
-                <span>Articles</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/comment/list" id="navbar-links-comments">
-                <i class="bi bi-chat-dots"></i>
-                <span>Commentaires</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/" id="navbar-links-front">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>La Carte Chance</span>
-            </a>
-        </li>
-    </ul>
-</aside>
+    <main id="main" class="main">
+        <div class="response-message"></div>
+        <?php include $this->view; ?>
+    </main>
+</div>
 
-<main id="main" class="main">
-    <div class="response-message"></div>
-    <?php include $this->view; ?>
-</main>
 
 <?php $this->partial("footer", []) ?>
-
-
 </body>
 
-<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/Assets/js/main.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/main.js"></script>
 
 <script type="text/javascript">
     const path = window.location.pathname;

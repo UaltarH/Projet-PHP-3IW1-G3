@@ -5,9 +5,9 @@ namespace App\Controllers;
 use App\Core\Config;
 use App\Core\Errors;
 use App\Core\Validator;
-use App\Models\Article;
+
 use App\Models\User;
-use App\Repository\ArticleRepository;
+
 use App\Repository\UserRepository;
 
 use function App\Services\HttpMethod\getHttpMethodVarContent;
@@ -16,11 +16,9 @@ require_once '/var/www/html/Services/HttpMethod.php';
 class Api
 {
     private UserRepository $userRepository;
-    private ArticleRepository $articleRepository;
     private array $config;
     public function __construct() {
         $this->userRepository = new UserRepository();
-        $this->articleRepository = new ArticleRepository();
         $this->config = Config::getInstance()->getConfig();
     }
 
@@ -29,12 +27,12 @@ class Api
      */
     public function usercreate(): void
     {
-        header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode(['success' => false]);
             exit;
         }
+        header('Content-Type: application/json');
         $user = new User();
         $validator = new Validator();
         if (!empty($_POST["pseudo"]) && !empty($_POST["first_name"]) && !empty($_POST["last_name"]) && !empty($_POST["email"]) && !empty($_POST["phone_number"]) && !empty($_POST["role"])) {
@@ -46,7 +44,7 @@ class Api
                 $user->setPassword(trim($_POST['pseudo']));
                 $user->setRoleId($_POST["role"]);
                 $user->setPhoneNumber($_POST['phone_number']);
-                $user->setEmailConfirmation(false);
+                $user->setEmailConfirmation(true);
                 $user->setDateInscription(date("Y-m-d H:i:s"));
 
                 if($this->userRepository->save($user)->success) {
@@ -77,12 +75,11 @@ class Api
      */
     public function userlist(): void
     {
-        if($_SERVER['REQUEST_METHOD'] != "GET") {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
-        // TODO : deny access to this url
         $length = intval(trim($_GET['length']));
         $start = intval(trim($_GET['start']));
         $search = '';
@@ -116,12 +113,12 @@ class Api
    
     public function useredit(): void
     {
-        header('Content-Type: application/json');
-        if($_SERVER['REQUEST_METHOD'] != "POST") {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
             Errors::define(400, 'Bad HTTP request');
             echo json_encode("Bad Method");
             exit;
         }
+        header('Content-Type: application/json');
         $emptyFields = true;
         $user = new User();
         $validator = new Validator();
@@ -183,12 +180,13 @@ class Api
             $user->setId($_POST["id"]);
             if($this->userRepository->save($user)->success) {
                 echo json_encode(['success' => true]);
+                exit();
             }
             else {
                 Errors::define(500, 'Internal Server Error');
                 echo json_encode(['success' => false, 'message'=>'Internal Server Error']);
+                exit();
             }
-            exit();
         }
         else {
             Errors::define(500, 'Invalid Info');

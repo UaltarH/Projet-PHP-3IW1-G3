@@ -1,8 +1,3 @@
-<h1>Page d'email confirmation</h1> <br>
 <?php if(!empty($messageInfo)): ?>
-<?php print_r($messageInfo);?>
+    <?php echo "<div class='alert alert-info'>" . $messageInfo[0] . "</div></br>";?>
 <?php endif;?>
-
-<button onclick="window.location.href='/login'">
-    Connection
-</button>

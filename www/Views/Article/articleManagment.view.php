@@ -34,43 +34,9 @@
 
 <!-- script js pour la datatable -->
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script src="/Assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script>
 
-//gestions des boutons de modal
-    // Récupérer la référence à la modal create article
-    var modalCreateArticleElement = document.getElementById('multi-step-modal');
-    var modalCreateArticle = new bootstrap.Modal(modalCreateArticleElement);
-    $("#open-modalCreateGameArticle-btn").on('click', function(){
-        openModalCreateArticle();
-    }); 
-    $("#close-modalCreateGameArticle-btn").on('click', function(){
-        closeModalCreateArticle();
-    }); 
-    function openModalCreateArticle(){
-        modalCreateArticle.show();
-    }
-    function closeModalCreateArticle(){
-        modalCreateArticle.hide();
-    }
-
-    //modal edit article
-    var modalEdiotArticleElement = document.getElementById('editArticle-modal');
-    var modalEditArticle = new bootstrap.Modal(modalEdiotArticleElement);
-    $("#close-modalEditArticle-btn").on('click', function(){
-        closeModalEditArticle();
-    }); 
-
-    function openModalEditArticle(){
-        modalEditArticle.show();
-    }
-    function closeModalEditArticle(){
-        contentArticle = "";
-        document.getElementById("editArticle-form-title").value = "";
-        modalEditArticle.hide();
-    }
-//
-    
 // Formulaire à plusieurs étapes
     // Récupérer toutes les sections du formulaire
     const formSteps = document.querySelectorAll('.form-step');
@@ -169,10 +135,55 @@
 //
 
 
+//gestions des boutons de modal
+    // Récupérer la référence à la modal create article
+    var modalCreateArticleElement = document.getElementById('multi-step-modal');
+    var modalCreateArticle = new bootstrap.Modal(modalCreateArticleElement);
+    $("#open-modalCreateGameArticle-btn").on('click', function(){
+        openModalCreateArticle();
+    }); 
+    $("#close-modalCreateGameArticle-btn").on('click', function(){
+
+        closeModalCreateArticle();
+    }); 
+    function openModalCreateArticle(){
+        let alertSuccess = document.getElementsByClassName('alert alert-success addArticle')[0];
+        let alertDanger = document.getElementsByClassName('alert alert-danger addArticle')[0]; 
+        alertSuccess.style.display = 'none';
+        alertDanger.style.display = 'none';
+        modalCreateArticle.show();
+    }
+    function closeModalCreateArticle(){
+        showStep(0);
+        modalCreateArticle.hide();
+    }
+
+    //modal edit article
+    var modalEdiotArticleElement = document.getElementById('editArticle-modal');
+    var modalEditArticle = new bootstrap.Modal(modalEdiotArticleElement);
+    $("#close-modalEditArticle-btn").on('click', function(){
+        closeModalEditArticle();
+    }); 
+
+    function openModalEditArticle(){
+        let alertSuccess = document.getElementsByClassName('alert alert-success editArticle')[0];
+        alertSuccess.style.display = 'none';
+        modalEditArticle.show();
+    }
+    function closeModalEditArticle(){
+        contentArticle = "";
+        document.getElementById("editArticle-form-title").value = "";
+        modalEditArticle.hide();
+    }
+//
+    
+
+
 //gestion de la datatable 
     var selectedRow;
+    let timeout;
+    let responseMessage = $('.response-message');
     $(document).ready(function() {
-
         $('input[required]').siblings("");
         let table = $('#articleTable').DataTable({
             'processing': true,
@@ -249,11 +260,33 @@
 
                                 // Ajouter le contenu HTML à la div
                                 ulVersions.innerHTML = htmlContent;
+                            } else{
+                                document.getElementById("ul-article-version").innerHTML = "";
                             }
                         })
                         .catch(function(error) {
                             console.error(`Error: ${JSON.stringify(error)}`);
                         });
+
+                        // reset content of the editor 
+                        if (editorEditArticle) {
+                            editorEditArticle.destroy();
+                            editorEditArticle = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                            //remove style of the container
+                            var containerGrapeJs = document.getElementById('editorGrapesJsForEdit');
+                            containerGrapeJs.removeAttribute('style');
+                        }
+
+                        //reset btn of the modal
+                        let btnOpenEditor = document.getElementById('open-editor-edit');
+                        let btnSave = document.getElementById('save-button-edit');
+                        let btnCloseEditor = document.getElementById('close-editor-edit');
+                        
+                        btnCloseEditor.style.display = 'none';
+                        btnOpenEditor.style.display = 'block';
+                        btnSave.style.display = 'none';
+
+
                         
                         //ouvrir la modal pour l'edition de l'article
                         openModalEditArticle();
@@ -263,12 +296,12 @@
                         deleteArticle(e, table);
                     }
                 });
-
-                //declanche les appels ajax quand on submit un des formulaires
-                $('input[name="submitEditArticle"]').on('click', function(e) { editArticle(e, table); });
-                $('input[name="submitCreateArticle"]').on('click', function(e) { createArticle(e, table); });
             }
-        });            
+        });      
+        
+        //declanche les appels ajax quand on submit un des formulaires
+        $('input[name="submitEditArticle"]').on('click', function(e) { editArticle(e, table); });
+        $('input[name="submitCreateArticle"]').on('click', function(e) { createArticle(e, table); });
     });
 //
 
@@ -331,16 +364,29 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             processData: false, // Désactiver le traitement automatique des données
             contentType: false,
             success: function (data) {            
                 closeModalCreateArticle();
                 // Afficher la première étape du formaulaire d'ajout d'article
                 showStep(0);
-                // reset content of the editor and update message of the editor
+                // reset content of the editor and close the editor and reset the btn
                 htmlContent = "";
-                document.getElementById('addArticleContent-info').textContent = "Votre article ne contient pas de contenu.";
+                if (editor) {
+                    editor.destroy();
+                    editor = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                    //remove style of the container
+                    var containerGrapeJs = document.getElementById('editorGrapesJs');
+                    containerGrapeJs.removeAttribute('style');
+                }
+                let btnOpenEditor = document.getElementById('open-editor');
+                let btnSave = document.getElementById('save-button');
+                let btnCloseEditor = document.getElementById('close-editor');
+                
+                btnCloseEditor.style.display = 'none';
+                btnOpenEditor.style.display = 'block';
+                btnSave.style.display = 'none';
 
                 table.ajax.reload();
             },
@@ -383,9 +429,6 @@
             if(data["content"] == selectedRow.content){
                 delete data["content"];
             }
-            if(data["editArticle-form-title"] == selectedRow.title){
-                delete data["editArticle-form-title"];
-            }
         }
         
         $.ajax({
@@ -394,9 +437,27 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             success: function (data) {
                 closeModalEditArticle();
+
+                // reset content of the editor and close the editor and reset the btn
+                if (editorEditArticle) {
+                    editorEditArticle.destroy();
+                    editorEditArticle = null; // Réinitialise la variable editor après avoir détruit l'éditeur
+                    //remove style of the container
+                    var containerGrapeJs = document.getElementById('editorGrapesJsForEdit');
+                    containerGrapeJs.removeAttribute('style');
+                }
+
+                let btnOpenEditor = document.getElementById('open-editor-edit');
+                let btnSave = document.getElementById('save-button-edit');
+                let btnCloseEditor = document.getElementById('close-editor-edit');
+                
+                btnCloseEditor.style.display = 'none';
+                btnOpenEditor.style.display = 'block';
+                btnSave.style.display = 'none';
+
                 table.ajax.reload();
             },
             error: function (xhr, resp, error) {
@@ -418,7 +479,7 @@
             data: data,
             dataType: "json", // type de retour attendu
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // type de données envoyées
-            context: $('.response-message'),
+            context: responseMessage,
             success: function (data) {
                 table.ajax.reload();
             },
@@ -451,16 +512,22 @@
 //
 
     function showResponseMessage(status, action) {
-        $('.response-message').addClass('active');
+        if(!!timeout)
+            clearTimeout(timeout);
+        responseMessage.children().remove();
+        responseMessage.addClass('active');
         if(status === "success") {
-            $('.response-message').append(`<h2>${action} successful !</h2>`);
+            responseMessage.addClass('success');
+            responseMessage.append(`<h2>${action} successful !</h2>`);
         }
         else {
-            $('.response-message').append("<h2>Save fail !</h2>");
+            responseMessage.addClass('error');
+            responseMessage.append("<p>Save fail !</p>");
         }
-        setTimeout(()=> {
-            $('.response-message').children().remove();
-        }, 2000);
+        timeout = setTimeout(()=> {
+            responseMessage.children().remove();
+            responseMessage.removeClass("active error success");
+        }, 5000);
     }
 
 </script>

@@ -22,12 +22,13 @@
                         <div id="ul-article-version" style="display: inline-block;">
 
                         </div>
-                        <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor-edit"
-                                style="display: none;">Fermez l'éditeur
-                        </button>
-                        <button type="button" class="btn btn-primary btn-grapesjs" id="save-button-edit"
-                                style="display: none;">Enregistrez votre contenu
-                        </button>
+                        <button type="button" class="btn btn-primary btn-grapesjs" id="close-editor-edit" style="display: none;">Fermez l'éditeur</button>
+                        <button type="button" class="btn btn-primary btn-grapesjs" id="save-button-edit" style="display: none;">Enregistrez votre contenu</button>                        
+
+                        <div class="alert alert-success editArticle" role="alert" style="display: none;">
+                            Le contenu de votre article a bien été enregistrer.
+                        </div>
+
                         <div id="editorGrapesJsForEdit"></div>
                     </div>
                     <input type="submit" name="submitEditArticle" id="submitEditArticle" class="btn btn-primary"
@@ -38,10 +39,10 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="/library/grapes.js/grapesjs/css/grapes.min.css">
-<script src="/library/grapes.js/grapesjs/grapes.min.js"></script>
-<script src="/library/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
-<script src="/library/grapes.js/packages/blocks-basic/index.js"></script>
+<link rel="stylesheet" href="/assets/vendor/grapes.js/grapesjs/css/grapes.min.css">
+<script src="/assets/vendor/grapes.js/grapesjs/grapes.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/tabs/grapesjs-tabs.min.js"></script>
+<script src="/assets/vendor/grapes.js/packages/blocks-basic/index.js"></script>
 
 
 <script type="text/javascript">
@@ -64,95 +65,95 @@
             }
         </style>`;
 
-    var templateSpotify = ` <main>
+    var templateExemple = ` <main>
 			<section id="section1">
 				<div class="container">
 					<div>
-						<h1>Obtenez 3 mois pour 0,99 €</h1>
-						<h2>Seulement 9,99 € /par mois ensuite. Annulez à tout moment.</h2>
-						<a href="#" class="cta-button cta-button--blue">Démarrer Spotify Premium</a>
+						<h1>Titre section 1</h1>
+						<h2>Lorem Ipsum is simply dummy text of the printing and typesetting.</h2>
+						<a href="#" class="cta-button cta-button--blue">Template Exemple</a>
 					</div>
 					<footer>
 						<p>
-							Offre réservée aux utilisateurs n'ayant jamais essayé Spotify Premium. Offre valable jusqu'au 31 déc. 2021.<br>Offre soumise à conditions.
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
 						</p>
 					</footer>
 				</div>
 			</section>
 			<section id="section2">
 				<div class="container">
-					<h1>Pourquoi passer à Spotify premium ?</h1>
+					<h1>Titre section 2</h1>
 					<div>
 						<article class="benefit">
 							<figure>
-
+								
 							</figure>
-							<h1>Téléchargez votre musique.</h1>
-							<h2>Profitez-en même sans connexion internet.</h2>
+							<h1>titre article.</h1>
+							<h2>titre 2 article</h2>
 						</article>
 						<article class="benefit">
 							<figure>
-
+								
 							</figure>
-							<h1>Écoutez sans pubs.</h1>
-							<h2>Profitez de vos titres sans interruption.</h2>
+							<h1>titre article.</h1>
+							<h2>titre 2 article</h2>
 						</article>
 						<article class="benefit">
 							<figure>
-
+								
 							</figure>
-							<h1>Écoutez les titres de votre choix.</h1>
-							<h2>Même sur votre mobile.</h2>
+							<h1>titre article.</h1>
+							<h2>titre 2 article</h2>
 						</article>
 						<article class="benefit">
 							<figure>
-
+								
 							</figure>
-							<h1>Zapping à l'infini.</h1>
-							<h2>Cliquez simplement sur suivant.</h2>
+							<h1>titre article.</h1>
+							<h2>titre 2 article</h2>
 						</article>
 					</div>
 				</div>
 			</section>
 			<section id="section3">
 				<div class="container">
-					<h1>Écoutez gratuitement ou abonnez-vous à Spotify Premium.</h1>
+					<h1>titre 1 section 3.</h1>
 					<div class="offers-container">
 						<article class="offer">
-							<h1>Spotify Free</h1>
-							<h2>0,00 € <small>/ mois</small></h2>
+							<h1>titre 1 article</h1>
+							<h2>titre 2 article</small></h2>
 							<ul>
-								<li>Lecture aléatoire</li>
-								<li class="disabled">Sans interruptions</li>
-								<li class="disabled">Zappez les titres sans limite</li>
-								<li class="disabled">Écouter hors connexion</li>
-								<li class="disabled">Écoutez les titres de votre choix</li>
-								<li class="disabled">Son de qualité supérieure</li>
+								<li>Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
 							</ul>
-							<a href="#" class="cta-button cta-button--white">Démarrer</a>
+							<a href="#" class="cta-button cta-button--white">Link</a>
 						</article>
 						<article class="offer">
-							<h1>Spotify Premium</h1>
-							<h2>3 mois pour 0,99 €</h2>
+                        <h1>titre 1 article</h1>
+							<h2>titre 2 article</small></h2>
 							<ul>
-								<li>Lecture aléatoire</li>
-								<li>Sans interruptions</li>
-								<li>Zappez les titres sans limite</li>
-								<li>Écouter hors connexion</li>
-								<li>Écoutez les titres de votre choix</li>
-								<li>Son de qualité supérieure</li>
+								<li>Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
+								<li class="disabled">Lorem Ipsum is simply dummy</li>
 							</ul>
-							<a href="#" class="cta-button cta-button--green">Démarrer spotify premium</a>
+							<a href="#" class="cta-button cta-button--green">Link</a>
 						</article>
 					</div>
 					<footer>
 						<p>
-							Seulement 9,99 € /par mois ensuite. Offre réservée aux utilisateurs n'ayant jamais essayé Spotify Premium.<br>Offre valable jusqu'au 31 déc. 2018. Offre soumise à conditions.
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
 						</p>
 					</footer>
 				</div>
 			</section>
-		</main> <style>
+		</main> <style> 
             a{
                 color: inherit;
             }
@@ -173,7 +174,7 @@
             .cta-button{
                 display: inline-block;
                 background-color: grey;
-                color: white;
+                color: black;
                 padding: 1em 3em;
                 text-transform: uppercase;
                 font-weight: 700;
@@ -209,7 +210,7 @@
             .cta-button--white:hover{
                 background-color: var(--green-hover);
                 border-color: var(--green);
-                color: white;
+                color: black;
             }
 
             .cta-button--green{
@@ -282,7 +283,7 @@
                 text-decoration: none;
                 padding: 0.5em;
                 display: block;
-                color: white;
+                color: black;
             }
 
 
@@ -291,7 +292,7 @@
             #section1{
                 height: 640px;
                 padding-bottom: 20px;
-                color: white;
+                color: black;
                 background-image: url('assets/images/hero-image.jpg');
                 background-size: cover;
                 background-position: center right;
@@ -450,8 +451,8 @@
 
             body > footer {
                 padding: 1rem 0;
-                background-color: black;
-                color: white;
+                background-color: white;
+                color: black;
                 font-size: 14px;
             }
 
@@ -496,8 +497,8 @@
                 blocks: [
                     {
                         id: 'template1',
-                        label: 'Sportify Template',
-                        content: templateSpotify
+                        label: 'Exemple de Template',
+                        content: templateExemple
                     },
                     {
                         id: 'template2',
@@ -546,13 +547,16 @@
             contentArticle = editorEditArticle.getHtml();
             let css = editorEditArticle.getCss();
 
-            contentArticle = contentArticle.replace(/<body/g, '<div');
-            contentArticle = contentArticle.replace(/<\/body>/g, '</div>');
-            contentArticle += '<style>' + css + '</style>';
-        } else {
-            alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
-        }
-    });
+        contentArticle = contentArticle.replace(/<body/g, '<div');
+        contentArticle = contentArticle.replace(/<\/body>/g, '</div>');
+        contentArticle += '<style>' + css + '</style>';
+
+        let alertSuccess = document.getElementsByClassName('alert alert-success editArticle')[0];
+        alertSuccess.style.display = 'block';
+    }else {
+        alert('Veuillez remplir le contenu de votre article avant de sauvegarder');
+    }
+});
 
     //changer le contenu de lediteur de contenu quand on change de version d'article
     function changeContentEditor(encodedContent) {

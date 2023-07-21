@@ -3,11 +3,12 @@
 namespace App\Controllers;
 
 use App\Core\View;
+
 use App\Models\Article;
-use App\Models\Game_Category;
 use App\Models\Comment;
 use App\Models\Game;
 use App\Models\User;
+
 use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 use App\Repository\GameCategoryRepository;

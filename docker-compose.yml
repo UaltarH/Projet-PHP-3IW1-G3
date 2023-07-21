@@ -5,7 +5,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./www:/var/www/html/
+      - ./www/:/var/www/html/
+      - ./script/sql/create_db/:/var/www/html/script/sql/create_db/
       - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./server/apache2.conf:/etc/apache2/apache2.conf
       - ./server/php.ini:/usr/local/etc/php/php.ini
@@ -17,7 +18,7 @@ services:
       - 5432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./script/sql/create_db/script_carte_chance.sql:/docker-entrypoint-initdb.d/script_carte_chance.sql
+      # - ./script/sql/create_db/script_carte_chance.sql:/docker-entrypoint-initdb.d/script_carte_chance.sql
     environment:
       POSTGRES_DB: esgi
       POSTGRES_USER: esgi
@@ -34,7 +35,7 @@ services:
     volumes:
       - ./www:/home
     # command: sass --watch "/home/Assets/scss/main.scss:/home/style.css"
-    command: sass --watch "/home/Assets/scss/main.scss:/home/style.css" --no-source-map && npx postcss /home/style.css --use autoprefixer --output /home/style.css
+    command: sass --watch "/home/Assets/scss/main.scss:/home/public/style.css" --no-source-map && npx postcss /home/public/style.css --use autoprefixer --output /home/public/style.css
 
   mailcatcher:
     restart: always

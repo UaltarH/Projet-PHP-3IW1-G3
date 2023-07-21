@@ -4,7 +4,7 @@ import generateStructure from "./core/generateStructure.js";
 import Page1 from "./pages/Page1.js";
 import Exo from "./pages/Exo.js";
 
-const root = document.getElementById("root");
+export const root = document.getElementById("root");
 // BrowserRouter(routes, root, root.dataset.baseurl);
 
 root.appendChild(generateStructure(Page1()));
@@ -54,17 +54,17 @@ root.appendChild(generateStructure(Page1()));
 
 // BrowserRouter(routes, root);
 
-//function BrowserRouter({ routes }) {
-//  window.history.pushState = function (state, title, path) {
-//    oldPushState.call(window.history, state, title, path);
-//    window.dispatchEvent(new Event("popstate"));
-//  };
-//  function generate() {
-//    this.setState({ path: window.location.pathname });
-//  }
-//  window.addEventListener("popstate", generate);
-//  return {
-//    type: routes[this.state.path].path,
-//    attributes: routes[this.state.path].props,
-//  };
-//}
+// function BrowserRouter({ routes }) {
+//   window.history.pushState = function (state, title, path) {
+//     oldPushState.call(window.history, state, title, path);
+//     window.dispatchEvent(new Event("popstate"));
+//   };
+//   function generate() {
+//     this.setState({ path: window.location.pathname });
+//   }
+//   window.addEventListener("popstate", generate);
+//   return {
+//     type: routes[this.state.path].path,
+//     attributes: routes[this.state.path].props,
+//   };
+// }
