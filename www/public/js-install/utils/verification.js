@@ -115,5 +115,15 @@ export default function form_check(variable, conf) {
     }
   }
 
+  if ("space" in conf && conf.space === false) {
+    const hasSpaces = /\s/.test(variable.value);
+    if (hasSpaces) {
+      return {
+        isValid: false,
+        message: `Vous ne pouvez avoir d'espace pour le champ ${variable.field}`,
+      };
+    }
+  }
+
   return { isValid: true };
 }
