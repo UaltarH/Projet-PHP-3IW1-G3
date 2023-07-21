@@ -39,7 +39,7 @@ CREATE TABLE $prefix$_user
     id                 UUID DEFAULT uuid_generate_v4(),
     pseudo             VARCHAR(15) NOT NULL UNIQUE,
     first_name         VARCHAR(64) NOT NULL,
-    last_name          VARCHAR(64) NOT NULL,
+    last_name          VARCHAR(120) NOT NULL,
     email              VARCHAR(64) NOT NULL UNIQUE,
     password           VARCHAR(64) NOT NULL,
     email_confirmation BOOLEAN     NOT NULL,
