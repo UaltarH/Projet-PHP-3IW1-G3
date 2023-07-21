@@ -8,22 +8,22 @@ bdd:
   port: 5432
   username: esgi
   password: Test1234
-  prefix: mapa
+  prefix: esgi
   user:
-    pseudo: zaza
-    firstname: zaza
-    lastname: zazaz
-    email: zaz@dz.Fr
-    phone: 0676767861
-    password: Azer123@
+    pseudo: Gauthier
+    firstname: Gauthier
+    lastname: LO
+    email: lo.gauthier.glo@gmail.com
+    phone: 0651957268
+    password: Azerty1!
 errorLog: explicit
 website:
-  name: aza
-  description: zaza
+  name: Mon site
+  description: Ma description&#039;
   baseurl: http://localhost/
 mail:
   mailer: smtp
   host: mailcatcher
   port: 1025
-  mailFrom: aza@dz.Fr
+  mailFrom: lo.gauthier.glo@gmail.com
 ...

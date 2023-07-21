@@ -99,10 +99,10 @@ class Api
             "sortOrder" => $columnSortOrder,
             "join" => [
                 [
-                    "table" => $this->config['bdd']['prefix']."role",
+                    "table" => $this->config['bdd']['prefix']."_role",
                     "foreignKeys" => [
                         "originColumn" => ["id" => "role_id",
-                                           "table" => "carte_chance_user"
+                                           "table" => $this->config['bdd']['prefix']."_user"
                                           ],
                         "targetColumn" => "id"
                     ]

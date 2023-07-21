@@ -87,7 +87,24 @@ class Validator
         if (!preg_match($regex, $phoneNumber)) {
             if (isset($this->config["inputs"]["phone_number"]["error"]))
                 $this->errors[] = $this->config["inputs"]["phone_number"]["error"];
-            echo 'regex err phone';
+            return false;
+        }
+        return true;
+    }
+    public function isEmailValid(string $email): bool
+    {
+        $regex = '/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/';
+        if (!preg_match($regex, $email)) {
+            if (isset($this->config["inputs"]["email"]["error"]))
+                $this->errors[] = $this->config["inputs"]["password"]["error"];
+            return false;
+        }
+        return true;
+    }
+    public function isPrefixValid(string $prefix): bool
+    {
+        $regex = '/^[a-z]+$/';
+        if (!preg_match($regex, $prefix)) {
             return false;
         }
         return true;

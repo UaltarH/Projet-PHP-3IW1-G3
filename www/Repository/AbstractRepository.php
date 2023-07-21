@@ -21,7 +21,7 @@ abstract class AbstractRepository
     public function getTable($model): string
     {
         $classExploded = explode("\\", $model::class);
-        return Config::getConfig()['bdd']['prefix'] . strtolower(end($classExploded));
+        return Config::getConfig()['bdd']['prefix'] . "_" . strtolower(end($classExploded));
     }
     /** Le resultat sera sous d'un tableau associatif, l'unique colonne qu'on aura se nomme "column_exists" avec comme contenu soit
      * "the value for column the nom_colonne_concerné already exists" ou "none_exists".
@@ -213,7 +213,7 @@ abstract class AbstractRepository
             }
             //securisé les injections xss
             if(is_string($value) ){
-                if(self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article" && self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "article_memento"){
+                if(self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "_article" && self::getTable($model) != Config::getConfig()['bdd']['prefix'] . "_article_memento"){
                     $columns[$key] = htmlspecialchars($value);
                 } else{
                     if($key != "content"){

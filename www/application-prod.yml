@@ -9,6 +9,13 @@ bdd:
   username: esgi
   password: Test1234
   prefix: carte_chance_
+  user:
+    pseudo: zaza
+    firstname: zaza
+    lastname: zazaz
+    email: zaz@dz.Fr
+    phone: 0676767861
+    password: Azer123@
 errorLog: minimal
 website:
   name: La Carte Chance
