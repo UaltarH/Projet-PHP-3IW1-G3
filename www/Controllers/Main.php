@@ -3,14 +3,14 @@
 namespace App\Controllers;
 
 use App\Core\View;
+use App\Core\Errors;
+
 use App\Models\AbstractModel;
-use App\Models\Article_Category;
 use App\Models\Game;
-use App\Models\Game_Category;
-use App\Repository\ArticleCategoryRepository;
+
 use App\Repository\ArticleRepository;
-use App\Repository\GameCategoryRepository;
 use App\Repository\GameRepository;
+
 use function App\Core\TokenJwt\getSpecificDataFromToken;
 use function App\Core\TokenJwt\validateJWT;
 require_once '/var/www/html/Core/TokenJwt.php';
@@ -18,15 +18,11 @@ require_once '/var/www/html/Core/TokenJwt.php';
 class Main extends AbstractModel
 {
     private ArticleRepository $articleRepository;
-    private ArticleCategoryRepository $articleCategoryRepository;
-    private GameCategoryRepository $gameCategoryRepository;
     private GameRepository $gameRepository;
 
     public function __construct()
     {
         $this->articleRepository = new ArticleRepository();
-        $this->articleCategoryRepository = new ArticleCategoryRepository();
-        $this->gameCategoryRepository = new GameCategoryRepository();
         $this->gameRepository = new GameRepository();
     }
 
@@ -45,16 +41,22 @@ class Main extends AbstractModel
 
     public function contact(): void
     {
-        echo "Page de contact";
+        $view = new View("Main/contact", "front");
     }
 
     public function aboutUs(): void
     {
-        echo "Page à propos";
+        $view = new View("Main/about-us", "front");
     }
 
     public function search(): void
     {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         $query = $_GET["search"];
         $articleModel = $this->articleRepository;
         $jeuxModel = $this->gameRepository;

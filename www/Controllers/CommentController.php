@@ -3,8 +3,11 @@
 namespace App\Controllers;
 
 use App\Core\View;
+
 use App\Forms\ModerateComment;
+
 use App\Models\Comment;
+
 use App\Repository\AbstractRepository;
 use App\Repository\CommentRepository;
 
@@ -33,6 +36,12 @@ class CommentController extends AbstractRepository
     }
 
     public function edit() {
+        if(empty($_GET) || $_SERVER['REQUEST_METHOD'] != "GET") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode("Bad Method");
+            exit;
+        }
+
         $id = $_GET["id"];
         $commentaireModel = $this->commentRepository;
         $moderateCommentForm = new ModerateComment();
@@ -47,7 +56,12 @@ class CommentController extends AbstractRepository
     }
 
     public function moderate() {
-        var_dump($_POST);
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         $id = $_POST["id"];
         $accepted = $_POST['accepted'] ?? false;
         $commentaireModel = $this->commentRepository;

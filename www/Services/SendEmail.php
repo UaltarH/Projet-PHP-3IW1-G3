@@ -1,6 +1,8 @@
 <?php
 namespace App\Services\SendEmail;
 
+use App\Core\Config;
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\SMTP;
@@ -10,25 +12,26 @@ require '/var/www/html/library/PHPMailer/src/SMTP.php';
 
 function SendMailFunction($to, $contentMail,$subject):array 
 {
+    $config = Config::getInstance()->getConfig();
     try {
         $mail = new PHPMailer (true);
         $mail->IsSMTP();
-        $mail->Mailer = "smtp";
+        $mail->Mailer = $config['mail']['mailer'];
         $mail->SMTPDebug  = 0;  
-        $mail->Port       = 1025;
-        $mail->Host       = "mailcatcher";
+        $mail->Port       = $config['mail']['port'];
+        $mail->Host       = $config['mail']['host'];
         $mail->IsHTML(true);
         $mail->AddAddress($to, "recipient-name");
-        $mail->SetFrom("carte_chance_admin@myges.fr", "from-name");
+        $mail->SetFrom($config['mail']['mailFrom'], "from-name");
         $mail->Subject = $subject;
         $content = $contentMail;
 
         $mail->MsgHTML($content);
 
         if(!$mail->Send()) {
-            $messageInfoSendMail[] = "Error while sending Email.";   
+            $messageInfoSendMail[] = "Erreur lors de l'envoi du mail.";   
         } else {
-            $messageInfoSendMail[] = "Email sent successfully";
+            $messageInfoSendMail[] = "L'email a bien été envoyé.";
         }
     } catch (Exception $e) {
             $messageInfoSendMail = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

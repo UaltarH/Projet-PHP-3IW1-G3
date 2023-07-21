@@ -35,94 +35,96 @@ if (isset($_SESSION["token"])) {
 </head>
 <body>
 
+<div class="content-wrapper">
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="/sys/dashboard" class="logo d-flex align-items-center">
+                <img src="/assets/img/logo.png" alt="">
+                <span class="d-none d-lg-block"><?=\App\Core\Config::getConfig()['website']['name']?> Backoffice</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
 
-<header id="header" class="header fixed-top d-flex align-items-center">
-    <div class="d-flex align-items-center justify-content-between">
-        <a href="/sys/dashboard" class="logo d-flex align-items-center">
-            <img src="/assets/img/logo.png" alt="">
-            <span class="d-none d-lg-block"><?=\App\Core\Config::getConfig()['website']['name']?> Backoffice</span>
-        </a>
-        <i class="bi bi-list toggle-sidebar-btn"></i>
-    </div>
-
-    <nav class="header-nav ms-auto">
-        <ul class="d-flex align-items-center">
-            <li class="nav-item dropdown pe-3">
-                <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                        <i class="bi bi-person"></i>
-                    </div>
-                    <span class="d-none d-md-block dropdown-toggle ps-2"><?= $informationsUser["pseudo"] ?></span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                    <li class="dropdown-header">
-                        <h6><?= $informationsUser["firstName"] ?> <?= $informationsUser["lastName"] ?></h6>
-                        <span><?= $informationsUser["roleName"] == "admin" ? "Admin" : "Modérateur" ?></span>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="#">
+        <nav class="header-nav ms-auto">
+            <ul class="d-flex align-items-center">
+                <li class="nav-item dropdown pe-3">
+                    <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                             <i class="bi bi-person"></i>
-                            <span>Mon compte</span>
-                        </a>
-                    </li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li>
-                        <a class="dropdown-item d-flex align-items-center" href="logout">
-                            <i class="bi bi-box-arrow-right"></i>
-                            <span>Se déconnecter</span>
-                        </a>
-                    </li>
-                </ul>
+                        </div>
+                        <span class="d-none d-md-block dropdown-toggle ps-2"><?= $informationsUser["pseudo"] ?></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
+                        <li class="dropdown-header">
+                            <h6><?= $informationsUser["firstName"] ?> <?= $informationsUser["lastName"] ?></h6>
+                            <span><?= $informationsUser["roleName"] == "admin" ? "Admin" : "Modérateur" ?></span>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="/profil">
+                                <i class="bi bi-person"></i>
+                                <span>Mon compte</span>
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Se déconnecter</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <aside id="sidebar" class="sidebar">
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="/sys/dashboard" id="navbar-links-dash">
+                    <i class="bi bi-grid"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/user/list" id="navbar-links-user">
+                    <i class="bi bi-person"></i>
+                    <span>Utilisateurs</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/article/articles-management" id="navbar-links-article">
+                    <i class="bi bi-bag"></i>
+                    <span>Articles</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/sys/comment/list" id="navbar-links-comments">
+                    <i class="bi bi-chat-dots"></i>
+                    <span>Commentaires</span>
+                </a>
+            </li>
+            <li class="nav-item navbar-links">
+                <a class="nav-link collapsed" href="/" id="navbar-links-front">
+                    <i class="bi bi-box-arrow-left"></i>
+                    <span>La Carte Chance</span>
+                </a>
             </li>
         </ul>
-    </nav>
-</header>
+    </aside>
 
+    <main id="main" class="main">
+        <div class="response-message"></div>
+        <?php include $this->view; ?>
+    </main>
+</div>
 
-<aside id="sidebar" class="sidebar">
-    <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="/sys/dashboard" id="navbar-links-dash">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/user/list" id="navbar-links-user">
-                <i class="bi bi-person"></i>
-                <span>Utilisateurs</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/article/articles-management" id="navbar-links-article">
-                <i class="bi bi-bag"></i>
-                <span>Articles</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/sys/comment/list" id="navbar-links-comments">
-                <i class="bi bi-chat-dots"></i>
-                <span>Commentaires</span>
-            </a>
-        </li>
-        <li class="nav-item navbar-links">
-            <a class="nav-link collapsed" href="/" id="navbar-links-front">
-                <i class="bi bi-box-arrow-left"></i>
-                <span>La Carte Chance</span>
-            </a>
-        </li>
-    </ul>
-</aside>
-
-<main id="main" class="main">
-    <div class="response-message"></div>
-    <?php include $this->view; ?>
-</main>
 
 <?php $this->partial("footer", []) ?>
 

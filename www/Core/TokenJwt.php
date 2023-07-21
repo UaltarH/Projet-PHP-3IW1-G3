@@ -35,6 +35,10 @@ function validateJWT($token) {
     
     if ($signature !== $expectedSignature) {
         // La signature n'est pas valide
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+        
         return false;
     }
 
@@ -42,6 +46,9 @@ function validateJWT($token) {
     $payloadData = json_decode($payload, true);
     if (isset($payloadData['exp']) && $payloadData['exp'] < time()) {
         // Le token est expiré
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
         return false;
     }
 

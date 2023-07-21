@@ -11,6 +11,12 @@ class Installer extends Validator
 
     public function setAdmin()
     {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
         $hasErrors = false;
@@ -161,6 +167,12 @@ class Installer extends Validator
 
     public function setDatabase()
     {
+        if(empty($_POST) || $_SERVER['REQUEST_METHOD'] != "POST") {
+            Errors::define(400, 'Bad HTTP request');
+            echo json_encode(['success' => false]);
+            exit;
+        }
+        
         // Récupérer les données envoyées en tant que JSON
         $data = json_decode(file_get_contents('php://input'), true);
         $hasErrors = false;

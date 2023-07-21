@@ -13,6 +13,11 @@ contact:
   action: contact
   access: [ALL]
 
+about-us:
+  controller: Main
+  action: aboutUs
+  access: [ALL]
+
 login:
   controller: Auth
   action: login
@@ -86,11 +91,6 @@ post-comment:
   action: postComment
   access: [ USER, MODERATOR, ADMIN ]
 
-post-comment:
-  controller: Article
-  action: postComment
-  access: [ USER, MODERATOR, ADMIN ]
-
 trucs-et-astuces:
   controller: Article
   action: allTrucsEtAstuces
@@ -144,7 +144,7 @@ sys:
       access: [ ADMIN, MODERATOR ]
     get-all-article-version:
       controller: Article
-      action: getAllArticlesMomento
+      action: getAllArticlesMemento
       access: [ ADMIN, MODERATOR ]
 
   dashboard:
