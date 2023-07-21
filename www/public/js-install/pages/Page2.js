@@ -14,7 +14,7 @@ const validationSchema2 = {
     bddPrefix: { type: "string", min: 2, max: 20, space: false },
     siteName: { type: "string", min: 2, max: 20 },
     siteDescription: { type: "string", min: 2, max: 80 },
-    adminEmail: { type: "string", min: 6, format: "email", space: false },
+    adminEmail: { type: "string", min: 6, max: 64,format: "email", space: false },
   },
   required: ["bddPrefix", "siteName", "siteDescription", "adminEmail"],
 };

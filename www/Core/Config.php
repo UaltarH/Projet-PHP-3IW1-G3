@@ -96,7 +96,7 @@ class Config
         $currentData = &$data;
         foreach ($keys as $key) {
                 if (!isset($currentData[$key])) {
-                    Errors::define(400, "Route not exist");
+                    Errors::define(404, "Route not exist");
                     exit;
                 }
                 $currentData = &$currentData[$key];
