@@ -200,6 +200,9 @@ VALUES ((SELECT id FROM $prefix$_permission WHERE permission_name = 'Create'),
        ((SELECT id FROM $prefix$_permission WHERE permission_name = 'Update'),
         (SELECT id FROM $prefix$_role WHERE role_name = 'user')),
        ((SELECT id FROM $prefix$_permission WHERE permission_name = 'Delete'),
+        (SELECT id FROM $prefix$_role WHERE role_name = 'user')),
+       ((SELECT id FROM $prefix$_permission WHERE permission_name = 'Read'),
+        (SELECT id FROM $prefix$_role WHERE role_name = 'admin'));
 
 
 -- $prefix$_article_category
@@ -213,6 +216,4 @@ INSERT INTO $prefix$_game_category (id, category_game_name, description)
 VALUES (uuid_generate_v4(), 'Jeux de cartes', 'Cette catégorie regroupe tous les jeux de cartes'),
        (uuid_generate_v4(), 'Jeux de dés', 'Cette catégorie regroupe tous les jeux de dés'),
        (uuid_generate_v4(), 'Jeux de plateau', 'Cette catégorie regroupe tous les jeux de plateau');
-        (SELECT id FROM $prefix$_role WHERE role_name = 'user')),
-       ((SELECT id FROM $prefix$_permission WHERE permission_name = 'Read'),
-        (SELECT id FROM $prefix$_role WHERE role_name = 'admin'));
+
