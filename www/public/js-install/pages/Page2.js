@@ -64,39 +64,41 @@ export default function Page2() {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
           },
-        }).then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Erreur lors de l'envoi du formulaire.");
-          }
-        }).then((responseData) => {
-          console.log(responseData);
-
-          if(responseData.success === true) {
-            //fetch pour lancer l'initialisation du site (creation sql)
-            fetch("/installer/init-site", {
-              method: "POST",
-              body: JSON.stringify(data),
-              headers: {
-                "Content-Type": "application/json; charset=utf-8",
-              },
-            }).then((response) => {
-              if (response.ok) {
-                return response.json();
-              } else {
-                throw new Error("Erreur lors de l'envoi du formulaire.");
-              }
-            }).then((responseData) => {
-              if(responseData.success === true) {
-                // rediriger vers login 
-                window.location.href = "/login";
-              } else {                
-                console.log(responseData);
-              }
-            });
-          }
-        });
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error("Erreur lors de l'envoi du formulaire.");
+            }
+          })
+          .then((responseData) => {
+            if (responseData.success === true) {
+              //fetch pour lancer l'initialisation du site (creation sql)
+              fetch("/installer/init-site", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                  "Content-Type": "application/json; charset=utf-8",
+                },
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    return response.json();
+                  } else {
+                    throw new Error("Erreur lors de l'envoi du formulaire.");
+                  }
+                })
+                .then((responseData) => {
+                  if (responseData.success === true) {
+                    // rediriger vers login
+                    window.location.href = "/login";
+                  } else {
+                    console.log(responseData);
+                  }
+                });
+            }
+          });
       }
     } catch (error) {
       console.error(error);

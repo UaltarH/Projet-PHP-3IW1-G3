@@ -97,6 +97,9 @@ export default function Page1() {
             }
 
             sessionStorage.setItem("currentPage", "page2");
+            if (root.firstChild != generateStructure(Page1())) {
+              root.removeChild(root.firstChild);
+            }
             root.replaceChild(generateStructure(Page2()), root.firstChild);
           });
       }
