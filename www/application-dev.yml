@@ -1,7 +1,7 @@
 ---
 installation:
   done: false
-  on-going: true
+  on-going: false
 bdd:
   host: database
   dbname: esgi
