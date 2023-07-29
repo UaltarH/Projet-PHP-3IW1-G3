@@ -181,7 +181,7 @@ class Installer extends Validator
         $conf->updateConfig(['bdd', 'user', 'lastname'], $last_name);
         $conf->updateConfig(['bdd', 'user', 'email'], $email);
         $conf->updateConfig(['bdd', 'user', 'phone'], $phone_number);
-        $conf->updateConfig(['bdd', 'user', 'password'], $password);
+        $conf->updateConfig(['bdd', 'user', 'password'], password_hash($password, PASSWORD_DEFAULT));
 
         echo json_encode($response);
 
@@ -308,7 +308,7 @@ class Installer extends Validator
         }
 
         $stringInsertUser = " INSERT INTO ". Config::getConfig()['bdd']['prefix'] . "_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token, phone_number, date_inscription, role_id)
-        VALUES ( uuid_generate_v4(), '". $userBdd['pseudo'] ."', '" . $userBdd['firstname'] . "', '" . $userBdd['lastname'] . "', '" . $userBdd['email'] . "', '" . password_hash($userBdd['password'], PASSWORD_DEFAULT) . "', TRUE," . $userToken . ", " . $userBdd['phone'] . ", '" . date("Y-m-d H:i:s") . "', (SELECT id FROM " . Config::getConfig()['bdd']['prefix'] . "_role WHERE role_name = 'admin'));";
+        VALUES ( uuid_generate_v4(), '". $userBdd['pseudo'] ."', '" . $userBdd['firstname'] . "', '" . $userBdd['lastname'] . "', '" . $userBdd['email'] . "', '" . $userBdd['password'] . "', TRUE," . $userToken . ", " . $userBdd['phone'] . ", '" . date("Y-m-d H:i:s") . "', (SELECT id FROM " . Config::getConfig()['bdd']['prefix'] . "_role WHERE role_name = 'admin'));";
 
         $scriptSQLParsed .= $stringInsertUser;
         
@@ -348,8 +348,6 @@ class Installer extends Validator
             $response = array('success' => false, 'message' => 'Erreur lors du lancement du script SQL');
             echo json_encode($response);
         }
-
-
 
     }
 }
