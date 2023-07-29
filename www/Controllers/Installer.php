@@ -305,7 +305,7 @@ class Installer extends Validator
         $userToken = "";
         for ($i = 0; $i < $lengthKey; $i++) {
             $userToken .= mt_rand(0, 20);
-
+        }
 
         $stringInsertUser = " INSERT INTO ". Config::getConfig()['bdd']['prefix'] . "_user (id, pseudo, first_name, last_name, email, password, email_confirmation, confirm_and_reset_token, phone_number, date_inscription, role_id)
         VALUES ( uuid_generate_v4(), '". $userBdd['pseudo'] ."', '" . $userBdd['firstname'] . "', '" . $userBdd['lastname'] . "', '" . $userBdd['email'] . "', '" . $userBdd['password'] . "', TRUE," . $userToken . ", " . $userBdd['phone'] . ", '" . date("Y-m-d H:i:s") . "', (SELECT id FROM " . Config::getConfig()['bdd']['prefix'] . "_role WHERE role_name = 'admin'));";
