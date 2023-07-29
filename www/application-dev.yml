@@ -1,6 +1,6 @@
 ---
 installation:
-  done: true
+  done: false
   on-going: false
 bdd:
   host: database
@@ -14,12 +14,12 @@ bdd:
     firstname: admin
     lastname: admin
     email: admin@admin.com
-    phone: 0651957268
-    password: Mplokij1!
+    phone: 0611111111
+    password: test
 errorLog: explicit
 website:
-  name: Mon Site
-  description: Description du site
+  name: La Carte Chance
+  description: Description
   baseurl: http://localhost/
 mail:
   mailer: smtp
